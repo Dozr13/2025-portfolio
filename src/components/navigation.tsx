@@ -30,8 +30,18 @@ export function Navigation() {
   const scrollToSection = (href: string) => {
     const element = document.querySelector(href)
     if (element) {
-      element.scrollIntoView({ behavior: "smooth" })
       setIsOpen(false)
+
+      setTimeout(() => {
+        const headerOffset = 80
+        const elementPosition = element.getBoundingClientRect().top
+        const offsetPosition = elementPosition + window.pageYOffset - headerOffset
+
+        window.scrollTo({
+          top: offsetPosition,
+          behavior: "smooth"
+        })
+      }, 300)
     }
   }
 
@@ -58,13 +68,13 @@ export function Navigation() {
       initial={{ y: -100 }}
       animate={{ y: 0 }}
       transition={{ duration: 0.6 }}
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${scrolled
+      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 w-full ${scrolled
         ? "glass border-b border-border/50"
         : "bg-transparent"
         }`}
     >
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between items-center h-16">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
+        <div className="flex justify-between items-center h-16 w-full">
           {/* Logo */}
           <motion.div
             whileHover={{ scale: 1.05 }}
@@ -111,9 +121,20 @@ export function Navigation() {
             {/* Mobile menu button */}
             <div className="md:hidden">
               <motion.button
-                onClick={() => setIsOpen(!isOpen)}
+                onClick={(e) => {
+                  e.preventDefault()
+                  e.stopPropagation()
+                  setIsOpen(!isOpen)
+                }}
+                onTouchEnd={(e) => {
+                  e.preventDefault()
+                  e.stopPropagation()
+                  setIsOpen(!isOpen)
+                }}
                 whileTap={{ scale: 0.9 }}
-                className="p-2 rounded-lg bg-muted hover:bg-accent transition-colors"
+                className="p-2 rounded-lg bg-muted hover:bg-accent transition-colors touch-manipulation"
+                style={{ WebkitTapHighlightColor: 'transparent' }}
+                aria-label="Toggle navigation menu"
               >
                 {isOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
               </motion.button>
@@ -136,11 +157,21 @@ export function Navigation() {
               {navItems.map((item, index) => (
                 <motion.button
                   key={item.name}
-                  onClick={() => scrollToSection(item.href)}
+                  onClick={(e) => {
+                    e.preventDefault()
+                    e.stopPropagation()
+                    scrollToSection(item.href)
+                  }}
+                  onTouchEnd={(e) => {
+                    e.preventDefault()
+                    e.stopPropagation()
+                    scrollToSection(item.href)
+                  }}
                   initial={{ opacity: 0, x: -20 }}
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ delay: index * 0.1 }}
-                  className="text-foreground hover:text-primary hover:bg-accent block px-3 py-2 text-base font-medium w-full text-left rounded-lg transition-colors"
+                  className="text-foreground hover:text-primary hover:bg-accent block px-3 py-2 text-base font-medium w-full text-left rounded-lg transition-colors touch-manipulation cursor-pointer"
+                  style={{ WebkitTapHighlightColor: 'transparent' }}
                 >
                   {item.name}
                 </motion.button>

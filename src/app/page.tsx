@@ -9,9 +9,9 @@ import { Skills } from "@/components/sections/skills"
 
 export default function Home() {
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-background w-full overflow-x-hidden">
       <Navigation />
-      <main>
+      <main className="w-full">
         <Hero />
         <About />
         <Skills />
