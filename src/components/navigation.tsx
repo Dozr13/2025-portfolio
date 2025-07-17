@@ -33,7 +33,7 @@ export function Navigation() {
       setIsOpen(false)
 
       setTimeout(() => {
-        const headerOffset = 80
+        const headerOffset = 90
         const elementPosition = element.getBoundingClientRect().top
         const offsetPosition = elementPosition + window.pageYOffset - headerOffset
 
@@ -69,12 +69,12 @@ export function Navigation() {
       animate={{ y: 0 }}
       transition={{ duration: 0.6 }}
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 w-full ${scrolled
-        ? "bg-background/80 backdrop-blur-xl border-b border-border/50 supports-[backdrop-filter]:bg-background/60"
-        : "bg-transparent"
+        ? "bg-background/90 backdrop-blur-xl border-b border-border/50 supports-[backdrop-filter]:bg-background/75 shadow-sm"
+        : "bg-background/40 backdrop-blur-sm"
         }`}
     >
       <div className="max-w-7xl mx-auto px-5 sm:px-8 lg:px-12 xl:px-16 w-full">
-        <div className="flex justify-between items-center h-16 w-full">
+        <div className="flex justify-between items-center h-20 w-full">
           {/* Logo */}
           <motion.div
             whileHover={{ scale: 1.02 }}
@@ -137,7 +137,7 @@ export function Navigation() {
                   onClick={() => scrollToSection(item.href)}
                   whileHover={{ y: -2 }}
                   whileTap={{ y: 0 }}
-                  className="text-foreground hover:text-primary px-3 py-2 text-sm font-medium transition-colors relative group"
+                  className="text-foreground hover:text-primary px-4 py-3 text-base font-medium transition-colors relative group"
                 >
                   {item.name}
                   <span className="absolute inset-x-0 bottom-0 h-0.5 bg-primary transform scale-x-0 group-hover:scale-x-100 transition-transform origin-left"></span>
@@ -193,7 +193,7 @@ export function Navigation() {
             transition={{ duration: 0.2 }}
             className="md:hidden glass border-t border-border/50"
           >
-            <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3">
+            <div className="px-4 pt-3 pb-4 space-y-2 sm:px-6">
               {navItems.map((item, index) => (
                 <motion.button
                   key={item.name}
@@ -210,7 +210,7 @@ export function Navigation() {
                   initial={{ opacity: 0, x: -20 }}
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ delay: index * 0.1 }}
-                  className="text-foreground hover:text-primary hover:bg-accent block px-3 py-2 text-base font-medium w-full text-left rounded-lg transition-colors touch-manipulation cursor-pointer"
+                  className="text-foreground hover:text-primary hover:bg-accent block px-4 py-3 text-lg font-medium w-full text-left rounded-lg transition-colors touch-manipulation cursor-pointer"
                   style={{ WebkitTapHighlightColor: 'transparent' }}
                 >
                   {item.name}
