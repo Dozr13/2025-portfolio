@@ -38,6 +38,8 @@ html, body {
   .xs\:text-left { text-align: left; }
 }
 
+
+
 /* Modern color system with beautiful gradients */
 :root {
   /* Light theme colors */
@@ -102,7 +104,8 @@ html, body {
   --glass-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
 }
 
-@theme inline {
+/* Tailwind color mappings - replaced @theme inline for better compatibility */
+:root {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --color-muted: var(--muted);
@@ -136,6 +139,36 @@ body {
   color: var(--foreground);
   font-feature-settings: "rlig" 1, "calt" 1;
   transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* Auto-container for all main sections */
+section[id]:not(#hero) > div:first-child {
+  max-width: 1280px; /* max-w-7xl */
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: 1.25rem; /* px-5 - more breathing room */
+  padding-right: 1.25rem;
+}
+
+@media (min-width: 640px) {
+  section[id]:not(#hero) > div:first-child {
+    padding-left: 2rem; /* sm:px-8 - increased from px-6 */
+    padding-right: 2rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  section[id]:not(#hero) > div:first-child {
+    padding-left: 3rem; /* lg:px-12 - increased from px-8 */
+    padding-right: 3rem;
+  }
+}
+
+@media (min-width: 1280px) {
+  section[id]:not(#hero) > div:first-child {
+    padding-left: 4rem; /* xl:px-16 - extra space on larger screens */
+    padding-right: 4rem;
+  }
 }
 
 /* Smooth scrolling */
@@ -208,6 +241,23 @@ html {
 
 .animate-glow {
   animation: glow 2s ease-in-out infinite;
+}
+
+/* Line clamp utilities for text truncation */
+.line-clamp-2 {
+  display: -webkit-box;
+  line-clamp: 2;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.line-clamp-3 {
+  display: -webkit-box;
+  line-clamp: 3;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
 }
 
 /* Focus styles */

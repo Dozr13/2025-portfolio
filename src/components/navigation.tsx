@@ -1,7 +1,7 @@
 "use client"
 
+import { Icon } from "@/components/ui/icon"
 import { AnimatePresence, motion } from "framer-motion"
-import { Menu, Monitor, Moon, Sun, X } from "lucide-react"
 import { useEffect, useState } from "react"
 import { useTheme } from "./theme-provider"
 
@@ -55,11 +55,11 @@ export function Navigation() {
   const getThemeIcon = () => {
     switch (theme) {
       case "light":
-        return <Sun className="h-5 w-5" />
+        return <Icon name="sun" size="md" />
       case "dark":
-        return <Moon className="h-5 w-5" />
+        return <Icon name="moon" size="md" />
       default:
-        return <Monitor className="h-5 w-5" />
+        return <Icon name="monitor" size="md" />
     }
   }
 
@@ -69,22 +69,62 @@ export function Navigation() {
       animate={{ y: 0 }}
       transition={{ duration: 0.6 }}
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 w-full ${scrolled
-        ? "glass border-b border-border/50"
+        ? "bg-background/80 backdrop-blur-xl border-b border-border/50 supports-[backdrop-filter]:bg-background/60"
         : "bg-transparent"
         }`}
     >
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
+      <div className="max-w-7xl mx-auto px-5 sm:px-8 lg:px-12 xl:px-16 w-full">
         <div className="flex justify-between items-center h-16 w-full">
           {/* Logo */}
           <motion.div
-            whileHover={{ scale: 1.05 }}
+            whileHover={{ scale: 1.02 }}
             className="flex-shrink-0"
           >
             <button
               onClick={() => scrollToSection("#hero")}
-              className="text-2xl font-bold gradient-text hover:opacity-80 transition-opacity"
+              className="group flex items-center space-x-2 hover:opacity-90 transition-all duration-300"
             >
-              {"<WadePate />"}
+              {/* Icon */}
+              <motion.div
+                whileHover={{ rotate: 180 }}
+                transition={{ duration: 0.3 }}
+                className="relative"
+              >
+                <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center shadow-lg group-hover:shadow-xl transition-shadow">
+                  <motion.div
+                    animate={{ opacity: [0.7, 1, 0.7] }}
+                    transition={{ duration: 2, repeat: Infinity }}
+                    className="text-white text-sm font-bold"
+                  >
+                    W
+                  </motion.div>
+                </div>
+                {/* Subtle glow effect */}
+                <div className="absolute inset-0 rounded-lg bg-gradient-to-br from-blue-500 to-purple-600 opacity-20 blur-sm scale-110 group-hover:opacity-30 transition-opacity"></div>
+              </motion.div>
+
+              {/* Text */}
+              <div className="flex flex-col items-start">
+                <motion.div
+                  className="flex items-center space-x-1"
+                >
+                  <span className="text-xl font-bold text-foreground group-hover:text-primary transition-colors">
+                    Wade
+                  </span>
+                  <motion.span
+                    animate={{ opacity: [0.5, 1, 0.5] }}
+                    transition={{ duration: 1.5, repeat: Infinity }}
+                    className="text-xl font-bold gradient-text"
+                  >
+                    Pate
+                  </motion.span>
+                </motion.div>
+                <motion.div
+                  className="text-xs text-muted-foreground font-mono tracking-wider opacity-60 group-hover:opacity-80 transition-opacity"
+                >
+                  {"{ dev }"}
+                </motion.div>
+              </div>
             </button>
           </motion.div>
 
@@ -136,7 +176,7 @@ export function Navigation() {
                 style={{ WebkitTapHighlightColor: 'transparent' }}
                 aria-label="Toggle navigation menu"
               >
-                {isOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
+                {isOpen ? <Icon name="x" size="lg" /> : <Icon name="menu" size="lg" />}
               </motion.button>
             </div>
           </div>

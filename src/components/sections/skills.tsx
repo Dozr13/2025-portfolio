@@ -16,7 +16,7 @@ const skills = [
 export function Skills() {
   return (
     <section id="skills" className="py-20 bg-background">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div>
         <motion.div
           initial={{ opacity: 0, y: 50 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -24,7 +24,7 @@ export function Skills() {
           viewport={{ once: true }}
           className="text-center mb-16"
         >
-          <h2 className="text-4xl md:text-5xl font-bold gradient-text mb-6">
+          <h2 className="text-4xl md:text-5xl font-bold gradient-text mb-6 leading-tight pb-1">
             Skills & Technologies
           </h2>
           <p className="text-xl text-muted-foreground max-w-3xl mx-auto">

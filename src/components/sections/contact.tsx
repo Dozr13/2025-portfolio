@@ -1,12 +1,37 @@
 "use client"
 
+import { Icon, type IconName } from "@/components/ui/icon"
 import { motion } from "framer-motion"
-import { Mail, MapPin, Phone, Send } from "lucide-react"
+
+const contactInfo: {
+  icon: IconName
+  label: string
+  value: string
+  href?: string
+}[] = [
+    {
+      icon: "mail",
+      label: "Email",
+      value: "wadejp8@gmail.com",
+      href: "mailto:wadejp8@gmail.com"
+    },
+    {
+      icon: "phone",
+      label: "Phone",
+      value: "(720) 641-7170",
+      href: "tel:+17206417170"
+    },
+    {
+      icon: "map-pin",
+      label: "Location",
+      value: "Meridian, Idaho"
+    }
+  ]
 
 export function Contact() {
   return (
     <section id="contact" className="py-20 bg-muted/50">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div>
         <motion.div
           initial={{ opacity: 0, y: 50 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -14,11 +39,12 @@ export function Contact() {
           viewport={{ once: true }}
           className="text-center mb-16"
         >
-          <h2 className="text-4xl md:text-5xl font-bold gradient-text mb-6">
-            Get In Touch
+          <h2 className="text-4xl md:text-5xl font-bold gradient-text mb-6 leading-tight pb-1">
+            Let&apos;s Connect
           </h2>
           <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
-            I&apos;m always interested in new opportunities and exciting projects. Let&apos;s talk!
+            Whether you have a project in mind, want to collaborate, or just want to say hello, I&apos;d love to hear from
+            you. I&apos;m always open to discussing new opportunities.
           </p>
         </motion.div>
 
@@ -31,55 +57,46 @@ export function Contact() {
             viewport={{ once: true }}
             className="space-y-8"
           >
-            <div>
+            <div className="space-y-6">
               <h3 className="text-2xl font-bold text-foreground mb-6">
-                Let&apos;s Connect
+                Get In Touch
               </h3>
-              <p className="text-muted-foreground leading-relaxed mb-8">
-                Whether you have a project in mind, want to collaborate, or just want to say hello,
-                I&apos;d love to hear from you. I&apos;m always open to discussing new opportunities.
+              <p className="text-muted-foreground leading-relaxed">
+                I&apos;m always interested in new opportunities and exciting projects. Let&apos;s talk!
               </p>
             </div>
 
             <div className="space-y-6">
-              {[
-                {
-                  icon: Mail,
-                  label: "Email",
-                  value: "wadejp8@gmail.com",
-                  href: "mailto:wadejp8@gmail.com"
-                },
-                {
-                  icon: Phone,
-                  label: "Phone",
-                  value: "(720) 641-7170",
-                  href: "tel:+17206417170"
-                },
-                {
-                  icon: MapPin,
-                  label: "Location",
-                  value: "Meridian, Idaho",
-                  href: "#"
-                }
-              ].map((contact, index) => (
-                <motion.a
-                  key={contact.label}
-                  href={contact.href}
+              {contactInfo.map((info, index) => (
+                <motion.div
+                  key={info.label}
                   initial={{ opacity: 0, y: 20 }}
                   whileInView={{ opacity: 1, y: 0 }}
                   transition={{ delay: index * 0.1, duration: 0.6 }}
                   viewport={{ once: true }}
-                  whileHover={{ scale: 1.02, x: 10 }}
-                  className="flex items-center gap-4 p-4 glass rounded-xl hover:bg-accent/50 transition-colors group"
+                  className="flex items-center space-x-4 p-4 rounded-xl bg-background/50 border border-border/50 hover:border-border transition-colors"
                 >
-                  <div className="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center group-hover:bg-primary/20 transition-colors">
-                    <contact.icon className="w-6 h-6 text-primary" />
+                  <div className="w-12 h-12 rounded-lg bg-gradient-to-br from-blue-500/10 to-purple-600/10 flex items-center justify-center">
+                    <Icon
+                      name={info.icon}
+                      size="md"
+                      className="text-blue-600 dark:text-blue-400"
+                    />
                   </div>
                   <div>
-                    <p className="font-medium text-foreground">{contact.label}</p>
-                    <p className="text-muted-foreground">{contact.value}</p>
+                    <p className="font-medium text-foreground">{info.label}</p>
+                    {info.href ? (
+                      <a
+                        href={info.href}
+                        className="text-muted-foreground hover:text-primary transition-colors"
+                      >
+                        {info.value}
+                      </a>
+                    ) : (
+                      <p className="text-muted-foreground">{info.value}</p>
+                    )}
                   </div>
-                </motion.a>
+                </motion.div>
               ))}
             </div>
           </motion.div>
@@ -90,21 +107,19 @@ export function Contact() {
             whileInView={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.8 }}
             viewport={{ once: true }}
-            className="glass p-8 rounded-xl"
           >
-            <form className="space-y-6">
-              <div className="grid sm:grid-cols-2 gap-6">
+            <form className="space-y-6 p-8 rounded-2xl bg-background border border-border">
+              <div className="grid md:grid-cols-2 gap-6">
                 <div>
                   <label htmlFor="name" className="block text-sm font-medium text-foreground mb-2">
                     Name
                   </label>
                   <input
-                    type="text"
                     id="name"
-                    name="name"
-                    required
-                    className="w-full px-4 py-3 bg-background border border-border rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent transition-colors"
+                    type="text"
                     placeholder="Your name"
+                    className="w-full px-4 py-3 bg-muted border border-border rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent transition-colors"
+                    required
                   />
                 </div>
                 <div>
@@ -112,12 +127,11 @@ export function Contact() {
                     Email
                   </label>
                   <input
-                    type="email"
                     id="email"
-                    name="email"
-                    required
-                    className="w-full px-4 py-3 bg-background border border-border rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent transition-colors"
+                    type="email"
                     placeholder="your.email@example.com"
+                    className="w-full px-4 py-3 bg-muted border border-border rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent transition-colors"
+                    required
                   />
                 </div>
               </div>
@@ -127,12 +141,11 @@ export function Contact() {
                   Subject
                 </label>
                 <input
-                  type="text"
                   id="subject"
-                  name="subject"
-                  required
-                  className="w-full px-4 py-3 bg-background border border-border rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent transition-colors"
+                  type="text"
                   placeholder="Project collaboration"
+                  className="w-full px-4 py-3 bg-muted border border-border rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent transition-colors"
+                  required
                 />
               </div>
 
@@ -142,11 +155,10 @@ export function Contact() {
                 </label>
                 <textarea
                   id="message"
-                  name="message"
-                  rows={5}
-                  required
-                  className="w-full px-4 py-3 bg-background border border-border rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent transition-colors resize-none"
+                  rows={6}
                   placeholder="Tell me about your project..."
+                  className="w-full px-4 py-3 bg-muted border border-border rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent transition-colors resize-none"
+                  required
                 />
               </div>
 
@@ -156,7 +168,11 @@ export function Contact() {
                 whileTap={{ scale: 0.98 }}
                 className="w-full flex items-center justify-center gap-2 px-6 py-3 bg-primary text-primary-foreground rounded-lg font-medium hover:bg-primary/90 transition-colors group"
               >
-                <Send className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+                <Icon
+                  name="send"
+                  size="md"
+                  className="group-hover:translate-x-1 transition-transform"
+                />
                 Send Message
               </motion.button>
             </form>

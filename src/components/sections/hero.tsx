@@ -1,7 +1,7 @@
 "use client"
 
+import { Icon, type IconName } from "@/components/ui/icon"
 import { motion } from "framer-motion"
-import { Briefcase, ChevronDown, Code, Download, Github, Linkedin, Mail, MapPin } from "lucide-react"
 import { useEffect, useState } from "react"
 
 const roles = [
@@ -12,22 +12,25 @@ const roles = [
   "Infrastructure Leader"
 ]
 
-const stats = [
-  { label: "Years Experience", value: "6+", icon: Briefcase },
-  { label: "Projects Completed", value: "50+", icon: Code },
-  { label: "Technologies", value: "15+", icon: Code },
-]
+const stats: {
+  label: string
+  value: string
+  icon: IconName
+}[] = [
+    { label: "Years Experience", value: "6+", icon: "briefcase" },
+    { label: "Projects Completed", value: "50+", icon: "code" },
+    { label: "Technologies", value: "15+", icon: "code" },
+  ]
 
 export function Hero() {
   const [currentRole, setCurrentRole] = useState(0)
   const [displayText, setDisplayText] = useState("")
-  const [isTyping, setIsTyping] = useState(true)
   const [isDeleting, setIsDeleting] = useState(false)
 
   useEffect(() => {
     const role = roles[currentRole]
 
-    if (isTyping && !isDeleting) {
+    if (!isDeleting) {
       if (displayText.length < role.length) {
         const timer = setTimeout(() => {
           setDisplayText(role.slice(0, displayText.length + 1))
@@ -50,7 +53,7 @@ export function Hero() {
         setCurrentRole((prev) => (prev + 1) % roles.length)
       }
     }
-  }, [displayText, currentRole, isTyping, isDeleting])
+  }, [displayText, currentRole, isDeleting])
 
   const scrollToAbout = () => {
     const aboutSection = document.querySelector("#about")
@@ -148,7 +151,7 @@ export function Hero() {
         ))}
       </div>
 
-      <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
+      <div className="relative z-10 max-w-7xl mx-auto px-5 sm:px-8 lg:px-12 xl:px-16 py-8 sm:py-12">
         <div className="grid lg:grid-cols-2 gap-8 lg:gap-12 items-center">
           {/* Left side - Content */}
           <motion.div
@@ -199,7 +202,7 @@ export function Hero() {
                 initial={{ opacity: 0, y: 30 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.6, duration: 0.8 }}
-                className="text-base sm:text-lg lg:text-xl text-white/80 max-w-xl sm:max-w-2xl mx-auto lg:mx-0 leading-relaxed px-2 sm:px-0"
+                className="text-base sm:text-lg lg:text-xl text-white/80 max-w-xl sm:max-w-2xl mx-auto lg:mx-0 leading-relaxed"
               >
                 Transforming complex requirements into elegant solutions with{" "}
                 <span className="text-blue-200 font-semibold">6+ years</span> of experience
@@ -213,7 +216,7 @@ export function Hero() {
                 transition={{ delay: 0.7, duration: 0.8 }}
                 className="flex items-center justify-center lg:justify-start gap-2 text-white/70 text-sm sm:text-base"
               >
-                <MapPin className="w-4 h-4 flex-shrink-0" />
+                <Icon name="map-pin" size="sm" className="flex-shrink-0" />
                 <span>Meridian, Idaho</span>
               </motion.div>
             </div>
@@ -245,7 +248,7 @@ export function Hero() {
                 whileTap={{ scale: 0.95 }}
                 className="group flex items-center justify-center gap-2 sm:gap-3 px-6 sm:px-8 py-3 sm:py-4 border-2 border-white/30 text-white rounded-full font-semibold text-base sm:text-lg backdrop-blur-sm hover:bg-white/10 hover:border-white/50 transition-all duration-300 w-full sm:w-auto sm:min-w-[200px] touch-manipulation"
               >
-                <Download className="w-4 h-4 sm:w-5 sm:h-5 group-hover:animate-bounce flex-shrink-0" />
+                <Icon name="download" size="md" className="group-hover:animate-bounce flex-shrink-0" />
                 <span>Download Resume</span>
               </motion.a>
             </motion.div>
@@ -257,11 +260,11 @@ export function Hero() {
               transition={{ delay: 1, duration: 0.8 }}
               className="flex justify-center lg:justify-start space-x-3 sm:space-x-4"
             >
-              {[
-                { icon: Github, href: "https://github.com/Dozr13", label: "GitHub" },
-                { icon: Linkedin, href: "https://www.linkedin.com/in/wadejp8/", label: "LinkedIn" },
-                { icon: Mail, href: "mailto:wadejp8@gmail.com", label: "Email" },
-              ].map((social) => (
+              {([
+                { icon: "github" as const, href: "https://github.com/Dozr13", label: "GitHub" },
+                { icon: "linkedin" as const, href: "https://www.linkedin.com/in/wadejp8/", label: "LinkedIn" },
+                { icon: "mail" as const, href: "mailto:wadejp8@gmail.com", label: "Email" },
+              ] as const).map((social) => (
                 <motion.a
                   key={social.label}
                   href={social.href}
@@ -272,7 +275,7 @@ export function Hero() {
                   className="w-11 h-11 sm:w-12 sm:h-12 rounded-full glass border border-white/20 flex items-center justify-center text-white/80 hover:text-blue-200 hover:border-blue-200/50 transition-all duration-300 group touch-manipulation"
                   aria-label={social.label}
                 >
-                  <social.icon className="w-4 h-4 sm:w-5 sm:h-5 group-hover:scale-110 transition-transform" />
+                  <Icon name={social.icon} size="md" className="w-4 h-4 sm:w-5 sm:h-5 group-hover:scale-110 transition-transform" />
                 </motion.a>
               ))}
             </motion.div>
@@ -329,7 +332,7 @@ export function Hero() {
                 >
                   <div className="flex items-center gap-3">
                     <div className="w-10 h-10 rounded-lg bg-gradient-to-r from-blue-500/20 to-purple-600/20 flex items-center justify-center group-hover:scale-110 transition-transform">
-                      <stat.icon className="w-5 h-5 text-blue-200" />
+                      <Icon name={stat.icon} size="md" className="text-blue-200" />
                     </div>
                     <div>
                       <div className="text-2xl font-bold text-white">{stat.value}</div>
@@ -363,7 +366,7 @@ export function Hero() {
             className="w-7 h-7 sm:w-8 sm:h-8 rounded-full border border-white/30 flex items-center justify-center text-white/80 hover:text-white hover:border-white/50 transition-all duration-300 touch-manipulation"
             aria-label="Scroll to about section"
           >
-            <ChevronDown className="w-3 h-3 sm:w-4 sm:h-4" />
+            <Icon name="chevron-down" size="sm" />
           </motion.button>
         </motion.div>
       </motion.div>
