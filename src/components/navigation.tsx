@@ -52,7 +52,17 @@ export function Navigation() {
     setTheme(themes[nextIndex])
   }
 
+  const [mounted, setMounted] = useState(false)
+
+  useEffect(() => {
+    setMounted(true)
+  }, [])
+
   const getThemeIcon = () => {
+    if (!mounted) {
+      return <Icon name="monitor" size="md" />
+    }
+
     switch (theme) {
       case "light":
         return <Icon name="sun" size="md" />
@@ -90,17 +100,17 @@ export function Navigation() {
                 transition={{ duration: 0.3 }}
                 className="relative"
               >
-                <div className="w-8 h-8 lg:w-10 lg:h-10 xl:w-12 xl:h-12 rounded-lg bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center shadow-lg group-hover:shadow-xl transition-shadow">
+                <div className="w-8 h-8 lg:w-10 lg:h-10 xl:w-12 xl:h-12 rounded-lg gradient-nav-inverted flex items-center justify-center shadow-lg group-hover:shadow-xl transition-shadow">
                   <motion.div
-                    animate={{ opacity: [0.7, 1, 0.7] }}
-                    transition={{ duration: 2, repeat: Infinity }}
+                    animate={{ opacity: [0.8, 1, 0.8] }}
+                    transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
                     className="text-white text-sm lg:text-base xl:text-lg font-bold"
                   >
                     W
                   </motion.div>
                 </div>
                 {/* Subtle glow effect */}
-                <div className="absolute inset-0 rounded-lg bg-gradient-to-br from-blue-500 to-purple-600 opacity-20 blur-sm scale-110 group-hover:opacity-30 transition-opacity"></div>
+                <div className="absolute inset-0 rounded-lg gradient-nav-inverted opacity-20 blur-sm scale-110 group-hover:opacity-30 transition-opacity"></div>
               </motion.div>
 
               {/* Text */}
@@ -112,9 +122,9 @@ export function Navigation() {
                     Wade
                   </span>
                   <motion.span
-                    animate={{ opacity: [0.5, 1, 0.5] }}
-                    transition={{ duration: 1.5, repeat: Infinity }}
-                    className="text-xl lg:text-2xl xl:text-3xl font-bold gradient-text"
+                    animate={{ opacity: [0.85, 1, 0.85] }}
+                    transition={{ duration: 2.5, repeat: Infinity, ease: "easeInOut" }}
+                    className="text-xl lg:text-2xl xl:text-3xl font-bold gradient-text-inverted"
                   >
                     Pate
                   </motion.span>
