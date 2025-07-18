@@ -1,7 +1,8 @@
 "use client"
 
 import { Icon, type IconName } from "@/components/ui/icon"
-import { motion } from "framer-motion"
+import { AnimatePresence, motion } from "framer-motion"
+import { useRef, useState } from "react"
 
 const contactInfo: {
   icon: IconName
@@ -28,7 +29,187 @@ const contactInfo: {
     }
   ]
 
+interface FormData {
+  name: string
+  email: string
+  subject: string
+  message: string
+}
+
+type FormStatus = 'idle' | 'loading' | 'success' | 'error'
+
+// Rate limiting helper
+const RATE_LIMIT_KEY = 'contact_form_last_submission'
+const RATE_LIMIT_DURATION = 60000
+
 export function Contact() {
+  const [formData, setFormData] = useState<FormData>({
+    name: '',
+    email: '',
+    subject: '',
+    message: ''
+  })
+  const [status, setStatus] = useState<FormStatus>('idle')
+  const [statusMessage, setStatusMessage] = useState('')
+
+  // Honeypot field (hidden from users, bots will fill it)
+  const [honeypot, setHoneypot] = useState('')
+  const submissionTimeRef = useRef<number>(0)
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    const { name, value } = e.target
+    setFormData(prev => ({
+      ...prev,
+      [name]: value
+    }))
+  }
+
+  const validateForm = (): string | null => {
+    // TEMPORARILY DISABLED: Honeypot check (if filled, it's likely a bot)
+    // if (honeypot) {
+    //   console.log('DEBUG: Honeypot triggered:', honeypot)
+    //   return 'Spam detected. Please try again.'
+    // }
+
+    // Rate limiting check
+    const lastSubmission = localStorage.getItem(RATE_LIMIT_KEY)
+    if (lastSubmission) {
+      const timeSinceLastSubmission = Date.now() - parseInt(lastSubmission)
+      if (timeSinceLastSubmission < RATE_LIMIT_DURATION) {
+        const secondsLeft = Math.ceil((RATE_LIMIT_DURATION - timeSinceLastSubmission) / 1000)
+        console.log('DEBUG: Rate limit triggered:', secondsLeft, 'seconds left')
+        return `Please wait ${secondsLeft} seconds before submitting again.`
+      }
+    }
+
+    // Enhanced validation
+    if (formData.name.length < 2 || formData.name.length > 50) {
+      console.log('DEBUG: Name validation failed:', formData.name.length, 'characters')
+      return 'Name must be between 2 and 50 characters.'
+    }
+
+    if (formData.subject.length < 5 || formData.subject.length > 100) {
+      console.log('DEBUG: Subject validation failed:', formData.subject.length, 'characters')
+      return 'Subject must be between 5 and 100 characters.'
+    }
+
+    if (formData.message.length < 10 || formData.message.length > 1000) {
+      console.log('DEBUG: Message validation failed:', formData.message.length, 'characters')
+      return 'Message must be between 10 and 1000 characters.'
+    }
+
+    // TEMPORARILY DISABLED: Time-based validation (form should take at least 3 seconds to fill)
+    // const timeSpent = Date.now() - submissionTimeRef.current
+    // if (timeSpent < 3000) {
+    //   console.log('DEBUG: Time validation failed:', timeSpent, 'ms')
+    //   return 'Please take your time filling out the form.'
+    // }
+
+    console.log('DEBUG: All validations passed!')
+    return null
+  }
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault()
+    setStatus('loading')
+    setStatusMessage('')
+
+    // Validate form
+    const validationError = validateForm()
+    if (validationError) {
+      setStatus('error')
+      setStatusMessage(validationError)
+      setTimeout(() => {
+        setStatus('idle')
+        setStatusMessage('')
+      }, 5000)
+      return
+    }
+
+    try {
+      // DEBUG: Check environment variables
+      console.log('DEBUG: Environment variables:')
+      console.log('Service ID:', process.env.NEXT_PUBLIC_EMAILJS_SERVICE_ID)
+      console.log('Template ID:', process.env.NEXT_PUBLIC_EMAILJS_TEMPLATE_ID)
+      console.log('Public Key:', process.env.NEXT_PUBLIC_EMAILJS_PUBLIC_KEY)
+
+      // EmailJS integration with enhanced data - FIXED IMPORT
+      // @ts-expect-error - EmailJS works at runtime despite TypeScript warning
+      const emailjsModule = await import('@emailjs/browser')
+      const emailjs = emailjsModule.default || emailjsModule
+
+      const templateParams = {
+        from_name: formData.name.trim(),
+        from_email: formData.email.trim(),
+        subject: formData.subject.trim(),
+        message: formData.message.trim(),
+        to_email: 'wadejp8@gmail.com',
+        sent_date: new Date().toLocaleDateString('en-US', {
+          year: 'numeric',
+          month: 'long',
+          day: 'numeric',
+          hour: '2-digit',
+          minute: '2-digit',
+          timeZoneName: 'short'
+        }),
+        user_agent: navigator.userAgent,
+        page_url: window.location.href
+      }
+
+      console.log('DEBUG: Template params:', templateParams)
+
+      // Send email with built-in auto-reply
+      console.log('DEBUG: Sending email with auto-reply...')
+      await emailjs.send(
+        process.env.NEXT_PUBLIC_EMAILJS_SERVICE_ID!,
+        process.env.NEXT_PUBLIC_EMAILJS_TEMPLATE_ID!,
+        {
+          ...templateParams,
+          // EmailJS auto-reply variables
+          to_email: 'wadejp8@gmail.com',
+          auto_reply: 'true',
+          reply_to_email: formData.email.trim(),
+          reply_to: formData.email.trim(), // Auto-reply goes to form submitter
+        },
+        process.env.NEXT_PUBLIC_EMAILJS_PUBLIC_KEY!
+      )
+      console.log('DEBUG: Email sent successfully (with auto-reply)!')
+
+      // Store submission timestamp for rate limiting
+      localStorage.setItem(RATE_LIMIT_KEY, Date.now().toString())
+
+      setStatus('success')
+      setStatusMessage('Thank you! Your message has been sent successfully. I\'ll get back to you within 48 hours!')
+      setFormData({ name: '', email: '', subject: '', message: '' })
+      setHoneypot('')
+
+    } catch (error: unknown) {
+      setStatus('error')
+      setStatusMessage('Failed to send message. Please try again or contact me directly at wadejp8@gmail.com')
+      const errorObj = error as Error & { text?: string; status?: number }
+      console.error('EmailJS error details:', {
+        error,
+        message: errorObj?.message,
+        text: errorObj?.text,
+        status: errorObj?.status,
+        stack: errorObj?.stack
+      })
+    }
+
+    // Auto-hide status message after 7 seconds
+    setTimeout(() => {
+      setStatus('idle')
+      setStatusMessage('')
+    }, 7000)
+  }
+
+  // Track when user starts filling the form
+  const handleFirstInput = () => {
+    if (submissionTimeRef.current === 0) {
+      submissionTimeRef.current = Date.now()
+    }
+  }
+
   return (
     <section id="contact" className="py-20 bg-muted/50">
       <div>
@@ -108,7 +289,62 @@ export function Contact() {
             transition={{ duration: 0.8 }}
             viewport={{ once: true }}
           >
-            <form className="space-y-6 p-8 rounded-2xl bg-background border border-border">
+            <form onSubmit={handleSubmit} className="space-y-6 p-8 rounded-2xl bg-background border border-border">
+              {/* Honeypot field - hidden from users */}
+              <input
+                type="text"
+                name="website"
+                value={honeypot}
+                onChange={(e) => setHoneypot(e.target.value)}
+                style={{ position: 'absolute', left: '-9999px', opacity: 0 }}
+                tabIndex={-1}
+                autoComplete="off"
+              />
+
+              {/* Status Message - Fixed height container to prevent jumping */}
+              <div className="h-16 flex items-center justify-center">
+                <AnimatePresence mode="wait">
+                  {status === 'idle' ? (
+                    <motion.div
+                      key="chat-header"
+                      initial={{ opacity: 0, y: -10, scale: 0.95 }}
+                      animate={{ opacity: 1, y: 0, scale: 1 }}
+                      exit={{ opacity: 0, y: 10, scale: 0.95 }}
+                      transition={{ duration: 0.3, ease: "easeInOut" }}
+                      className="text-center"
+                    >
+                      <h3 className="text-lg font-bold gradient-text">
+                        Let&apos;s Chat! 💬
+                      </h3>
+                      <p className="text-xs text-muted-foreground mt-1">
+                        Ready to bring your ideas to life
+                      </p>
+                    </motion.div>
+                  ) : statusMessage && (
+                    <motion.div
+                      key="status-message"
+                      initial={{ opacity: 0, y: 10, scale: 0.95 }}
+                      animate={{ opacity: 1, y: 0, scale: 1 }}
+                      exit={{ opacity: 0, y: -10, scale: 0.95 }}
+                      transition={{ duration: 0.3, ease: "easeInOut" }}
+                      className={`w-full p-4 rounded-lg flex items-center gap-3 ${status === 'success'
+                        ? 'bg-green-500/10 text-green-600 border border-green-500/20'
+                        : status === 'error'
+                          ? 'bg-red-500/10 text-red-600 border border-red-500/20'
+                          : 'bg-blue-500/10 text-blue-600 border border-blue-500/20'
+                        }`}
+                    >
+                      <Icon
+                        name={status === 'success' ? 'check-circle' : status === 'error' ? 'alert-circle' : 'loader'}
+                        size="md"
+                        className={status === 'loading' ? 'animate-spin' : ''}
+                      />
+                      <p className="text-sm font-medium">{statusMessage}</p>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </div>
+
               <div className="grid md:grid-cols-2 gap-6">
                 <div>
                   <label htmlFor="name" className="block text-sm font-medium text-foreground mb-2">
@@ -116,10 +352,16 @@ export function Contact() {
                   </label>
                   <input
                     id="name"
+                    name="name"
                     type="text"
+                    value={formData.name}
+                    onChange={handleInputChange}
+                    onFocus={handleFirstInput}
                     placeholder="Your name"
                     className="w-full px-4 py-3 bg-muted border border-border rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent transition-colors"
                     required
+                    disabled={status === 'loading'}
+                    maxLength={50}
                   />
                 </div>
                 <div>
@@ -128,10 +370,15 @@ export function Contact() {
                   </label>
                   <input
                     id="email"
+                    name="email"
                     type="email"
+                    value={formData.email}
+                    onChange={handleInputChange}
+                    onFocus={handleFirstInput}
                     placeholder="your.email@example.com"
                     className="w-full px-4 py-3 bg-muted border border-border rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent transition-colors"
                     required
+                    disabled={status === 'loading'}
                   />
                 </div>
               </div>
@@ -142,10 +389,16 @@ export function Contact() {
                 </label>
                 <input
                   id="subject"
+                  name="subject"
                   type="text"
+                  value={formData.subject}
+                  onChange={handleInputChange}
+                  onFocus={handleFirstInput}
                   placeholder="Project collaboration"
                   className="w-full px-4 py-3 bg-muted border border-border rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent transition-colors"
                   required
+                  disabled={status === 'loading'}
+                  maxLength={100}
                 />
               </div>
 
@@ -155,25 +408,51 @@ export function Contact() {
                 </label>
                 <textarea
                   id="message"
+                  name="message"
                   rows={6}
+                  value={formData.message}
+                  onChange={handleInputChange}
+                  onFocus={handleFirstInput}
                   placeholder="Tell me about your project..."
                   className="w-full px-4 py-3 bg-muted border border-border rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent transition-colors resize-none"
                   required
+                  disabled={status === 'loading'}
+                  maxLength={1000}
                 />
+                <p className="text-xs text-muted-foreground mt-1">
+                  {formData.message.length}/1000 characters
+                </p>
               </div>
 
               <motion.button
                 type="submit"
-                whileHover={{ scale: 1.02, y: -2 }}
-                whileTap={{ scale: 0.98 }}
-                className="w-full flex items-center justify-center gap-2 px-6 py-3 bg-primary text-primary-foreground rounded-lg font-medium hover:bg-primary/90 transition-colors group"
+                disabled={status === 'loading'}
+                whileHover={status !== 'loading' ? { scale: 1.02, y: -2 } : {}}
+                whileTap={status !== 'loading' ? { scale: 0.98 } : {}}
+                className={`w-full flex items-center justify-center gap-2 px-6 py-3 rounded-lg font-medium transition-all group ${status === 'loading'
+                  ? 'bg-muted text-muted-foreground cursor-not-allowed'
+                  : 'bg-primary text-primary-foreground hover:bg-primary/90'
+                  }`}
               >
-                <Icon
-                  name="send"
-                  size="md"
-                  className="group-hover:translate-x-1 transition-transform"
-                />
-                Send Message
+                {status === 'loading' ? (
+                  <>
+                    <Icon
+                      name="loader"
+                      size="md"
+                      className="animate-spin"
+                    />
+                    Sending...
+                  </>
+                ) : (
+                  <>
+                    <Icon
+                      name="send"
+                      size="md"
+                      className="group-hover:translate-x-1 transition-transform"
+                    />
+                    Send Message
+                  </>
+                )}
               </motion.button>
             </form>
           </motion.div>

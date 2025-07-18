@@ -1,7 +1,9 @@
 import { cn } from "@/lib/utils"
 import {
+  AlertCircle,
   Briefcase,
   Calendar,
+  CheckCircle,
   ChevronDown,
   Code,
   Download,
@@ -9,6 +11,7 @@ import {
   Github,
   Heart,
   Linkedin,
+  Loader2,
   Mail,
   MapPin,
   Menu,
@@ -22,14 +25,16 @@ import {
   Users,
   X,
   type LucideIcon,
-  type LucideProps,
+  type LucideProps
 } from "lucide-react"
 import { forwardRef } from "react"
 
 // Icon registry for type safety and centralized management
 const iconRegistry = {
+  "alert-circle": AlertCircle,
   briefcase: Briefcase,
   calendar: Calendar,
+  "check-circle": CheckCircle,
   "chevron-down": ChevronDown,
   code: Code,
   download: Download,
@@ -37,6 +42,7 @@ const iconRegistry = {
   github: Github,
   heart: Heart,
   linkedin: Linkedin,
+  loader: Loader2,
   mail: Mail,
   "map-pin": MapPin,
   menu: Menu,
@@ -59,8 +65,10 @@ export type IconSize = "xs" | "sm" | "md" | "lg" | "xl" | "2xl"
 
 // Accessibility labels for each icon
 const iconLabels: Record<IconName, string> = {
+  "alert-circle": "Alert",
   briefcase: "Work experience",
   calendar: "Calendar",
+  "check-circle": "Success",
   "chevron-down": "Expand menu",
   code: "Code",
   download: "Download",
@@ -68,6 +76,7 @@ const iconLabels: Record<IconName, string> = {
   github: "GitHub profile",
   heart: "Favorite",
   linkedin: "LinkedIn profile",
+  loader: "Loading",
   mail: "Email",
   "map-pin": "Location",
   menu: "Open menu",

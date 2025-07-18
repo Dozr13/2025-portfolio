@@ -33,7 +33,7 @@ export function Navigation() {
       setIsOpen(false)
 
       setTimeout(() => {
-        const headerOffset = 90
+        const headerOffset = window.innerWidth >= 1280 ? 120 : window.innerWidth >= 1024 ? 100 : 90
         const elementPosition = element.getBoundingClientRect().top
         const offsetPosition = elementPosition + window.pageYOffset - headerOffset
 
@@ -69,12 +69,12 @@ export function Navigation() {
       animate={{ y: 0 }}
       transition={{ duration: 0.6 }}
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 w-full ${scrolled
-        ? "bg-background/90 backdrop-blur-xl border-b border-border/50 supports-[backdrop-filter]:bg-background/75 shadow-sm"
-        : "bg-background/40 backdrop-blur-sm"
+        ? "bg-background/95 backdrop-blur-xl border-b border-border/70 supports-[backdrop-filter]:bg-background/85 shadow-lg shadow-background/20"
+        : "bg-background/60 backdrop-blur-md border-b border-border/30 shadow-sm shadow-background/10"
         }`}
     >
-      <div className="max-w-7xl mx-auto px-5 sm:px-8 lg:px-12 xl:px-16 w-full">
-        <div className="flex justify-between items-center h-20 w-full">
+      <div className="max-w-7xl mx-auto px-5 sm:px-8 lg:px-12 xl:px-16 2xl:px-20 w-full">
+        <div className="flex justify-between items-center h-20 lg:h-24 xl:h-28 w-full">
           {/* Logo */}
           <motion.div
             whileHover={{ scale: 1.02 }}
@@ -90,11 +90,11 @@ export function Navigation() {
                 transition={{ duration: 0.3 }}
                 className="relative"
               >
-                <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center shadow-lg group-hover:shadow-xl transition-shadow">
+                <div className="w-8 h-8 lg:w-10 lg:h-10 xl:w-12 xl:h-12 rounded-lg bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center shadow-lg group-hover:shadow-xl transition-shadow">
                   <motion.div
                     animate={{ opacity: [0.7, 1, 0.7] }}
                     transition={{ duration: 2, repeat: Infinity }}
-                    className="text-white text-sm font-bold"
+                    className="text-white text-sm lg:text-base xl:text-lg font-bold"
                   >
                     W
                   </motion.div>
@@ -108,19 +108,19 @@ export function Navigation() {
                 <motion.div
                   className="flex items-center space-x-1"
                 >
-                  <span className="text-xl font-bold text-foreground group-hover:text-primary transition-colors">
+                  <span className="text-xl lg:text-2xl xl:text-3xl font-bold text-foreground group-hover:text-primary transition-colors">
                     Wade
                   </span>
                   <motion.span
                     animate={{ opacity: [0.5, 1, 0.5] }}
                     transition={{ duration: 1.5, repeat: Infinity }}
-                    className="text-xl font-bold gradient-text"
+                    className="text-xl lg:text-2xl xl:text-3xl font-bold gradient-text"
                   >
                     Pate
                   </motion.span>
                 </motion.div>
                 <motion.div
-                  className="text-xs text-muted-foreground font-mono tracking-wider opacity-60 group-hover:opacity-80 transition-opacity"
+                  className="text-xs lg:text-sm xl:text-base text-muted-foreground font-mono tracking-wider opacity-60 group-hover:opacity-80 transition-opacity"
                 >
                   {"{ dev }"}
                 </motion.div>
@@ -130,14 +130,14 @@ export function Navigation() {
 
           {/* Desktop Navigation */}
           <div className="hidden md:block">
-            <div className="ml-10 flex items-baseline space-x-8">
+            <div className="ml-10 flex items-baseline space-x-6 lg:space-x-8 xl:space-x-10 2xl:space-x-12">
               {navItems.map((item) => (
                 <motion.button
                   key={item.name}
                   onClick={() => scrollToSection(item.href)}
                   whileHover={{ y: -2 }}
                   whileTap={{ y: 0 }}
-                  className="text-foreground hover:text-primary px-4 py-3 text-base font-medium transition-colors relative group"
+                  className="text-foreground hover:text-primary px-4 py-3 lg:px-5 lg:py-4 xl:px-6 xl:py-5 text-base lg:text-lg xl:text-xl font-medium transition-colors relative group"
                 >
                   {item.name}
                   <span className="absolute inset-x-0 bottom-0 h-0.5 bg-primary transform scale-x-0 group-hover:scale-x-100 transition-transform origin-left"></span>
@@ -152,7 +152,7 @@ export function Navigation() {
               onClick={cycleTheme}
               whileHover={{ scale: 1.1 }}
               whileTap={{ scale: 0.9 }}
-              className="p-2 rounded-lg bg-muted hover:bg-accent transition-colors"
+              className="p-2 lg:p-3 xl:p-4 rounded-lg bg-muted hover:bg-accent transition-colors [&>*]:xl:scale-125"
               aria-label="Toggle theme"
             >
               {getThemeIcon()}
@@ -172,7 +172,7 @@ export function Navigation() {
                   setIsOpen(!isOpen)
                 }}
                 whileTap={{ scale: 0.9 }}
-                className="p-2 rounded-lg bg-muted hover:bg-accent transition-colors touch-manipulation"
+                className="p-2 lg:p-3 rounded-lg bg-muted hover:bg-accent transition-colors touch-manipulation [&>*]:lg:scale-110"
                 style={{ WebkitTapHighlightColor: 'transparent' }}
                 aria-label="Toggle navigation menu"
               >
