@@ -245,7 +245,7 @@ export function Contact() {
           viewport={{ once: true }}
           className="text-center mb-16"
         >
-          <h2 className="text-4xl md:text-5xl font-bold gradient-text mb-6 leading-tight pb-1">
+          <h2 className="text-4xl md:text-5xl font-bold gradient-text-title mb-6 leading-tight pb-1">
             Let&apos;s Connect
           </h2>
           <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
@@ -347,7 +347,7 @@ export function Contact() {
                       transition={{ duration: 0.3, ease: "easeInOut" }}
                       className="text-center"
                     >
-                      <h3 className="text-lg font-bold gradient-text">
+                      <h3 className="text-lg font-bold gradient-text-title">
                         Let&apos;s Chat! 💬
                       </h3>
                       <p className="text-xs text-muted-foreground mt-1">

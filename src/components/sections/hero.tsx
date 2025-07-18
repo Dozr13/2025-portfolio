@@ -215,7 +215,7 @@ export function Hero() {
                 transition={{ delay: 0.6, duration: 0.8 }}
                 className="space-y-6"
               >
-                <p className="text-primary text-enhanced text-base h-20 font-semibold">
+                <p className="text-primary text-enhanced text-base h-16 font-semibold">
                   Transforming complex requirements into elegant solutions with{" "}
                   <span className="text-accent font-bold text-lg sm:text-xl lg:text-3xl">6+ years</span> of experience
                   in modern web technologies and cloud infrastructure.
@@ -227,7 +227,7 @@ export function Hero() {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.7, duration: 0.8 }}
-                className="flex items-center justify-center lg:justify-start gap-2 text-primary text-sm sm:text-base"
+                className="flex items-center justify-center lg:justify-start gap-2 text-primary text-sm mt-12 md:mt-0"
               >
                 <Icon name="map-pin" size="sm" className="flex-shrink-0 text-primary" />
                 <span>Meridian, Idaho</span>
