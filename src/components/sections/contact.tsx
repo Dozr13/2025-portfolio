@@ -128,13 +128,12 @@ export function Contact() {
 
     try {
       // DEBUG: Check environment variables
-      console.log('DEBUG: Environment variables:')
-      console.log('Service ID:', process.env.NEXT_PUBLIC_EMAILJS_SERVICE_ID)
-      console.log('Template ID:', process.env.NEXT_PUBLIC_EMAILJS_TEMPLATE_ID)
-      console.log('Public Key:', process.env.NEXT_PUBLIC_EMAILJS_PUBLIC_KEY)
+      // console.log('DEBUG: Environment variables:')
+      // console.log('Service ID:', process.env.NEXT_PUBLIC_EMAILJS_SERVICE_ID)
+      // console.log('Template ID:', process.env.NEXT_PUBLIC_EMAILJS_TEMPLATE_ID)
+      // console.log('Public Key:', process.env.NEXT_PUBLIC_EMAILJS_PUBLIC_KEY)
 
       // EmailJS integration with enhanced data
-      // @ts-expect-error - EmailJS module works at runtime despite type warnings
       const emailjsModule = await import('@emailjs/browser')
       const emailjs = emailjsModule.default || emailjsModule
 
