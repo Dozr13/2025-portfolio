@@ -1,0 +1,10 @@
+nodeLinker: pnp
+
+# Enable zero-installs
+enableGlobalCache: false
+
+# Better performance
+compressionLevel: mixed
+
+# Modern features
+enableImmutableInstalls: false
