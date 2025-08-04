@@ -29,12 +29,11 @@ const projects: Project[] = [
     status: "Private Repository"
   },
   {
-    title: "ComComs Healthcare",
-    description: "Healthcare management system with appointment scheduling, patient records, and secure messaging. Built with modern web technologies.",
-    technologies: ["React Native", "TypeScript", "Supabase", "Expo"],
-    liveUrl: null,
-    githubUrl: "https://github.com/Dozr13/CareConnect",
-    status: "Private Repository"
+    title: "Request Hub SaaS Platform",
+    description: "Enterprise multi-tenant SaaS platform for VC portfolio companies with real-time request management, Linear integration, and admin dashboards. Built in 5 days as a technical assessment.",
+    technologies: ["Next.js 15", "TypeScript", "Clerk", "Prisma", "Pusher", "Linear API"],
+    liveUrl: "https://request-hub-gamma.vercel.app",
+    githubUrl: "https://github.com/Dozr13/request-hub"
   }
 ]
 
