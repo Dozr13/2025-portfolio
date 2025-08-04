@@ -1,0 +1,72 @@
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches: [ main, dev ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Enable Corepack
+      run: corepack enable
+    
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '22'
+    
+    - name: Install dependencies
+      run: yarn install --immutable
+    
+    - name: Run linting
+      run: yarn lint
+    
+    - name: Type check
+      run: yarn tsc --noEmit
+    
+    - name: Build application
+      run: yarn build
+      env:
+        NEXT_PUBLIC_EMAILJS_SERVICE_ID: ${{ secrets.NEXT_PUBLIC_EMAILJS_SERVICE_ID }}
+        NEXT_PUBLIC_EMAILJS_TEMPLATE_ID: ${{ secrets.NEXT_PUBLIC_EMAILJS_TEMPLATE_ID }}
+        NEXT_PUBLIC_EMAILJS_PUBLIC_KEY: ${{ secrets.NEXT_PUBLIC_EMAILJS_PUBLIC_KEY }}
+    
+    - name: Run tests (when you add them)
+      run: echo "Add your test command here when ready"
+      # run: yarn test
+
+  docker-build:
+    runs-on: ubuntu-latest
+    needs: test
+    if: github.ref == 'refs/heads/main'
+    
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Build Docker image
+      run: docker build -t portfolio:${{ github.sha }} .
+    
+    - name: Test Docker image
+      run: |
+        docker run -d -p 3000:3000 --name test-container portfolio:${{ github.sha }}
+        sleep 10
+        curl -f http://localhost:3000 || exit 1
+        docker stop test-container
+
+  # Vercel handles deployment automatically
+  # This job just validates the build
+  deploy:
+    runs-on: ubuntu-latest
+    needs: test
+    if: github.ref == 'refs/heads/main'
+    
+    steps:
+    - uses: actions/checkout@v4
+    - name: Deploy notification
+      run: echo "Ready for Vercel auto-deployment"
