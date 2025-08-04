@@ -1,12 +1,16 @@
 {
-  "name": "portfolio-temp",
+  "name": "wade-pate-dev-portfolio",
   "version": "0.1.0",
   "private": true,
   "scripts": {
     "dev": "next dev --turbopack",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "docker:build": "docker build -t portfolio .",
+    "docker:run": "docker run -p 3000:3000 portfolio",
+    "docker:dev": "docker-compose -p portfolio --profile dev up --build",
+    "docker:prod": "docker-compose -p portfolio up --build"
   },
   "dependencies": {
     "@emailjs/browser": "^4.4.1",

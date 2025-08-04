@@ -147,7 +147,7 @@ export function Navigation() {
                   onClick={() => scrollToSection(item.href)}
                   whileHover={{ y: -2 }}
                   whileTap={{ y: 0 }}
-                  className="text-foreground hover:text-primary px-4 py-3 lg:px-5 lg:py-4 xl:px-6 xl:py-5 text-base lg:text-lg xl:text-xl font-medium transition-colors relative group"
+                  className="text-foreground hover:text-primary px-4 py-3 lg:px-5 lg:py-4 xl:px-6 xl:py-5 text-base lg:text-lg xl:text-xl font-medium transition-colors relative group cursor-pointer"
                 >
                   {item.name}
                   <span className="absolute inset-x-0 bottom-0 h-0.5 bg-primary transform scale-x-0 group-hover:scale-x-100 transition-transform origin-left"></span>
@@ -162,7 +162,7 @@ export function Navigation() {
               onClick={cycleTheme}
               whileHover={{ scale: 1.1 }}
               whileTap={{ scale: 0.9 }}
-              className="p-2 lg:p-3 xl:p-4 rounded-lg bg-muted hover:bg-accent transition-colors [&>*]:xl:scale-125"
+              className="p-2 lg:p-3 xl:p-4 rounded-lg bg-muted hover:bg-accent transition-colors [&>*]:xl:scale-125 cursor-pointer"
               aria-label="Toggle theme"
             >
               {getThemeIcon()}
