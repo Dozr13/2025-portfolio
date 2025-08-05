@@ -70,8 +70,8 @@ export async function GET(request: Request) {
       visitors = visitorsCount
       pageViews = pageViewsCount
       avgTimeOnSite = avgTime._avg.timeOnSite || 0
-    } catch (analyticsError) {
-      console.log("Analytics tables not available or empty")
+    } catch (error) {
+      console.log("Analytics tables not available or empty:", error)
     }
 
     return NextResponse.json({
