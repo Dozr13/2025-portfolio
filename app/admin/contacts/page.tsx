@@ -1,10 +1,11 @@
 "use client"
 
 import { Icon } from "@/components/ui/icon"
+import { useAdminAuth } from "@/hooks/useAdminAuth"
 import { motion } from "framer-motion"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
-import { useEffect, useState } from "react"
+import { useCallback, useEffect, useState } from "react"
 
 interface Contact {
   id: string
@@ -36,32 +37,10 @@ export default function ContactsManagement() {
   })
   const router = useRouter()
 
-  useEffect(() => {
-    checkAuth()
-    fetchContacts()
-  }, [filters])
 
-  const checkAuth = async () => {
-    const token = localStorage.getItem("adminToken")
-    if (!token) {
-      router.push("/admin")
-      return
-    }
+  const { isLoading: authLoading, isAuthenticated, redirectToLogin } = useAdminAuth()
 
-    try {
-      const response = await fetch("/api/admin/auth", {
-        headers: { "Authorization": `Bearer ${token}` }
-      })
-      if (!response.ok) {
-        localStorage.removeItem("adminToken")
-        router.push("/admin")
-      }
-    } catch (error) {
-      router.push("/admin")
-    }
-  }
-
-  const fetchContacts = async () => {
+  const fetchContacts = useCallback(async () => {
     try {
       const token = localStorage.getItem("adminToken")
       const params = new URLSearchParams()
@@ -81,7 +60,15 @@ export default function ContactsManagement() {
     } finally {
       setLoading(false)
     }
-  }
+  }, [filters.status, filters.search])
+
+  useEffect(() => {
+    if (!authLoading && !isAuthenticated) {
+      redirectToLogin()
+    } else if (!authLoading && isAuthenticated) {
+      fetchContacts()
+    }
+  }, [authLoading, isAuthenticated, redirectToLogin, fetchContacts])
 
   const updateContactStatus = async (contactId: string, status: string, priority?: string, notes?: string) => {
     try {

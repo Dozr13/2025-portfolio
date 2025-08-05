@@ -4,7 +4,7 @@ import { Icon } from "@/components/ui/icon"
 import { useAdminAuth } from "@/hooks/useAdminAuth"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
-import { useEffect, useState } from "react"
+import { useCallback, useEffect, useState } from "react"
 
 interface ProjectData {
   id: string
@@ -39,14 +39,8 @@ export default function EditProject({ params }: { params: { id: string } }) {
     }
   }, [authLoading, isAuthenticated, redirectToLogin])
 
-  // Fetch project data
-  useEffect(() => {
-    if (!authLoading && isAuthenticated) {
-      fetchProject()
-    }
-  }, [authLoading, isAuthenticated, params.id])
 
-  const fetchProject = async () => {
+  const fetchProject = useCallback(async () => {
     try {
       const token = localStorage.getItem("adminToken")
       const response = await fetch(`/api/admin/projects/${params.id}`, {
@@ -68,7 +62,14 @@ export default function EditProject({ params }: { params: { id: string } }) {
     } finally {
       setLoading(false)
     }
-  }
+  }, [params.id, router])
+
+  // Fetch project data
+  useEffect(() => {
+    if (!authLoading && isAuthenticated) {
+      fetchProject()
+    }
+  }, [authLoading, isAuthenticated, fetchProject, params.id])
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()

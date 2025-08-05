@@ -1,10 +1,10 @@
 "use client"
 
 import { Icon } from "@/components/ui/icon"
+import { useAdminAuth } from "@/hooks/useAdminAuth"
 import { motion } from "framer-motion"
 import Link from "next/link"
-import { useRouter } from "next/navigation"
-import { useEffect, useState } from "react"
+import { useCallback, useEffect, useState } from "react"
 
 interface DashboardStats {
   contacts: {
@@ -34,43 +34,19 @@ interface RecentContact {
 }
 
 export default function AdminDashboard() {
-  const [user, setUser] = useState<{ username: string } | null>(null)
+  const { user, isLoading: authLoading, isAuthenticated, redirectToLogin, logout } = useAdminAuth()
   const [stats, setStats] = useState<DashboardStats | null>(null)
   const [recentContacts, setRecentContacts] = useState<RecentContact[]>([])
   const [loading, setLoading] = useState(true)
-  const router = useRouter()
 
+  // Redirect if not authenticated
   useEffect(() => {
-    checkAuth()
-    fetchDashboardData()
-  }, [])
-
-  const checkAuth = async () => {
-    try {
-      const token = localStorage.getItem("adminToken")
-      if (!token) {
-        router.push("/admin")
-        return
-      }
-
-      const response = await fetch("/api/admin/auth", {
-        headers: { "Authorization": `Bearer ${token}` }
-      })
-
-      if (response.ok) {
-        const data = await response.json()
-        setUser(data.user)
-      } else {
-        localStorage.removeItem("adminToken")
-        router.push("/admin")
-      }
-    } catch (error) {
-      console.error("Auth check failed:", error)
-      router.push("/admin")
+    if (!authLoading && !isAuthenticated) {
+      redirectToLogin()
     }
-  }
+  }, [authLoading, isAuthenticated, redirectToLogin])
 
-  const fetchDashboardData = async () => {
+  const fetchDashboardData = useCallback(async () => {
     try {
       const token = localStorage.getItem("adminToken")
 
@@ -99,14 +75,15 @@ export default function AdminDashboard() {
     } finally {
       setLoading(false)
     }
-  }
+  }, [])
 
-  const logout = () => {
-    localStorage.removeItem("adminToken")
-    router.push("/admin")
-  }
+  useEffect(() => {
+    if (!authLoading && isAuthenticated) {
+      fetchDashboardData()
+    }
+  }, [authLoading, isAuthenticated, fetchDashboardData])
 
-  if (loading) {
+  if (authLoading || loading) {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center">
         <div className="text-center">

@@ -1,6 +1,7 @@
 "use client"
 
 import { Icon } from "@/components/ui/icon"
+import { useAdminAuth } from "@/hooks/useAdminAuth"
 import { motion } from "framer-motion"
 import Link from "next/link"
 import { useCallback, useEffect, useState } from "react"
@@ -27,29 +28,17 @@ interface AnalyticsData {
 }
 
 export default function Analytics() {
-  const [user, setUser] = useState<{ username: string } | null>(null)
+  const { user, isLoading: authLoading, isAuthenticated, redirectToLogin, logout } = useAdminAuth()
   const [analytics, setAnalytics] = useState<AnalyticsData | null>(null)
   const [loading, setLoading] = useState(true)
-  const [authChecked, setAuthChecked] = useState(false)
   const [timeRange, setTimeRange] = useState("7d")
 
+  // Redirect if not authenticated
   useEffect(() => {
-    // Check authentication on mount
-    const checkAuth = () => {
-      const token = localStorage.getItem("adminToken")
-      const userData = localStorage.getItem("adminUser")
-
-      if (!token || !userData) {
-        window.location.href = "/admin"
-        return
-      }
-
-      setUser(JSON.parse(userData))
-      setAuthChecked(true)
+    if (!authLoading && !isAuthenticated) {
+      redirectToLogin()
     }
-
-    checkAuth()
-  }, [])
+  }, [authLoading, isAuthenticated, redirectToLogin])
 
   const fetchAnalytics = useCallback(async () => {
     try {
@@ -98,18 +87,12 @@ export default function Analytics() {
   }, [timeRange])
 
   useEffect(() => {
-    if (authChecked) {
+    if (!authLoading && isAuthenticated) {
       fetchAnalytics()
     }
-  }, [authChecked, timeRange, fetchAnalytics])
+  }, [authLoading, isAuthenticated, timeRange, fetchAnalytics])
 
-  const handleLogout = () => {
-    localStorage.removeItem("adminToken")
-    localStorage.removeItem("adminUser")
-    window.location.href = "/admin"
-  }
-
-  if (!authChecked || loading) {
+  if (authLoading || loading) {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center">
         <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
@@ -149,7 +132,7 @@ export default function Analytics() {
                 Welcome, {user?.username}
               </span>
               <button
-                onClick={handleLogout}
+                onClick={logout}
                 className="text-sm text-muted-foreground hover:text-foreground transition-colors"
               >
                 Logout

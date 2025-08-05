@@ -4,7 +4,7 @@ import { Icon } from "@/components/ui/icon"
 import { useAdminAuth } from "@/hooks/useAdminAuth"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
-import { useEffect, useState } from "react"
+import { useCallback, useEffect, useState } from "react"
 
 interface BlogPostData {
   id: string
@@ -38,14 +38,8 @@ export default function EditBlogPost({ params }: { params: { id: string } }) {
     }
   }, [authLoading, isAuthenticated, redirectToLogin])
 
-  // Fetch blog post data
-  useEffect(() => {
-    if (!authLoading && isAuthenticated) {
-      fetchBlogPost()
-    }
-  }, [authLoading, isAuthenticated, params.id])
 
-  const fetchBlogPost = async () => {
+  const fetchBlogPost = useCallback(async () => {
     try {
       const token = localStorage.getItem("adminToken")
       const response = await fetch(`/api/admin/blog/${params.id}`, {
@@ -67,7 +61,14 @@ export default function EditBlogPost({ params }: { params: { id: string } }) {
     } finally {
       setLoading(false)
     }
-  }
+  }, [params.id, router])
+
+  // Fetch blog post data
+  useEffect(() => {
+    if (!authLoading && isAuthenticated) {
+      fetchBlogPost()
+    }
+  }, [authLoading, isAuthenticated, fetchBlogPost, params.id])
 
   const handleSave = async () => {
     if (!postData) return

@@ -1,7 +1,7 @@
 {
-  "buildCommand": "yarn build",
+  "buildCommand": "yarn vercel-build",
   "outputDirectory": ".next",
-  "installCommand": "yarn install",
+  "installCommand": "corepack enable && yarn install",
   "framework": "nextjs",
   "regions": ["iad1"],
   "functions": {

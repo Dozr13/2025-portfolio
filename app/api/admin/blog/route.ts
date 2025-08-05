@@ -18,8 +18,8 @@ export async function GET(request: Request) {
 
     const offset = (page - 1) * limit
 
-    // Build where clause
-    const where: Record<string, any> = {}
+    // Build where clause  
+    const where: any = {}
     if (status) {
       where.status = status
     }
