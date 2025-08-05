@@ -1,5 +1,6 @@
 import { prisma } from "@/lib/prisma"
 import { NextResponse } from "next/server"
+import { Contact } from '../../../generated/client'
 
 export async function POST(request: Request) {
   try {
@@ -64,7 +65,7 @@ export async function GET() {
     })
 
     return NextResponse.json({
-      contacts: contacts.map(contact => ({
+      contacts: contacts.map((contact: Contact) => ({
         id: contact.id,
         name: contact.name,
         createdAt: contact.createdAt,

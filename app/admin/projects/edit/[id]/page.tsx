@@ -26,7 +26,7 @@ interface ProjectData {
 }
 
 export default function EditProject({ params }: { params: { id: string } }) {
-  const { user, isLoading: authLoading, isAuthenticated, redirectToLogin } = useAdminAuth()
+  const { isLoading: authLoading, isAuthenticated, redirectToLogin } = useAdminAuth()
   const [projectData, setProjectData] = useState<ProjectData | null>(null)
   const [loading, setLoading] = useState(true)
   const [saving, setSaving] = useState(false)

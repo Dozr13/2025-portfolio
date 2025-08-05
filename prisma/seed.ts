@@ -1,4 +1,4 @@
-import { ContactStatus, Priority, PrismaClient, ProjectCategory, ProjectSkillImportance, ProjectStatus, ServiceCategory, SkillCategory, SkillLevel } from '../generated/client'
+import { ContactStatus, Priority, PrismaClient, Project, ProjectCategory, ProjectSkillImportance, ProjectStatus, ServiceCategory, Skill, SkillCategory, SkillLevel } from '../generated/client'
 import { seedBlog } from '../scripts/seed-blog'
 
 const prisma = new PrismaClient()
@@ -717,11 +717,11 @@ async function seedProjectSkills() {
   ]
   
   for (const mapping of projectSkillMappings) {
-    const project = allProjects.find(p => p.slug === mapping.projectSlug)
+    const project = allProjects.find((p: Project) => p.slug === mapping.projectSlug)
     if (!project) continue
     
     for (const skillMapping of mapping.skills) {
-      const skill = allSkills.find(s => s.name === skillMapping.name)
+      const skill = allSkills.find((s: Skill) => s.name === skillMapping.name)
       if (!skill) continue
       
       await prisma.projectSkill.upsert({
@@ -742,13 +742,9 @@ async function seedProjectSkills() {
       })
     }
   }
-  
-  console.log('✅ Linked projects with skills')
 }
 
 async function main() {
-  console.log('🌱 Starting comprehensive database seeding...\n')
-  
   try {
     // Core portfolio data
     await seedSkills()
