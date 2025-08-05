@@ -36,6 +36,13 @@ jobs:
         NEXT_PUBLIC_EMAILJS_SERVICE_ID: ${{ secrets.NEXT_PUBLIC_EMAILJS_SERVICE_ID }}
         NEXT_PUBLIC_EMAILJS_TEMPLATE_ID: ${{ secrets.NEXT_PUBLIC_EMAILJS_TEMPLATE_ID }}
         NEXT_PUBLIC_EMAILJS_PUBLIC_KEY: ${{ secrets.NEXT_PUBLIC_EMAILJS_PUBLIC_KEY }}
+        # Database (new - required for Prisma)
+        DATABASE_URL: ${{ secrets.DATABASE_URL }}
+        # Admin credentials (new - required for auth)
+        ADMIN_USERNAME: ${{ secrets.ADMIN_USERNAME }}
+        ADMIN_PASSWORD: ${{ secrets.ADMIN_PASSWORD }}
+        JWT_SECRET: ${{ secrets.JWT_SECRET }}
+        NEXTAUTH_SECRET: ${{ secrets.NEXTAUTH_SECRET }}
     
     - name: Run tests (when you add them)
       run: echo "Add your test command here when ready"
@@ -54,10 +61,19 @@ jobs:
     
     - name: Test Docker image
       run: |
-        docker run -d -p 3000:3000 --name test-container portfolio:${{ github.sha }}
-        sleep 10
+        # Create a test .env.local file for Docker test
+        echo "DATABASE_URL=${{ secrets.DATABASE_URL }}" > test.env
+        echo "ADMIN_USERNAME=${{ secrets.ADMIN_USERNAME }}" >> test.env
+        echo "ADMIN_PASSWORD=${{ secrets.ADMIN_PASSWORD }}" >> test.env
+        echo "JWT_SECRET=${{ secrets.JWT_SECRET }}" >> test.env
+        echo "NEXTAUTH_SECRET=${{ secrets.NEXTAUTH_SECRET }}" >> test.env
+        
+        # Run container with environment variables
+        docker run -d -p 3000:3000 --env-file test.env --name test-container portfolio:${{ github.sha }}
+        sleep 15
         curl -f http://localhost:3000 || exit 1
         docker stop test-container
+        rm test.env
 
   # Vercel handles deployment automatically
   # This job just validates the build

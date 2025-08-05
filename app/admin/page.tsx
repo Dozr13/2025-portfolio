@@ -24,14 +24,16 @@ export default function AdminLogin() {
       })
 
       if (response.ok) {
-        const { token } = await response.json()
+        const { token, user } = await response.json()
         localStorage.setItem("adminToken", token)
+        localStorage.setItem("adminUser", JSON.stringify(user))
         router.push("/admin/dashboard")
       } else {
         const { error } = await response.json()
         setError(error || "Invalid credentials")
       }
-    } catch (err) {
+    } catch (error) {
+      console.error("Login error:", error)
       setError("Login failed. Please try again.")
     } finally {
       setLoading(false)

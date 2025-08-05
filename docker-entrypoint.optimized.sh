@@ -33,7 +33,7 @@ setup_database() {
   # Run migrations (this will create tables if they don't exist)
   echo "📈 Running database migrations..."
   yarn pnpify prisma db push --accept-data-loss || {
-    echo "❌ Failed to run migrations"
+    echo "Failed to run migrations"
     exit 1
   }
   
@@ -59,8 +59,8 @@ EOF
 
 # Main execution
 main() {
-  echo "🔍 Environment: $NODE_ENV"
-  echo "🔍 Port: ${PORT:-3000}"
+  echo "Environment: $NODE_ENV"
+  echo "Port: ${PORT:-3000}"
   
   # Check database connectivity
   if check_database; then
@@ -75,7 +75,7 @@ main() {
     
     # Verify build exists
     if [ ! -f "server.js" ]; then
-      echo "❌ Production build not found! Please build the application first."
+      echo "Production build not found! Please build the application first."
       exit 1
     fi
     

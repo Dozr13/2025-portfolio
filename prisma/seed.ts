@@ -785,7 +785,7 @@ async function main() {
     console.log('   • Project-skill relationships')
     
   } catch (error) {
-    console.error('❌ Error during seeding:', error)
+    console.error('Error during seeding:', error)
     throw error
   } finally {
     await prisma.$disconnect()

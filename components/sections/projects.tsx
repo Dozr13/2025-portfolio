@@ -31,18 +31,6 @@ const projects: Project[] = [
     featured: true
   },
   {
-    title: "AI-Powered Database Migration Tool",
-    description: "Intelligent PostgreSQL migration system using Ollama AI to convert stored procedures and optimize database schemas. Features automated analysis, conversion recommendations, and performance optimization.",
-    technologies: ["Python", "PostgreSQL", "Ollama", "SQL", "Database Migration"],
-    liveUrl: null,
-    githubUrl: "https://github.com/Dozr13/proc-to-postgres",
-    category: "AI/Database",
-    metrics: ["Automated proc conversion", "Schema optimization", "Migration validation"],
-    teamSize: "Solo Project",
-    duration: "2 months",
-    featured: true
-  },
-  {
     title: "ShiftScribe Web Platform",
     description: "Modern web component system for scheduling and workforce management. Built with cutting-edge web technologies for scalable enterprise applications.",
     technologies: ["TypeScript", "Web Components", "Modern CSS", "Progressive Enhancement"],
@@ -53,28 +41,6 @@ const projects: Project[] = [
     teamSize: "Lead Developer",
     duration: "4 months",
     featured: true
-  },
-  {
-    title: "ByteSmith Company Website",
-    description: "Professional company website built with modern TypeScript and responsive design. Showcases services, portfolio, and client testimonials with optimized performance.",
-    technologies: ["TypeScript", "Next.js", "Responsive Design", "SEO Optimization"],
-    liveUrl: null,
-    githubUrl: "https://github.com/Dozr13/bytesmith-code",
-    category: "Corporate Website",
-    metrics: ["Fast loading", "Mobile optimized", "SEO friendly"],
-    teamSize: "Solo Project",
-    duration: "3 weeks"
-  },
-  {
-    title: "Advanced Todo Application",
-    description: "Feature-rich todo application built for code review and demonstration. Includes advanced state management, user authentication, and real-time synchronization.",
-    technologies: ["TypeScript", "React", "State Management", "Real-time Sync"],
-    liveUrl: null,
-    githubUrl: "https://github.com/Dozr13/todo-app",
-    category: "Full-Stack App",
-    metrics: ["Clean architecture", "Type safety", "Performance optimized"],
-    teamSize: "Solo Project",
-    duration: "1 week"
   },
   {
     title: "Modern Portfolio Website",

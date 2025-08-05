@@ -275,6 +275,21 @@ export default function AdminDashboard() {
               </Link>
 
               <Link
+                href="/admin/projects"
+                className="group bg-card border border-border rounded-xl p-6 hover:border-primary/50 transition-all duration-300"
+              >
+                <div className="flex items-center gap-4">
+                  <div className="w-12 h-12 bg-blue-500/10 rounded-lg flex items-center justify-center group-hover:bg-blue-500/20 transition-colors">
+                    <Icon name="folder" size="md" className="text-blue-500" />
+                  </div>
+                  <div>
+                    <p className="font-semibold text-foreground">Manage Projects</p>
+                    <p className="text-sm text-muted-foreground">Edit portfolio</p>
+                  </div>
+                </div>
+              </Link>
+
+              <Link
                 href="/admin/analytics"
                 className="group bg-card border border-border rounded-xl p-6 hover:border-primary/50 transition-all duration-300"
               >
