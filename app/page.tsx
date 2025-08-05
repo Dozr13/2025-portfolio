@@ -1,6 +1,8 @@
 import { Footer } from "@/components/footer"
 import { Navigation } from "@/components/navigation"
 import { About } from "@/components/sections/about"
+import { Blog } from "@/components/sections/blog"
+import { CaseStudies } from "@/components/sections/case-studies"
 import { Contact } from "@/components/sections/contact"
 import { Experience } from "@/components/sections/experience"
 import { Hero } from "@/components/sections/hero"
@@ -16,7 +18,9 @@ export default function Home() {
         <About />
         <Skills />
         <Projects />
+        <CaseStudies />
         <Experience />
+        <Blog />
         <Contact />
       </main>
       <Footer />

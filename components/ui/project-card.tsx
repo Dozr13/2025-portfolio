@@ -11,6 +11,11 @@ interface ProjectCardProps {
   githubUrl: string
   status?: string
   index: number
+  category: string
+  metrics?: string[]
+  teamSize?: string
+  duration?: string
+  featured?: boolean
 }
 
 export function ProjectCard({
@@ -20,7 +25,12 @@ export function ProjectCard({
   liveUrl,
   githubUrl,
   status,
-  index
+  index,
+  category,
+  metrics,
+  teamSize,
+  duration,
+  featured
 }: ProjectCardProps) {
   return (
     <motion.div
@@ -33,6 +43,18 @@ export function ProjectCard({
     >
       {/* Project Image/Preview - Fixed Height */}
       <div className="h-48 bg-gradient-to-br from-primary/20 to-purple-500/20 flex items-center justify-center relative">
+        {/* Featured Badge */}
+        {featured && (
+          <div className="absolute top-4 right-4 bg-gradient-to-r from-amber-500 to-amber-600 text-white px-3 py-1 rounded-full text-xs font-bold shadow-lg">
+            ⭐ FEATURED
+          </div>
+        )}
+        
+        {/* Category Badge */}
+        <div className="absolute top-4 left-4 bg-background/90 backdrop-blur-sm border border-border rounded-full px-3 py-1 text-xs font-medium text-muted-foreground">
+          {category}
+        </div>
+
         <div className="text-center text-muted-foreground">
           <div className="w-16 h-16 bg-primary/20 rounded-lg mx-auto mb-4 flex items-center justify-center group-hover:scale-110 transition-transform">
             <Icon name="external-link" size="xl" />
@@ -58,7 +80,7 @@ export function ProjectCard({
         </div>
 
         {/* Technologies - Fixed Space */}
-        <div className="mb-6 min-h-[2.5rem] flex items-start">
+        <div className="mb-4 min-h-[2.5rem] flex items-start">
           <div className="flex flex-wrap gap-2">
             {technologies.map((tech) => (
               <span
@@ -70,6 +92,43 @@ export function ProjectCard({
             ))}
           </div>
         </div>
+
+        {/* Project Metrics */}
+        {metrics && metrics.length > 0 && (
+          <div className="mb-4">
+            <h4 className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-2">
+              Key Metrics
+            </h4>
+            <div className="space-y-1">
+              {metrics.map((metric, index) => (
+                <div key={index} className="flex items-center gap-2 text-sm">
+                  <div className="w-1.5 h-1.5 bg-green-500 rounded-full"></div>
+                  <span className="text-muted-foreground">{metric}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* Project Details */}
+        {(teamSize || duration) && (
+          <div className="mb-4">
+            <div className="grid grid-cols-2 gap-4 text-xs">
+              {teamSize && (
+                <div>
+                  <span className="text-muted-foreground uppercase tracking-wider font-medium">Team</span>
+                  <div className="text-foreground font-medium mt-1">{teamSize}</div>
+                </div>
+              )}
+              {duration && (
+                <div>
+                  <span className="text-muted-foreground uppercase tracking-wider font-medium">Duration</span>
+                  <div className="text-foreground font-medium mt-1">{duration}</div>
+                </div>
+              )}
+            </div>
+          </div>
+        )}
 
         {/* Action Buttons - Push to Bottom */}
         <div className="flex gap-3 mt-auto">

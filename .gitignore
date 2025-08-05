@@ -44,3 +44,7 @@ next-env.d.ts
 *.log
 build*.log
 run*.log
+
+/lib/generated/prisma
+/generated/client
+

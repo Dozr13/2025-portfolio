@@ -6,6 +6,8 @@ services:
       dockerfile: Dockerfile
     ports:
       - "3000:3000"
+    env_file:
+      - .env.local
     environment:
       - NODE_ENV=production
       - NEXT_TELEMETRY_DISABLED=1
@@ -15,7 +17,7 @@ services:
       interval: 30s
       timeout: 10s
       retries: 3
-      start_period: 5s
+      start_period: 30s
 
   # Development service with hot reload
   dev:
@@ -24,6 +26,8 @@ services:
       dockerfile: Dockerfile
     ports:
       - "3001:3000"
+    env_file:
+      - .env.local
     environment:
       - NODE_ENV=development
       - NEXT_TELEMETRY_DISABLED=1
@@ -34,20 +38,3 @@ services:
     command: yarn dev --turbopack
     profiles:
       - dev
-
-  # Future services ready for expansion
-  # database:
-  #   image: postgres:16-alpine
-  #   environment:
-  #     POSTGRES_DB: portfolio
-  #     POSTGRES_USER: portfolio
-  #     POSTGRES_PASSWORD: portfolio
-  #   ports:
-  #     - "5432:5432"
-  #   volumes:
-  #     - postgres_data:/var/lib/postgresql/data
-  #   profiles:
-  #     - database
-
-# volumes:
-#   postgres_data:

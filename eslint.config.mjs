@@ -23,10 +23,28 @@ const eslintConfig = [
       '.env.production',
       '.env',
       '.yarn/**',
-      '.pnp.*'
+      '.pnp.*',
+      'generated/**',
+      'prisma/generated/**'
     ]
   },
   ...compat.extends('next/core-web-vitals', 'next/typescript'),
+  // Yarn PnP compatibility overrides
+  {
+    files: ['lib/prisma.ts', 'scripts/seed-blog.js'],
+    rules: {
+      '@typescript-eslint/no-require-imports': 'off'
+    }
+  },
+  // Admin-specific overrides
+  {
+    files: ['app/admin/**/*', 'app/api/admin/**/*'],
+    rules: {
+      '@typescript-eslint/no-explicit-any': 'warn',
+      '@typescript-eslint/no-unused-vars': 'warn',
+      'react-hooks/exhaustive-deps': 'warn'
+    }
+  }
 ]
 
 export default eslintConfig

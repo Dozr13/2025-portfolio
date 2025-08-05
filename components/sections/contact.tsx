@@ -153,13 +153,26 @@ export function Contact() {
     }
 
     try {
-      // DEBUG: Check environment variables
-      // console.log('DEBUG: Environment variables:')
-      // console.log('Service ID:', process.env.NEXT_PUBLIC_EMAILJS_SERVICE_ID)
-      // console.log('Template ID:', process.env.NEXT_PUBLIC_EMAILJS_TEMPLATE_ID)
-      // console.log('Public Key:', process.env.NEXT_PUBLIC_EMAILJS_PUBLIC_KEY)
+      // First, save to database
+      const response = await fetch('/api/contact', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          name: formData.name.trim(),
+          email: formData.email.trim(),
+          subject: formData.subject.trim(),
+          message: formData.message.trim(),
+          source: 'Portfolio Contact Form'
+        }),
+      })
 
-      // EmailJS integration with enhanced data
+      if (!response.ok) {
+        throw new Error('Failed to save contact to database')
+      }
+
+      // If database save is successful, send email notification
       const emailjsModule = await import('@emailjs/browser')
       const emailjs = emailjsModule.default || emailjsModule
 
@@ -181,44 +194,37 @@ export function Contact() {
         page_url: window.location.href
       }
 
-      console.log('DEBUG: Template params:', templateParams)
-
-      // Send email with built-in auto-reply
-      console.log('DEBUG: Sending email with auto-reply...')
-      await emailjs.send(
-        process.env.NEXT_PUBLIC_EMAILJS_SERVICE_ID!,
-        process.env.NEXT_PUBLIC_EMAILJS_TEMPLATE_ID!,
-        {
-          ...templateParams,
-          // EmailJS auto-reply variables
-          to_email: 'wadejp8@gmail.com',
-          auto_reply: 'true',
-          reply_to_email: formData.email.trim(),
-          reply_to: formData.email.trim(), // Auto-reply goes to form submitter
-        },
-        process.env.NEXT_PUBLIC_EMAILJS_PUBLIC_KEY!
-      )
-      console.log('DEBUG: Email sent successfully (with auto-reply)!')
+      // Send email notification (non-blocking, if this fails contact is still saved)
+      try {
+        await emailjs.send(
+          process.env.NEXT_PUBLIC_EMAILJS_SERVICE_ID!,
+          process.env.NEXT_PUBLIC_EMAILJS_TEMPLATE_ID!,
+          {
+            ...templateParams,
+            to_email: 'wadejp8@gmail.com',
+            auto_reply: 'true',
+            reply_to_email: formData.email.trim(),
+            reply_to: formData.email.trim(),
+          },
+          process.env.NEXT_PUBLIC_EMAILJS_PUBLIC_KEY!
+        )
+        console.log('Email notification sent successfully')
+      } catch (emailError) {
+        console.warn('Email notification failed, but contact was saved:', emailError)
+      }
 
       // Store submission timestamp for rate limiting
       localStorage.setItem(RATE_LIMIT_KEY, Date.now().toString())
 
       setStatus('success')
-      setStatusMessage('Thank you! Your message has been sent successfully. I\'ll get back to you within 48 hours!')
+      setStatusMessage('Thank you! Your message has been received. I\'ll get back to you within 48 hours!')
       setFormData({ name: '', email: '', subject: '', message: '' })
       setHoneypot('')
 
     } catch (error: unknown) {
       setStatus('error')
       setStatusMessage('Failed to send message. Please try again or contact me directly at wadejp8@gmail.com')
-      const errorObj = error as Error & { text?: string; status?: number }
-      console.error('EmailJS error details:', {
-        error,
-        message: errorObj?.message,
-        text: errorObj?.text,
-        status: errorObj?.status,
-        stack: errorObj?.stack
-      })
+      console.error('Contact submission error:', error)
     }
 
     // Auto-hide status message after 7 seconds

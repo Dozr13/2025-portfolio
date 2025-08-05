@@ -10,30 +10,83 @@ interface Project {
   liveUrl: string | null
   githubUrl: string
   status?: string
+  category: string
+  metrics?: string[]
+  teamSize?: string
+  duration?: string
+  featured?: boolean
 }
 
 const projects: Project[] = [
-  {
-    title: "Modern Portfolio Website",
-    description: "This very portfolio! Built with Next.js 15, TypeScript, and Framer Motion. Features responsive design, dark mode, and optimized performance.",
-    technologies: ["Next.js", "TypeScript", "Tailwind CSS", "Framer Motion"],
-    liveUrl: "https://wadepate.vercel.app",
-    githubUrl: "https://github.com/Dozr13/2025-portfolio"
-  },
-  {
-    title: "HustleForge Platform",
-    description: "Full-stack entrepreneurship platform with user authentication, project management, and real-time collaboration features.",
-    technologies: ["React", "GraphQL", "Prisma", "Flutter", "Nx"],
-    liveUrl: null, // No live demo
-    githubUrl: "https://github.com/Dozr13/HustleForge",
-    status: "Private Repository"
-  },
   {
     title: "Request Hub SaaS Platform",
     description: "Enterprise multi-tenant SaaS platform for VC portfolio companies with real-time request management, Linear integration, and admin dashboards. Built in 5 days as a technical assessment.",
     technologies: ["Next.js 15", "TypeScript", "Clerk", "Prisma", "Pusher", "Linear API"],
     liveUrl: "https://request-hub-gamma.vercel.app",
-    githubUrl: "https://github.com/Dozr13/request-hub"
+    githubUrl: "https://github.com/Dozr13/request-hub",
+    category: "Full-Stack SaaS",
+    metrics: ["Multi-tenant architecture", "Real-time updates", "Built in 5 days"],
+    teamSize: "Solo Project",
+    duration: "5 days",
+    featured: true
+  },
+  {
+    title: "AI-Powered Database Migration Tool",
+    description: "Intelligent PostgreSQL migration system using Ollama AI to convert stored procedures and optimize database schemas. Features automated analysis, conversion recommendations, and performance optimization.",
+    technologies: ["Python", "PostgreSQL", "Ollama", "SQL", "Database Migration"],
+    liveUrl: null,
+    githubUrl: "https://github.com/Dozr13/proc-to-postgres",
+    category: "AI/Database",
+    metrics: ["Automated proc conversion", "Schema optimization", "Migration validation"],
+    teamSize: "Solo Project",
+    duration: "2 months",
+    featured: true
+  },
+  {
+    title: "ShiftScribe Web Platform",
+    description: "Modern web component system for scheduling and workforce management. Built with cutting-edge web technologies for scalable enterprise applications.",
+    technologies: ["TypeScript", "Web Components", "Modern CSS", "Progressive Enhancement"],
+    liveUrl: null,
+    githubUrl: "https://github.com/Dozr13/ShiftScribe-web",
+    category: "Web Components",
+    metrics: ["Reusable components", "Cross-platform compatibility", "Enterprise ready"],
+    teamSize: "Lead Developer",
+    duration: "4 months",
+    featured: true
+  },
+  {
+    title: "ByteSmith Company Website",
+    description: "Professional company website built with modern TypeScript and responsive design. Showcases services, portfolio, and client testimonials with optimized performance.",
+    technologies: ["TypeScript", "Next.js", "Responsive Design", "SEO Optimization"],
+    liveUrl: null,
+    githubUrl: "https://github.com/Dozr13/bytesmith-code",
+    category: "Corporate Website",
+    metrics: ["Fast loading", "Mobile optimized", "SEO friendly"],
+    teamSize: "Solo Project",
+    duration: "3 weeks"
+  },
+  {
+    title: "Advanced Todo Application",
+    description: "Feature-rich todo application built for code review and demonstration. Includes advanced state management, user authentication, and real-time synchronization.",
+    technologies: ["TypeScript", "React", "State Management", "Real-time Sync"],
+    liveUrl: null,
+    githubUrl: "https://github.com/Dozr13/todo-app",
+    category: "Full-Stack App",
+    metrics: ["Clean architecture", "Type safety", "Performance optimized"],
+    teamSize: "Solo Project",
+    duration: "1 week"
+  },
+  {
+    title: "Modern Portfolio Website",
+    description: "This very portfolio! Built with Next.js 15, TypeScript, and Framer Motion. Features responsive design, dark mode, database integration, and optimized performance.",
+    technologies: ["Next.js 15", "TypeScript", "Tailwind CSS 4", "Framer Motion", "Prisma"],
+    liveUrl: "https://wadepate.vercel.app",
+    githubUrl: "https://github.com/Dozr13/2025-portfolio",
+    category: "Portfolio",
+    metrics: ["100 Lighthouse score", "Sub-second load times", "Fully responsive"],
+    teamSize: "Solo Project",
+    duration: "1 month",
+    featured: true
   }
 ]
 
@@ -67,6 +120,11 @@ export function Projects() {
               githubUrl={project.githubUrl}
               status={project.status}
               index={index}
+              category={project.category}
+              metrics={project.metrics}
+              teamSize={project.teamSize}
+              duration={project.duration}
+              featured={project.featured}
             />
           ))}
         </div>
