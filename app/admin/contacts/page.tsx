@@ -4,7 +4,6 @@ import { Icon } from "@/components/ui/icon"
 import { useAdminAuth } from "@/hooks/useAdminAuth"
 import { motion } from "framer-motion"
 import Link from "next/link"
-import { useRouter } from "next/navigation"
 import { useCallback, useEffect, useState } from "react"
 
 interface Contact {
@@ -35,7 +34,6 @@ export default function ContactsManagement() {
     status: "",
     search: ""
   })
-  const router = useRouter()
 
 
   const { isLoading: authLoading, isAuthenticated, redirectToLogin } = useAdminAuth()

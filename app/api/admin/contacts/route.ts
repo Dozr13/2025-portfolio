@@ -1,5 +1,6 @@
 import { prisma } from "@/lib/prisma"
 import { NextResponse } from "next/server"
+import { Prisma } from '../../../../generated/client'
 import { verifyAdminToken } from "../auth/route"
 
 export async function GET(request: Request) {
@@ -19,9 +20,9 @@ export async function GET(request: Request) {
     const offset = (page - 1) * limit
 
     // Build where clause
-    const where: Record<string, any> = {}
+    const where: Prisma.ContactWhereInput = {}
     if (status) {
-      where.status = status
+      where.status = status as Prisma.EnumContactStatusFilter
     }
     if (search) {
       where.OR = [
