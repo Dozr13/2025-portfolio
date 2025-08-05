@@ -3,7 +3,7 @@
 import { Icon } from "@/components/ui/icon"
 import { useAdminAuth } from "@/hooks/useAdminAuth"
 import Link from "next/link"
-import { useEffect, useState } from "react"
+import { useCallback, useEffect, useState } from "react"
 
 interface BlogPost {
   id: string
@@ -47,15 +47,7 @@ export default function BlogManagement() {
     }
   }, [authLoading, isAuthenticated, redirectToLogin])
 
-  useEffect(() => {
-    console.log("[BLOG PAGE] Data fetch effect:", { authLoading, isAuthenticated })
-    if (!authLoading && isAuthenticated) {
-      console.log("✅ [BLOG PAGE] Authenticated, fetching posts...")
-      fetchPosts()
-    }
-  }, [authLoading, isAuthenticated, page, searchTerm, statusFilter])
-
-  const fetchPosts = async () => {
+  const fetchPosts = useCallback(async () => {
     try {
       const params = new URLSearchParams({
         page: page.toString(),
@@ -81,7 +73,15 @@ export default function BlogManagement() {
     } finally {
       setLoading(false)
     }
-  }
+  }, [page, searchTerm, statusFilter])
+
+  useEffect(() => {
+    console.log("[BLOG PAGE] Data fetch effect:", { authLoading, isAuthenticated })
+    if (!authLoading && isAuthenticated) {
+      console.log("[BLOG PAGE] Authenticated, fetching posts...")
+      fetchPosts()
+    }
+  }, [authLoading, isAuthenticated, page, searchTerm, statusFilter, fetchPosts])
 
   const handleDelete = async (id: string) => {
     if (!confirm("Are you sure you want to delete this post?")) return

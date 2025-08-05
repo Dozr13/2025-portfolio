@@ -53,7 +53,7 @@ export function useAdminAuth() {
 
         if (response.ok) {
           const authData = await response.json()
-          console.log("✅ [AUTH] Authentication successful for user:", authData.user?.username)
+          console.log("[AUTH] Authentication successful for user:", authData.user?.username)
           setUser(authData.user)
           setIsAuthenticated(true)
         } else {

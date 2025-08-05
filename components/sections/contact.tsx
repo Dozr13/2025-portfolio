@@ -123,7 +123,7 @@ export function Contact() {
       return 'Please enter a valid email address.'
     }
 
-    console.log('DEBUG: ✅ All validations passed!')
+    console.log('DEBUG: All validations passed!')
     console.log('DEBUG: Final form state:', {
       nameLength: formData.name.length,
       emailValid: /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email),

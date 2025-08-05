@@ -511,7 +511,7 @@ async function seedSkills() {
     })
   }
   
-  console.log(`✅ Seeded ${skills.length} skills`)
+  console.log(`Seeded ${skills.length} skills`)
 }
 
 async function seedExperiences() {
@@ -530,7 +530,7 @@ async function seedExperiences() {
     })
   }
   
-  console.log(`✅ Seeded ${experiences.length} experiences`)
+  console.log(`Seeded ${experiences.length} experiences`)
 }
 
 async function seedProjects() {
@@ -544,7 +544,7 @@ async function seedProjects() {
     })
   }
   
-  console.log(`✅ Seeded ${projects.length} projects`)
+  console.log(`Seeded ${projects.length} projects`)
 }
 
 async function seedEducation() {
@@ -564,7 +564,7 @@ async function seedEducation() {
     })
   }
   
-  console.log(`✅ Seeded ${education.length} education records`)
+  console.log(`Seeded ${education.length} education records`)
 }
 
 async function seedCertifications() {
@@ -583,7 +583,7 @@ async function seedCertifications() {
     })
   }
   
-  console.log(`✅ Seeded ${certifications.length} certifications`)
+  console.log(`Seeded ${certifications.length} certifications`)
 }
 
 async function seedServices() {
@@ -597,7 +597,7 @@ async function seedServices() {
     })
   }
   
-  console.log(`✅ Seeded ${services.length} services`)
+  console.log(`Seeded ${services.length} services`)
 }
 
 async function seedFAQs() {
@@ -611,7 +611,7 @@ async function seedFAQs() {
     })
   }
   
-  console.log(`✅ Seeded ${faqs.length} FAQs`)
+  console.log(`Seeded ${faqs.length} FAQs`)
 }
 
 async function seedTestimonials() {
@@ -638,7 +638,7 @@ async function seedTestimonials() {
     }
   }
   
-  console.log(`✅ Seeded ${testimonials.length} testimonials`)
+  console.log(`Seeded ${testimonials.length} testimonials`)
 }
 
 async function seedContacts() {
@@ -665,7 +665,7 @@ async function seedContacts() {
     }
   }
   
-  console.log(`✅ Seeded ${contacts.length} sample contacts`)
+  console.log(`Seeded ${contacts.length} sample contacts`)
 }
 
 async function seedProjectSkills() {

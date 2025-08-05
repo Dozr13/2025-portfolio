@@ -3,7 +3,7 @@
 import { Icon } from "@/components/ui/icon"
 import { useAdminAuth } from "@/hooks/useAdminAuth"
 import Link from "next/link"
-import { useEffect, useState } from "react"
+import { useCallback, useEffect, useState } from "react"
 
 interface Project {
   id: string
@@ -48,15 +48,7 @@ export default function ProjectsManagement() {
     }
   }, [authLoading, isAuthenticated, redirectToLogin])
 
-  useEffect(() => {
-    console.log("[PROJECTS PAGE] Data fetch effect:", { authLoading, isAuthenticated })
-    if (!authLoading && isAuthenticated) {
-      console.log("✅ [PROJECTS PAGE] Authenticated, fetching projects...")
-      fetchProjects()
-    }
-  }, [authLoading, isAuthenticated, page, searchTerm, statusFilter, categoryFilter])
-
-  const fetchProjects = async () => {
+  const fetchProjects = useCallback(async () => {
     try {
       const params = new URLSearchParams({
         page: page.toString(),
@@ -83,7 +75,15 @@ export default function ProjectsManagement() {
     } finally {
       setLoading(false)
     }
-  }
+  }, [page, searchTerm, statusFilter, categoryFilter])
+
+  useEffect(() => {
+    console.log("[PROJECTS PAGE] Data fetch effect:", { authLoading, isAuthenticated })
+    if (!authLoading && isAuthenticated) {
+      console.log("[PROJECTS PAGE] Authenticated, fetching projects...")
+      fetchProjects()
+    }
+  }, [authLoading, isAuthenticated, page, searchTerm, statusFilter, categoryFilter, fetchProjects])
 
   const handleDelete = async (id: string) => {
     if (!confirm("Are you sure you want to delete this project?")) return

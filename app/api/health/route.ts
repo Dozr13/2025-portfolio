@@ -30,7 +30,8 @@ export async function GET() {
     console.error("Health check failed:", error)
     
     // If it's just a DB connection issue but app is running, still return 200 for CI
-    const isDbError = error?.message?.includes("connection") || error?.message?.includes("timeout")
+    const errorMessage = error instanceof Error ? error.message : String(error)
+    const isDbError = errorMessage?.includes("connection") || errorMessage?.includes("timeout")
     
     const response = {
       status: isDbError ? "degraded" : "unhealthy",

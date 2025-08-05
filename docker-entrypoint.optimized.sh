@@ -51,9 +51,9 @@ EOF
     yarn db:seed || {
       echo "⚠️  Warning: Database seeding failed, but continuing..."
     }
-    echo "✅ Database seeding completed"
+    echo "Database seeding completed"
   else
-    echo "✅ Database already contains data, skipping seeding"
+    echo "Database already contains data, skipping seeding"
   fi
 }
 
@@ -79,7 +79,7 @@ main() {
       exit 1
     fi
     
-    echo "✅ All checks passed, starting production server..."
+    echo "All checks passed, starting production server..."
   else
     echo "🛠️  Development mode"
   fi

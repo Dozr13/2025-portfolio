@@ -3,7 +3,7 @@
 import { Icon } from "@/components/ui/icon"
 import { motion } from "framer-motion"
 import Link from "next/link"
-import { useEffect, useState } from "react"
+import { useCallback, useEffect, useState } from "react"
 
 interface AnalyticsData {
   pageViews: { today: number; total: number; trend: number }
@@ -51,13 +51,7 @@ export default function Analytics() {
     checkAuth()
   }, [])
 
-  useEffect(() => {
-    if (authChecked) {
-      fetchAnalytics()
-    }
-  }, [authChecked, timeRange])
-
-  const fetchAnalytics = async () => {
+  const fetchAnalytics = useCallback(async () => {
     try {
       const response = await fetch(`/api/admin/stats?timeRange=${timeRange}`, {
         headers: {
@@ -101,7 +95,13 @@ export default function Analytics() {
     } finally {
       setLoading(false)
     }
-  }
+  }, [timeRange])
+
+  useEffect(() => {
+    if (authChecked) {
+      fetchAnalytics()
+    }
+  }, [authChecked, timeRange, fetchAnalytics])
 
   const handleLogout = () => {
     localStorage.removeItem("adminToken")
