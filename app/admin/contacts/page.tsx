@@ -2,6 +2,7 @@
 
 import { Icon } from "@/components/ui/icon"
 import { useAdminAuth } from "@/hooks/useAdminAuth"
+import { contactsService } from "@/lib/services/admin"
 import { motion } from "framer-motion"
 import Link from "next/link"
 import { useCallback, useEffect, useState } from "react"
@@ -40,19 +41,14 @@ export default function ContactsManagement() {
 
   const fetchContacts = useCallback(async () => {
     try {
-      const token = localStorage.getItem("adminToken")
-      const params = new URLSearchParams()
-      if (filters.status) params.append("status", filters.status)
-      if (filters.search) params.append("search", filters.search)
+      setLoading(true)
 
-      const response = await fetch(`/api/admin/contacts?${params.toString()}`, {
-        headers: { "Authorization": `Bearer ${token}` }
+      const data = await contactsService.fetchContacts({
+        status: filters.status || undefined,
+        search: filters.search || undefined
       })
 
-      if (response.ok) {
-        const data = await response.json()
-        setContacts(data.contacts)
-      }
+      setContacts(data.contacts)
     } catch (error) {
       console.error("Failed to fetch contacts:", error)
     } finally {
@@ -70,26 +66,10 @@ export default function ContactsManagement() {
 
   const updateContactStatus = async (contactId: string, status: string, priority?: string, notes?: string) => {
     try {
-      const token = localStorage.getItem("adminToken")
-      const response = await fetch("/api/admin/contacts", {
-        method: "PATCH",
-        headers: {
-          "Authorization": `Bearer ${token}`,
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify({
-          id: contactId,
-          status,
-          ...(priority && { priority }),
-          ...(notes !== undefined && { notes })
-        })
-      })
-
-      if (response.ok) {
-        fetchContacts()
-        if (selectedContact?.id === contactId) {
-          setSelectedContact(prev => prev ? { ...prev, status, ...(priority && { priority }), ...(notes !== undefined && { notes }) } : null)
-        }
+      await contactsService.updateContactStatus(contactId, status, priority, notes)
+      fetchContacts() // Refresh the list
+      if (selectedContact?.id === contactId) {
+        setSelectedContact(prev => prev ? { ...prev, status, ...(priority && { priority }), ...(notes !== undefined && { notes }) } : null)
       }
     } catch (error) {
       console.error("Failed to update contact:", error)

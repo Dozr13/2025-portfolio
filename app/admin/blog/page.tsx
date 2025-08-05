@@ -2,6 +2,7 @@
 
 import { Icon } from "@/components/ui/icon"
 import { useAdminAuth } from "@/hooks/useAdminAuth"
+import { blogService } from "@/lib/services/admin"
 import Link from "next/link"
 import { useCallback, useEffect, useState } from "react"
 
@@ -23,7 +24,7 @@ interface BlogPost {
 }
 
 export default function BlogManagement() {
-  const { user, isLoading: authLoading, isAuthenticated, redirectToLogin } = useAdminAuth()
+  const { user, isLoading: authLoading, isAuthenticated, redirectToLogin, logout } = useAdminAuth()
   const [posts, setPosts] = useState<BlogPost[]>([])
   const [loading, setLoading] = useState(true)
   const [page, setPage] = useState(1)
@@ -49,25 +50,17 @@ export default function BlogManagement() {
 
   const fetchPosts = useCallback(async () => {
     try {
-      const params = new URLSearchParams({
-        page: page.toString(),
-        limit: "10"
+      setLoading(true)
+
+      const data = await blogService.fetchPosts({
+        page,
+        limit: 10,
+        search: searchTerm || undefined,
+        status: statusFilter || undefined
       })
 
-      if (searchTerm) params.append("search", searchTerm)
-      if (statusFilter) params.append("status", statusFilter)
-
-      const response = await fetch(`/api/admin/blog?${params}`, {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("adminToken")}`
-        }
-      })
-
-      if (response.ok) {
-        const data = await response.json()
-        setPosts(data.posts)
-        setTotalPages(data.pagination.pages)
-      }
+      setPosts(data.posts)
+      setTotalPages(data.pagination.pages)
     } catch (error) {
       console.error("Error fetching posts:", error)
     } finally {
@@ -87,39 +80,19 @@ export default function BlogManagement() {
     if (!confirm("Are you sure you want to delete this post?")) return
 
     try {
-      const response = await fetch(`/api/admin/blog?id=${id}`, {
-        method: "DELETE",
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("adminToken")}`
-        }
-      })
-
-      if (response.ok) {
-        fetchPosts()
-      }
+      await blogService.deletePost(id)
+      fetchPosts() // Refresh the list
     } catch (error) {
       console.error("Error deleting post:", error)
     }
   }
 
-  const handleLogout = () => {
-    localStorage.removeItem("adminToken")
-    localStorage.removeItem("adminUser")
-    window.location.href = "/admin"
-  }
-
   if (authLoading || loading) {
-    console.log("[BLOG PAGE] Showing loading state:", { authLoading, loading })
     return (
       <div className="min-h-screen bg-background flex items-center justify-center">
         <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
       </div>
     )
-  }
-
-  if (!isAuthenticated) {
-    console.log("[BLOG PAGE] Not authenticated, should redirect...")
-    return null // This should not render as useEffect will redirect
   }
 
   return (
@@ -144,7 +117,7 @@ export default function BlogManagement() {
                 Welcome, {user?.username}
               </span>
               <button
-                onClick={handleLogout}
+                onClick={logout}
                 className="text-sm text-muted-foreground hover:text-foreground transition-colors"
               >
                 Logout

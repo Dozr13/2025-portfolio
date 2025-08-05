@@ -2,6 +2,7 @@
 
 import { Icon } from "@/components/ui/icon"
 import { useAdminAuth } from "@/hooks/useAdminAuth"
+import { projectsService } from "@/lib/services/admin"
 import Link from "next/link"
 import { useCallback, useEffect, useState } from "react"
 
@@ -50,26 +51,18 @@ export default function ProjectsManagement() {
 
   const fetchProjects = useCallback(async () => {
     try {
-      const params = new URLSearchParams({
-        page: page.toString(),
-        limit: "10"
+      setLoading(true)
+
+      const data = await projectsService.fetchProjects({
+        page,
+        limit: 10,
+        search: searchTerm || undefined,
+        status: statusFilter || undefined,
+        category: categoryFilter || undefined
       })
 
-      if (searchTerm) params.append("search", searchTerm)
-      if (statusFilter) params.append("status", statusFilter)
-      if (categoryFilter) params.append("category", categoryFilter)
-
-      const response = await fetch(`/api/admin/projects?${params}`, {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("adminToken")}`
-        }
-      })
-
-      if (response.ok) {
-        const data = await response.json()
-        setProjects(data.projects)
-        setTotalPages(data.pagination.pages)
-      }
+      setProjects(data.projects)
+      setTotalPages(data.pagination.pages)
     } catch (error) {
       console.error("Error fetching projects:", error)
     } finally {
@@ -80,7 +73,6 @@ export default function ProjectsManagement() {
   useEffect(() => {
     console.log("[PROJECTS PAGE] Data fetch effect:", { authLoading, isAuthenticated })
     if (!authLoading && isAuthenticated) {
-      console.log("[PROJECTS PAGE] Authenticated, fetching projects...")
       fetchProjects()
     }
   }, [authLoading, isAuthenticated, page, searchTerm, statusFilter, categoryFilter, fetchProjects])
@@ -89,16 +81,8 @@ export default function ProjectsManagement() {
     if (!confirm("Are you sure you want to delete this project?")) return
 
     try {
-      const response = await fetch(`/api/admin/projects?id=${id}`, {
-        method: "DELETE",
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("adminToken")}`
-        }
-      })
-
-      if (response.ok) {
-        fetchProjects()
-      }
+      await projectsService.deleteProject(id)
+      fetchProjects() // Refresh the list
     } catch (error) {
       console.error("Error deleting project:", error)
     }
