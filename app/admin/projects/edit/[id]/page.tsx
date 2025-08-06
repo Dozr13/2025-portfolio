@@ -4,7 +4,7 @@ import { useAdminAuthContext } from "@/components/admin/AdminAuthProvider"
 import { Icon } from "@/components/ui/icon"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
-import { useCallback, useEffect, useState } from "react"
+import { use, useCallback, useEffect, useState } from "react"
 
 interface ProjectData {
   id: string
@@ -25,7 +25,8 @@ interface ProjectData {
   updatedAt: string
 }
 
-export default function EditProject({ params }: { params: { id: string } }) {
+export default function EditProject({ params }: { params: Promise<{ id: string }> }) {
+  const resolvedParams = use(params)
   const { isLoading: authLoading, isAuthenticated, redirectToLogin } = useAdminAuthContext()
   const [projectData, setProjectData] = useState<ProjectData | null>(null)
   const [loading, setLoading] = useState(true)
@@ -43,7 +44,7 @@ export default function EditProject({ params }: { params: { id: string } }) {
   const fetchProject = useCallback(async () => {
     try {
       const token = localStorage.getItem("adminToken")
-      const response = await fetch(`/api/admin/projects/${params.id}`, {
+      const response = await fetch(`/api/admin/projects/${resolvedParams.id}`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -62,14 +63,14 @@ export default function EditProject({ params }: { params: { id: string } }) {
     } finally {
       setLoading(false)
     }
-  }, [params.id, router])
+  }, [resolvedParams.id, router])
 
   // Fetch project data
   useEffect(() => {
     if (!authLoading && isAuthenticated) {
       fetchProject()
     }
-  }, [authLoading, isAuthenticated, fetchProject, params.id])
+  }, [authLoading, isAuthenticated, fetchProject, resolvedParams.id])
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -78,7 +79,7 @@ export default function EditProject({ params }: { params: { id: string } }) {
     setSaving(true)
     try {
       const token = localStorage.getItem("adminToken")
-      const response = await fetch(`/api/admin/projects/${params.id}`, {
+      const response = await fetch(`/api/admin/projects/${resolvedParams.id}`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
