@@ -1,6 +1,6 @@
+import { Prisma } from '@/generated/client'
 import { prisma } from "@/lib/prisma"
 import { NextResponse } from "next/server"
-import { Prisma } from '../../../../generated/client'
 import { verifyAdminToken } from "../auth/route"
 
 export async function GET(request: Request) {

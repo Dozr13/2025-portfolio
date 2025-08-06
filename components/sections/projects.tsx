@@ -56,7 +56,7 @@ const projects: Project[] = [
   }
 ]
 
-export function Projects() {
+export const Projects = () => {
   return (
     <section id="projects" className="py-20 bg-muted/50">
       <div>

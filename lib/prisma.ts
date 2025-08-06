@@ -1,5 +1,6 @@
 // Yarn 4.9.2 with node-modules linker - Standard Prisma client
-import { PrismaClient } from '../generated/client'
+import { PrismaClient } from '@/generated/client'
+import { envConfig, getDatabaseConfig } from './envConfig'
 
 // Prevent multiple instances of Prisma Client in development
 const globalForPrisma = globalThis as unknown as {
@@ -7,7 +8,12 @@ const globalForPrisma = globalThis as unknown as {
 }
 
 export const prisma = globalForPrisma.prisma ?? new PrismaClient({
-  log: process.env.NODE_ENV === 'development' ? ['query', 'error', 'warn'] : ['error'],
+  datasources: {
+    db: {
+      url: getDatabaseConfig()
+    }
+  },
+  log: envConfig.NODE_ENV === 'development' ? ['query', 'error', 'warn'] : ['error'],
 })
 
-if (process.env.NODE_ENV !== 'production') globalForPrisma.prisma = prisma
+if (envConfig.NODE_ENV !== 'production') globalForPrisma.prisma = prisma
