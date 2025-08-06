@@ -3,21 +3,30 @@ import {
   AlertCircle,
   ArrowLeft,
   ArrowRight,
+  Atom,
   Briefcase,
   Calendar,
   ChartBar,
   CheckCircle,
   ChevronDown,
   Clock,
+  Cloud,
   Code,
+  Code2,
+  Container,
+  Database,
   Download,
   ExternalLink,
   Eye,
+  Figma,
   FileText,
   Folder,
+  GitBranch,
   Github,
   Heart,
   Inbox,
+  Layers,
+  Layers3,
   Linkedin,
   Loader2,
   Lock,
@@ -27,18 +36,25 @@ import {
   Menu,
   Monitor,
   Moon,
+  Paintbrush,
   Palette,
   Phone,
   Plus,
   Rocket,
   Send,
+  Server,
+  Share2,
   ShieldCheck,
+  Smartphone,
   SquarePen,
   Sun,
   Trash2,
+  Triangle,
   User,
   Users,
+  Workflow,
   X,
+  Zap,
   type LucideIcon,
   type LucideProps
 } from "lucide-react"
@@ -47,23 +63,33 @@ import { forwardRef } from "react"
 // Icon registry for type safety and centralized management
 const iconRegistry = {
   "alert-circle": AlertCircle,
+  api: Code, // REST APIs icon
   "arrow-left": ArrowLeft,
   "arrow-right": ArrowRight,
+  atom: Atom,
   briefcase: Briefcase,
   calendar: Calendar,
   "chart-bar": ChartBar,
   "check-circle": CheckCircle,
   "chevron-down": ChevronDown,
   clock: Clock,
+  cloud: Cloud,
   code: Code,
+  "code-2": Code2,
+  container: Container,
+  database: Database,
   download: Download,
   "external-link": ExternalLink,
   eye: Eye,
+  figma: Figma,
   "file-text": FileText,
   "folder": Folder,
+  "git-branch": GitBranch,
   github: Github,
   heart: Heart,
   inbox: Inbox,
+  layers: Layers,
+  "layers-3": Layers3,
   linkedin: Linkedin,
   loader: Loader2,
   lock: Lock,
@@ -73,18 +99,25 @@ const iconRegistry = {
   menu: Menu,
   monitor: Monitor,
   moon: Moon,
+  paintbrush: Paintbrush,
   palette: Palette,
-  plus: Plus,
   phone: Phone,
+  plus: Plus,
   rocket: Rocket,
   send: Send,
+  server: Server,
+  "share-2": Share2,
   "shield-check": ShieldCheck,
+  smartphone: Smartphone,
   "square-pen": SquarePen,
   sun: Sun,
   "trash-2": Trash2,
+  triangle: Triangle,
   user: User,
   users: Users,
+  workflow: Workflow,
   x: X,
+  zap: Zap,
 } as const
 
 // Type-safe icon names
@@ -96,23 +129,33 @@ export type IconSize = "xs" | "sm" | "md" | "lg" | "xl" | "2xl"
 // Accessibility labels for each icon
 const iconLabels: Record<IconName, string> = {
   "alert-circle": "Alert",
+  api: "REST API",
   "arrow-left": "Arrow left",
   "arrow-right": "Arrow right",
+  atom: "React",
   briefcase: "Work experience",
   calendar: "Calendar",
   "chart-bar": "Analytics",
   "check-circle": "Success",
   "chevron-down": "Expand menu",
   clock: "Time",
+  cloud: "Cloud platform",
   code: "Code",
+  "code-2": "JavaScript",
+  container: "Docker container",
+  database: "Database",
   download: "Download",
   "external-link": "Open external link",
   eye: "View count",
+  figma: "Figma design",
   "file-text": "Article",
   "folder": "Folder",
+  "git-branch": "Git version control",
   github: "GitHub profile",
   heart: "Favorite",
   inbox: "Inbox",
+  layers: "Layers",
+  "layers-3": "Prisma ORM",
   linkedin: "LinkedIn profile",
   loader: "Loading",
   lock: "Lock",
@@ -122,18 +165,25 @@ const iconLabels: Record<IconName, string> = {
   menu: "Open menu",
   monitor: "Monitor",
   moon: "Dark mode",
-  palette: "Design",
-  plus: "Plus",
+  paintbrush: "UI/UX Design",
+  palette: "Design tools",
   phone: "Phone",
+  plus: "Add",
   rocket: "Performance",
   send: "Send message",
-  "shield-check": "Shield check",
+  server: "Server backend",
+  "share-2": "GraphQL",
+  "shield-check": "Security",
+  smartphone: "Mobile app",
   "square-pen": "Edit",
   sun: "Light mode",
-  "trash-2": "Trash",
+  "trash-2": "Delete",
+  triangle: "Next.js framework",
   user: "User",
   users: "Team",
+  workflow: "CI/CD pipeline",
   x: "Close",
+  zap: "Fast performance",
 }
 
 // Size mapping for consistent scaling
@@ -189,13 +239,23 @@ export const Icon = forwardRef<SVGSVGElement, IconProps>(
     ref
   ) => {
     const IconComponent = iconRegistry[name] as LucideIcon
+    const sizeClasses = sizeMap[size]
 
     if (!IconComponent) {
-      console.warn(`Icon "${name}" not found in registry`)
-      return null
+      console.warn(`Icon "${name}" not found in registry, using fallback`)
+      // Use a generic code icon as fallback
+      return (
+        <Code
+          ref={ref}
+          className={cn(sizeClasses, className)}
+          aria-label={decorative ? undefined : ariaLabel || `Unknown icon: ${name}`}
+          aria-hidden={decorative}
+          role={decorative ? "presentation" : undefined}
+          {...props}
+        />
+      )
     }
 
-    const sizeClasses = sizeMap[size]
     const defaultLabel = iconLabels[name]
 
     return (
