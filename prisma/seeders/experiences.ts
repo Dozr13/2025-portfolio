@@ -5,60 +5,45 @@ const prisma = new PrismaClient()
 // Experience Data
 export const experiences = [
   {
-    company: 'TechCorp Solutions',
-    position: 'Senior Full-Stack Developer',
-    description: 'Led development of enterprise web applications serving 100K+ users. Architected scalable microservices infrastructure and mentored junior developers.',
-    startDate: new Date('2022-03-01'),
+    company: 'Resource Data',
+    position: 'Senior Software Engineer',
+    description: 'Architected AWS cloud solutions, improved data accuracy by 40%, and built scalable Node.js pipelines for reconciling multi-gigabyte datasets across SQL/NoSQL platforms.',
+    startDate: new Date('2023-08-01'),
     endDate: null,
     current: true,
-    location: 'Remote',
-    companyUrl: 'https://techcorp.com',
+    location: 'Boise, ID',
+    companyUrl: 'https://resourcedata.com',
     achievements: JSON.stringify([
-      'Reduced application load times by 60% through optimization',
-      'Led team of 5 developers on critical platform migration',
-      'Implemented CI/CD pipeline reducing deployment time by 80%',
-      'Architected microservices handling 1M+ daily requests'
+      'Architected AWS cloud solutions, improving data accuracy by 40% and increasing system resiliency',
+      'Built scalable Node.js pipelines for reconciling multi-gigabyte datasets across SQL/NoSQL platforms',
+      'Reduced latency in distributed services through system architecture redesign',
+      'Refactored legacy JavaScript into clean, typed TypeScript monorepos, improving dev efficiency and consistency',
+      'Mentored junior devs and conducted code reviews to enforce scalable design patterns',
+      'Led internal migration to TypeScript, reducing bugs and onboarding time'
     ]),
-    technologies: 'React, Next.js, Node.js, PostgreSQL, AWS, Docker, TypeScript',
+    technologies: 'AWS, Node.js, TypeScript, PostgreSQL, MongoDB, Docker, CI/CD, GraphQL',
     featured: true,
     order: 1
   },
   {
-    company: 'Digital Innovation Labs',
-    position: 'Full-Stack Developer',
-    description: 'Developed modern web applications for fintech and healthcare clients. Specialized in React, Node.js, and cloud infrastructure.',
-    startDate: new Date('2020-06-01'),
-    endDate: new Date('2022-02-28'),
+    company: 'In Time Tec',
+    position: 'Software Engineer',
+    description: 'Delivered global WPF desktop app, cutting sales review time by 80% and modernizing legacy workflows. Boosted enterprise performance by 30% via framework upgrades.',
+    startDate: new Date('2021-07-01'),
+    endDate: new Date('2023-04-30'),
     current: false,
-    location: 'San Francisco, CA',
-    companyUrl: 'https://digilabs.com',
+    location: 'Meridian, ID',
+    companyUrl: 'https://intimetek.com',
     achievements: JSON.stringify([
-      'Built HIPAA-compliant patient management system',
-      'Developed real-time trading platform processing $10M+ daily',
-      'Implemented automated testing reducing bugs by 70%',
-      'Mentored 3 junior developers and conducted code reviews'
+      'Delivered global WPF desktop app, cutting sales review time by 80% and modernizing legacy workflows',
+      'Boosted enterprise performance by 30% via framework upgrades and technical debt reduction',
+      'Elevated UX by 75% through responsive design and WCAG-compliant interfaces',
+      'Led cross-team initiatives to improve development processes and code quality',
+      'Implemented modern development practices including automated testing and CI/CD'
     ]),
-    technologies: 'React, Node.js, Express, MongoDB, AWS, GraphQL, TypeScript',
+    technologies: 'C#, WPF, .NET, SQL Server, TypeScript, React, Node.js',
     featured: true,
     order: 2
-  },
-  {
-    company: 'Freelance',
-    position: 'Full-Stack Developer',
-    description: 'Provided web development services to various clients including e-commerce, portfolio websites, and business applications.',
-    startDate: new Date('2019-01-01'),
-    endDate: new Date('2020-05-31'),
-    current: false,
-    location: 'Remote',
-    achievements: JSON.stringify([
-      'Delivered 25+ projects with 100% client satisfaction',
-      'Specialized in e-commerce and business automation solutions',
-      'Built long-term relationships with repeat clients',
-      'Expanded skill set across multiple technologies and frameworks'
-    ]),
-    technologies: 'React, Vue.js, Node.js, PHP, MySQL, WordPress',
-    featured: true,
-    order: 3
   }
 ]
 
