@@ -1,3 +1,6 @@
+import { getAnalyticsData } from "@/lib/analytics"
+import { getDatabaseInfo } from "@/lib/db"
+import { envConfig } from "@/lib/envConfig"
 import { prisma } from "@/lib/prisma"
 import { NextResponse } from "next/server"
 import { verifyAdminToken } from "../auth/route"
@@ -74,6 +77,12 @@ export async function GET(request: Request) {
       console.error("Analytics tables not available or empty:", error)
     }
 
+    // Get analytics data and database info
+    const [analyticsData, databaseInfo] = await Promise.all([
+      getAnalyticsData('7d').catch(() => null),
+      getDatabaseInfo().catch(() => null)
+    ])
+
     return NextResponse.json({
       contacts: {
         total: totalContacts,
@@ -85,11 +94,18 @@ export async function GET(request: Request) {
         drafts: draftPosts,
         totalViews: totalBlogViews._sum.views || 0
       },
-      analytics: {
+      analytics: analyticsData ? {
+        ...analyticsData.analytics,
+        environment: envConfig.NODE_ENV,
+        enabled: analyticsData.enabled
+      } : {
         visitors,
         pageViews,
-        avgTimeOnSite: Math.round(avgTimeOnSite / 60) // Convert to minutes
-      }
+        avgTimeOnSite: Math.round(avgTimeOnSite / 60),
+        environment: envConfig.NODE_ENV,
+        enabled: false
+      },
+      database: databaseInfo
     })
 
   } catch (error) {

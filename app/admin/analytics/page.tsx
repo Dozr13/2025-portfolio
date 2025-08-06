@@ -1,284 +1,338 @@
 "use client"
 
-import { useAdminAuthContext } from '@/components/admin/AdminAuthProvider'
-import { AdminError, AdminLoading } from "@/components/admin/AdminErrorBoundary"
-import { Icon } from "@/components/ui/icon"
-import { useAdminSearch } from "@/hooks/useAdminSearch"
-import { motion } from "framer-motion"
-import Link from "next/link"
-import { useCallback } from "react"
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { trackAdminAction } from "@/lib/analytics"
+import { useEffect, useState } from "react"
 
 interface AnalyticsData {
-  pageViews: { today: number; total: number; trend: number }
-  visitors: { today: number; total: number; trend: number }
-  avgTimeOnSite: number
-  topPages: Array<{ page: string; views: number }>
-  recentContacts: Array<{
-    id: string
-    name: string
-    email: string
-    subject: string
-    createdAt: string
-    status: string
-  }>
-  blogStats: {
-    totalPosts: number
-    publishedPosts: number
-    totalViews: number
-    avgReadingTime: number
+  pageViews: {
+    total: number
+    change: number
+    data: Array<{ date: string; views: number }>
+  }
+  topPages: Array<{ path: string; views: number; change: number }>
+  referrers: Array<{ source: string; visits: number; percentage: number }>
+  countries: Array<{ country: string; visits: number; percentage: number }>
+  events: Array<{ event: string; count: number; change: number }>
+}
+
+interface StatsData {
+  contacts: { total: number; new: number; thisWeek: number }
+  blog: { published: number; drafts: number; totalViews: number }
+  analytics: AnalyticsData & { environment: string; enabled: boolean }
+  database: {
+    skills: number
+    projects: number
+    experiences: number
+    contacts: number
+    testimonials: number
+    environment: string
+    database: string
   }
 }
 
-interface AnalyticsFilters {
-  timeRange: "1d" | "7d" | "30d" | "90d"
-  [key: string]: string | number | boolean | undefined
-}
+export default function AdminAnalytics() {
+  const [stats, setStats] = useState<StatsData | null>(null)
+  const [loading, setLoading] = useState(true)
+  const [timeRange, setTimeRange] = useState('7d')
 
-export default function Analytics() {
-  const { user, logout } = useAdminAuthContext()
+  useEffect(() => {
+    fetchStats()
+    // Track page view
+    trackAdminAction('view_analytics', { timeRange })
+  }, [timeRange])
 
-  const fetchAnalytics = useCallback(async (filters: AnalyticsFilters) => {
-    const response = await fetch(`/api/admin/stats?timeRange=${filters.timeRange}`, {
-      headers: {
-        Authorization: `Bearer ${localStorage.getItem("adminToken")}`
+  const fetchStats = async () => {
+    try {
+      const token = localStorage.getItem('adminToken')
+      const response = await fetch('/api/admin/stats', {
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      })
+
+      if (!response.ok) {
+        throw new Error('Failed to fetch stats')
       }
-    })
 
-    if (!response.ok) {
-      throw new Error('Failed to fetch analytics data')
+      const data = await response.json()
+      setStats(data)
+    } catch (error) {
+      console.error('Error fetching analytics:', error)
+    } finally {
+      setLoading(false)
     }
+  }
 
-    const data = await response.json()
+  const formatNumber = (num: number) => {
+    return new Intl.NumberFormat().format(num)
+  }
 
-    // Transform the stats data into analytics format
-    return {
-      pageViews: {
-        today: data.pageViews?.today || 0,
-        total: data.pageViews?.total || 0,
-        trend: 5.2 // Mock trend data
-      },
-      visitors: {
-        today: data.visitors?.today || 0,
-        total: data.visitors?.total || 0,
-        trend: 3.1 // Mock trend data
-      },
-      avgTimeOnSite: data.avgTimeOnSite || 0,
-      topPages: [
-        { page: "/", views: Math.floor(Math.random() * 1000) + 500 },
-        { page: "/blog", views: Math.floor(Math.random() * 500) + 200 },
-        { page: "/projects", views: Math.floor(Math.random() * 300) + 100 },
-        { page: "/contact", views: Math.floor(Math.random() * 200) + 50 }
-      ],
-      recentContacts: data.recentContacts || [],
-      blogStats: {
-        totalPosts: data.blogPosts?.total || 0,
-        publishedPosts: data.blogPosts?.published || 0,
-        totalViews: data.blogPosts?.totalViews || 0,
-        avgReadingTime: 6 // Mock data
-      }
-    }
-  }, [])
+  const formatPercentage = (num: number) => {
+    return `${num > 0 ? '+' : ''}${num.toFixed(1)}%`
+  }
 
-  // All complexity replaced with one hook!
-  const {
-    data: analytics,
-    loading,
-    error,
-    filters,
-    updateFilter,
-    invalidateData
-  } = useAdminSearch<AnalyticsData, AnalyticsFilters>({
-    fetchFn: fetchAnalytics,
-    initialFilters: { timeRange: "7d" }
-  })
-
-  // Clean error/loading states
-  if (loading) return <AdminLoading message="Loading analytics..." />
-  if (error) return <AdminError error={error} onRetry={invalidateData} title="Analytics Error" />
-
-  return (
-    <div className="min-h-screen bg-background">
-      {/* Header */}
-      <div className="border-b border-border/40">
-        <div className="container mx-auto px-4 py-4">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-4">
-              <Link
-                href="/admin/dashboard"
-                className="flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors"
-              >
-                <Icon name="arrow-left" size="sm" />
-                Back to Dashboard
-              </Link>
-              <div className="w-px h-6 bg-border"></div>
-              <h1 className="text-2xl font-bold">Analytics</h1>
-            </div>
-            <div className="flex items-center gap-4">
-              <select
-                value={filters.timeRange}
-                onChange={(e) => updateFilter('timeRange', e.target.value as AnalyticsFilters['timeRange'])}
-                className="px-3 py-1 text-sm bg-card border border-border rounded focus:outline-none focus:ring-2 focus:ring-primary/50"
-              >
-                <option value="1d">Last 24 hours</option>
-                <option value="7d">Last 7 days</option>
-                <option value="30d">Last 30 days</option>
-                <option value="90d">Last 90 days</option>
-              </select>
-              <span className="text-sm text-muted-foreground">
-                Welcome, {user?.username}
-              </span>
-              <button
-                onClick={logout}
-                className="text-sm text-muted-foreground hover:text-foreground transition-colors"
-              >
-                Logout
-              </button>
-            </div>
+  if (loading) {
+    return (
+      <div className="container mx-auto p-6">
+        <div className="flex items-center justify-center h-64">
+          <div className="text-center">
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto"></div>
+            <p className="mt-4 text-muted-foreground">Loading analytics...</p>
           </div>
         </div>
       </div>
+    )
+  }
 
-      <div className="container mx-auto px-4 py-8">
-        {/* Key Metrics */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="bg-card border border-border rounded-lg p-6"
-          >
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm text-muted-foreground">Page Views</p>
-                <p className="text-2xl font-bold">{analytics?.pageViews.total.toLocaleString()}</p>
-                <p className="text-sm text-green-500">+{analytics?.pageViews.trend}% vs last period</p>
-              </div>
-              <div className="w-12 h-12 bg-blue-500/10 rounded-lg flex items-center justify-center">
-                <Icon name="eye" size="md" className="text-blue-500" />
-              </div>
-            </div>
-          </motion.div>
-
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.1 }}
-            className="bg-card border border-border rounded-lg p-6"
-          >
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm text-muted-foreground">Visitors</p>
-                <p className="text-2xl font-bold">{analytics?.visitors.total.toLocaleString()}</p>
-                <p className="text-sm text-green-500">+{analytics?.visitors.trend}% vs last period</p>
-              </div>
-              <div className="w-12 h-12 bg-green-500/10 rounded-lg flex items-center justify-center">
-                <Icon name="users" size="md" className="text-green-500" />
-              </div>
-            </div>
-          </motion.div>
-
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.2 }}
-            className="bg-card border border-border rounded-lg p-6"
-          >
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm text-muted-foreground">Avg. Time on Site</p>
-                <p className="text-2xl font-bold">
-                  {Math.floor((analytics?.avgTimeOnSite || 0) / 60)}:{((analytics?.avgTimeOnSite || 0) % 60).toString().padStart(2, '0')}
-                </p>
-                <p className="text-sm text-muted-foreground">minutes</p>
-              </div>
-              <div className="w-12 h-12 bg-purple-500/10 rounded-lg flex items-center justify-center">
-                <Icon name="clock" size="md" className="text-purple-500" />
-              </div>
-            </div>
-          </motion.div>
-
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.3 }}
-            className="bg-card border border-border rounded-lg p-6"
-          >
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm text-muted-foreground">Blog Views</p>
-                <p className="text-2xl font-bold">{analytics?.blogStats.totalViews.toLocaleString()}</p>
-                <p className="text-sm text-muted-foreground">{analytics?.blogStats.publishedPosts} published posts</p>
-              </div>
-              <div className="w-12 h-12 bg-orange-500/10 rounded-lg flex items-center justify-center">
-                <Icon name="square-pen" size="md" className="text-orange-500" />
-              </div>
-            </div>
-          </motion.div>
-        </div>
-
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-          {/* Top Pages */}
-          <motion.div
-            initial={{ opacity: 0, x: -20 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ delay: 0.4 }}
-            className="bg-card border border-border rounded-lg p-6"
-          >
-            <h3 className="text-lg font-semibold mb-4">Top Pages</h3>
-            <div className="space-y-4">
-              {analytics?.topPages.map((page, index) => (
-                <div key={page.page} className="flex items-center justify-between">
-                  <div className="flex items-center gap-3">
-                    <span className="text-sm text-muted-foreground w-4">#{index + 1}</span>
-                    <span className="font-medium">{page.page}</span>
-                  </div>
-                  <span className="text-sm text-muted-foreground">{page.views.toLocaleString()} views</span>
-                </div>
-              ))}
-            </div>
-          </motion.div>
-
-          {/* Recent Activity */}
-          <motion.div
-            initial={{ opacity: 0, x: 20 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ delay: 0.5 }}
-            className="bg-card border border-border rounded-lg p-6"
-          >
-            <div className="flex items-center justify-between mb-4">
-              <h3 className="text-lg font-semibold">Recent Contacts</h3>
-              <Link
-                href="/admin/contacts"
-                className="text-sm text-primary hover:text-primary/80 transition-colors"
-              >
-                View all
-              </Link>
-            </div>
-            <div className="space-y-4">
-              {analytics?.recentContacts.slice(0, 5).map((contact) => (
-                <div key={contact.id} className="flex items-center justify-between">
-                  <div>
-                    <p className="font-medium text-sm">{contact.name}</p>
-                    <p className="text-xs text-muted-foreground">{contact.subject}</p>
-                  </div>
-                  <div className="text-right">
-                    <span className={`px-2 py-1 text-xs rounded ${contact.status === "NEW"
-                      ? "bg-blue-100 text-blue-800 dark:bg-blue-900/20 dark:text-blue-400"
-                      : contact.status === "RESPONDED"
-                        ? "bg-green-100 text-green-800 dark:bg-green-900/20 dark:text-green-400"
-                        : "bg-gray-100 text-gray-800 dark:bg-gray-900/20 dark:text-gray-400"
-                      }`}>
-                      {contact.status}
-                    </span>
-                    <p className="text-xs text-muted-foreground mt-1">
-                      {new Date(contact.createdAt).toLocaleDateString()}
-                    </p>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </motion.div>
+  if (!stats) {
+    return (
+      <div className="container mx-auto p-6">
+        <div className="text-center">
+          <h1 className="text-2xl font-bold text-red-500">Failed to load analytics</h1>
+          <p className="text-muted-foreground mt-2">Please try refreshing the page</p>
         </div>
       </div>
+    )
+  }
+
+  return (
+    <div className="container mx-auto p-6 space-y-6">
+      <div className="flex justify-between items-center">
+        <div>
+          <h1 className="text-3xl font-bold">Analytics Dashboard</h1>
+          <p className="text-muted-foreground">
+            Environment: <span className="font-medium">{stats.analytics.environment}</span> |
+            Analytics: <span className={`font-medium ${stats.analytics.enabled ? 'text-green-500' : 'text-yellow-500'}`}>
+              {stats.analytics.enabled ? 'Enabled' : 'Development Mode'}
+            </span>
+          </p>
+        </div>
+
+        <div className="flex gap-2">
+          <select
+            value={timeRange}
+            onChange={(e) => setTimeRange(e.target.value)}
+            className="px-3 py-2 border rounded-md bg-background"
+          >
+            <option value="7d">Last 7 days</option>
+            <option value="30d">Last 30 days</option>
+            <option value="90d">Last 90 days</option>
+          </select>
+        </div>
+      </div>
+
+      {!stats.analytics.enabled && (
+        <Card className="border-yellow-200 bg-yellow-50 dark:border-yellow-800 dark:bg-yellow-900/20">
+          <CardContent className="pt-6">
+            <div className="flex items-center gap-2">
+              <div className="w-2 h-2 bg-yellow-500 rounded-full"></div>
+              <p className="text-sm text-yellow-800 dark:text-yellow-200">
+                Analytics is disabled in development mode. Deploy to production to see real analytics data.
+              </p>
+            </div>
+          </CardContent>
+        </Card>
+      )}
+
+      <Tabs defaultValue="overview" className="space-y-4">
+        <TabsList>
+          <TabsTrigger value="overview">Overview</TabsTrigger>
+          <TabsTrigger value="pages">Top Pages</TabsTrigger>
+          <TabsTrigger value="sources">Traffic Sources</TabsTrigger>
+          <TabsTrigger value="database">Database</TabsTrigger>
+        </TabsList>
+
+        <TabsContent value="overview" className="space-y-4">
+          <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+            <Card>
+              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                <CardTitle className="text-sm font-medium">Page Views</CardTitle>
+                <span className="text-2xl">👁️</span>
+              </CardHeader>
+              <CardContent>
+                <div className="text-2xl font-bold">{formatNumber(stats.analytics.pageViews.total)}</div>
+                <p className="text-xs text-muted-foreground">
+                  <span className={stats.analytics.pageViews.change > 0 ? 'text-green-500' : 'text-red-500'}>
+                    {formatPercentage(stats.analytics.pageViews.change)}
+                  </span> from last period
+                </p>
+              </CardContent>
+            </Card>
+
+            <Card>
+              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                <CardTitle className="text-sm font-medium">Total Contacts</CardTitle>
+                <span className="text-2xl">📧</span>
+              </CardHeader>
+              <CardContent>
+                <div className="text-2xl font-bold">{formatNumber(stats.contacts.total)}</div>
+                <p className="text-xs text-muted-foreground">
+                  {stats.contacts.new} new, {stats.contacts.thisWeek} this week
+                </p>
+              </CardContent>
+            </Card>
+
+            <Card>
+              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                <CardTitle className="text-sm font-medium">Blog Posts</CardTitle>
+                <span className="text-2xl">📝</span>
+              </CardHeader>
+              <CardContent>
+                <div className="text-2xl font-bold">{formatNumber(stats.blog.published)}</div>
+                <p className="text-xs text-muted-foreground">
+                  {stats.blog.drafts} drafts, {formatNumber(stats.blog.totalViews)} total views
+                </p>
+              </CardContent>
+            </Card>
+
+            <Card>
+              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                <CardTitle className="text-sm font-medium">Events Tracked</CardTitle>
+                <span className="text-2xl">📊</span>
+              </CardHeader>
+              <CardContent>
+                <div className="text-2xl font-bold">
+                  {formatNumber(stats.analytics.events.reduce((sum, event) => sum + event.count, 0))}
+                </div>
+                <p className="text-xs text-muted-foreground">
+                  {stats.analytics.events.length} event types
+                </p>
+              </CardContent>
+            </Card>
+          </div>
+
+          <Card>
+            <CardHeader>
+              <CardTitle>Page Views Trend</CardTitle>
+              <CardDescription>Daily page views over the selected period</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="grid grid-cols-7 gap-2 text-sm">
+                {stats.analytics.pageViews.data.map((day, index) => (
+                  <div key={index} className="text-center">
+                    <div className="text-xs text-muted-foreground mb-1">
+                      {new Date(day.date).toLocaleDateString('en-US', { weekday: 'short' })}
+                    </div>
+                    <div className="bg-primary/10 rounded px-2 py-1 font-medium">
+                      {day.views}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </CardContent>
+          </Card>
+        </TabsContent>
+
+        <TabsContent value="pages" className="space-y-4">
+          <Card>
+            <CardHeader>
+              <CardTitle>Top Pages</CardTitle>
+              <CardDescription>Most visited pages and their performance</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-4">
+                {stats.analytics.topPages.map((page, index) => (
+                  <div key={index} className="flex items-center justify-between py-2 border-b last:border-b-0">
+                    <div>
+                      <div className="font-medium">{page.path}</div>
+                      <div className="text-sm text-muted-foreground">
+                        {formatNumber(page.views)} views
+                      </div>
+                    </div>
+                    <div className={`text-sm font-medium ${page.change > 0 ? 'text-green-500' : 'text-red-500'}`}>
+                      {formatPercentage(page.change)}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </CardContent>
+          </Card>
+        </TabsContent>
+
+        <TabsContent value="sources" className="space-y-4">
+          <div className="grid gap-4 md:grid-cols-2">
+            <Card>
+              <CardHeader>
+                <CardTitle>Traffic Sources</CardTitle>
+                <CardDescription>Where your visitors come from</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-4">
+                  {stats.analytics.referrers.map((referrer, index) => (
+                    <div key={index} className="flex items-center justify-between">
+                      <div className="flex items-center gap-3">
+                        <div className="font-medium">{referrer.source}</div>
+                      </div>
+                      <div className="text-right">
+                        <div className="font-medium">{formatNumber(referrer.visits)}</div>
+                        <div className="text-sm text-muted-foreground">{referrer.percentage}%</div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </CardContent>
+            </Card>
+
+            <Card>
+              <CardHeader>
+                <CardTitle>Top Countries</CardTitle>
+                <CardDescription>Geographic distribution of visitors</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-4">
+                  {stats.analytics.countries.map((country, index) => (
+                    <div key={index} className="flex items-center justify-between">
+                      <div className="font-medium">{country.country}</div>
+                      <div className="text-right">
+                        <div className="font-medium">{formatNumber(country.visits)}</div>
+                        <div className="text-sm text-muted-foreground">{country.percentage}%</div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+        </TabsContent>
+
+        <TabsContent value="database" className="space-y-4">
+          <Card>
+            <CardHeader>
+              <CardTitle>Database Overview</CardTitle>
+              <CardDescription>
+                Current database statistics | Environment: {stats.database?.environment} |
+                Database: {stats.database?.database}
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+                <div className="text-center p-4 border rounded-lg">
+                  <div className="text-2xl font-bold text-blue-500">{stats.database?.skills || 0}</div>
+                  <div className="text-sm text-muted-foreground">Skills</div>
+                </div>
+                <div className="text-center p-4 border rounded-lg">
+                  <div className="text-2xl font-bold text-green-500">{stats.database?.projects || 0}</div>
+                  <div className="text-sm text-muted-foreground">Projects</div>
+                </div>
+                <div className="text-center p-4 border rounded-lg">
+                  <div className="text-2xl font-bold text-purple-500">{stats.database?.experiences || 0}</div>
+                  <div className="text-sm text-muted-foreground">Experiences</div>
+                </div>
+                <div className="text-center p-4 border rounded-lg">
+                  <div className="text-2xl font-bold text-orange-500">{stats.database?.contacts || 0}</div>
+                  <div className="text-sm text-muted-foreground">Contacts</div>
+                </div>
+                <div className="text-center p-4 border rounded-lg">
+                  <div className="text-2xl font-bold text-pink-500">{stats.database?.testimonials || 0}</div>
+                  <div className="text-sm text-muted-foreground">Testimonials</div>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        </TabsContent>
+      </Tabs>
     </div>
   )
 }
