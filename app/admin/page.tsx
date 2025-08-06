@@ -1,15 +1,25 @@
 "use client"
 
+import { useAdminAuthContext } from "@/components/admin/AdminAuthProvider"
 import { Icon } from "@/components/ui/icon"
+import { refreshAuthState } from "@/hooks/useAdminAuth"
 import { motion } from "framer-motion"
 import { useRouter } from "next/navigation"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 
 export default function AdminLogin() {
   const [credentials, setCredentials] = useState({ username: "", password: "" })
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState("")
   const router = useRouter()
+  const { isAuthenticated, isLoading } = useAdminAuthContext()
+
+  // Redirect to dashboard if already authenticated
+  useEffect(() => {
+    if (!isLoading && isAuthenticated) {
+      router.push("/admin/dashboard")
+    }
+  }, [isAuthenticated, isLoading, router])
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -27,6 +37,11 @@ export default function AdminLogin() {
         const { token, user } = await response.json()
         localStorage.setItem("adminToken", token)
         localStorage.setItem("adminUser", JSON.stringify(user))
+
+        // Refresh auth state immediately
+        await refreshAuthState()
+
+        // Navigate to dashboard
         router.push("/admin/dashboard")
       } else {
         const { error } = await response.json()
