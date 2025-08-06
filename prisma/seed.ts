@@ -1,7 +1,7 @@
 import { PrismaClient, Project, ProjectSkillImportance, Skill } from '../generated/client'
-import '../lib/envConfig'; // Load environment configuration
-import { envConfig } from '../lib/envConfig'
-import { seedBlog } from '../scripts/seed-blog'
+import '../lib/config'; // Load environment configuration
+import { envConfig } from '../lib/config'
+import { seedBlog } from '../scripts/database/seed-blog'
 import { seedCertifications } from './seeders/certifications'
 import { seedContacts } from './seeders/contacts'
 import { seedEducation } from './seeders/education'

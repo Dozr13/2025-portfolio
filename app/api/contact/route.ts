@@ -1,5 +1,5 @@
 import { Contact } from '@/generated/client'
-import { prisma } from "@/lib/prisma"
+import { prisma } from "@/lib/config"
 import { NextResponse } from "next/server"
 
 export async function POST(request: Request) {

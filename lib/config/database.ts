@@ -1,5 +1,5 @@
 import { PrismaClient } from '@/generated/client'
-import { envConfig, getDatabaseConfig } from './envConfig'
+import { envConfig, getDatabaseConfig } from './env'
 
 const globalForPrisma = globalThis as unknown as {
   prisma: PrismaClient | undefined

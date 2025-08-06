@@ -24,8 +24,8 @@
     "docker:prod-full": "docker-compose -f docker-compose.production.yml up --build -d",
     "docker:logs": "docker-compose -f docker-compose.production.yml logs -f",
     "docker:down": "docker-compose -f docker-compose.production.yml down",
-    "deploy": "./scripts/deploy-production.sh",
-    "deploy:vercel": "DEPLOY_TARGET=vercel ./scripts/deploy-production.sh",
+    "deploy": "./scripts/deployment/deploy-production.sh",
+    "deploy:vercel": "DEPLOY_TARGET=vercel ./scripts/deployment/deploy-production.sh",
     "type-check": "tsc --noEmit",
     "analyze": "ANALYZE=true yarn build"
   },

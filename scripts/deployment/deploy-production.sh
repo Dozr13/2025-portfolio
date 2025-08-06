@@ -5,7 +5,7 @@
 
 set -e
 
-echo "🚀 Starting production deployment for Wade's Portfolio..."
+echo "Starting production deployment for Wade's Portfolio..."
 
 # Colors for output
 RED='\033[0;31m'
@@ -207,13 +207,13 @@ main() {
     
     if [ "${DEPLOY_TARGET:-docker}" = "docker" ]; then
         echo ""
-        echo "📊 Application URLs:"
+        echo "Application URLs:"
         echo "  • Portfolio: http://localhost:3000"
         echo "  • Admin: http://localhost:3000/admin"
         echo "  • Health Check: http://localhost:3000/api/health"
         echo "  • Database: postgresql://localhost:5432/portfolio"
         echo ""
-        echo "🔧 Management Commands:"
+        echo "Management Commands:"
         echo "  • View logs: docker-compose -f docker-compose.production.yml logs -f"
         echo "  • Stop services: docker-compose -f docker-compose.production.yml down"
         echo "  • Restart: docker-compose -f docker-compose.production.yml restart"

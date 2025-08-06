@@ -2,7 +2,8 @@
 
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { trackAdminAction } from "@/lib/analytics"
+import { trackAdminAction } from "@/lib/integrations"
+import { formatNumber, formatPercentage } from "@/lib/utils"
 import { useEffect, useState } from "react"
 
 interface AnalyticsData {
@@ -63,14 +64,6 @@ export default function AdminAnalytics() {
     } finally {
       setLoading(false)
     }
-  }
-
-  const formatNumber = (num: number) => {
-    return new Intl.NumberFormat().format(num)
-  }
-
-  const formatPercentage = (num: number) => {
-    return `${num > 0 ? '+' : ''}${num.toFixed(1)}%`
   }
 
   if (loading) {

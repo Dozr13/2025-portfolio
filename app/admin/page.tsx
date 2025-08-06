@@ -6,7 +6,6 @@ import { refreshAuthState } from "@/hooks/useAdminAuth"
 import { motion } from "framer-motion"
 import { useRouter } from "next/navigation"
 import { useEffect, useState } from "react"
-import '../globals.css'
 
 export default function AdminLogin() {
   const [credentials, setCredentials] = useState({ username: "", password: "" })

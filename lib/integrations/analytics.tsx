@@ -1,7 +1,7 @@
 import { track } from '@vercel/analytics'
 import { Analytics } from '@vercel/analytics/react'
 import { ReactNode } from 'react'
-import { envConfig, getAnalyticsConfig } from './envConfig'
+import { envConfig, getAnalyticsConfig } from '../config'
 
 // Analytics configuration
 export const analyticsConfig = getAnalyticsConfig()
@@ -9,7 +9,7 @@ export const analyticsConfig = getAnalyticsConfig()
 // Track custom events
 export function trackEvent(eventName: string, properties?: Record<string, string | number | boolean>) {
   if (!analyticsConfig.enabled || !analyticsConfig.trackingEnabled) {
-    console.log(`📊 [Analytics - ${envConfig.NODE_ENV}] Event:`, eventName, properties)
+    console.log(`[Analytics - ${envConfig.NODE_ENV}] Event:`, eventName, properties)
     return
   }
 

@@ -2,10 +2,10 @@
 
 A modern, full-stack portfolio website built with Next.js 15, TypeScript, and PostgreSQL.
 
-## 🚀 Quick Start
+## Quick Start
 
 ### Prerequisites
-- Node.js 18+ with Yarn
+- Node.js 20+ with Yarn 4.9.2 (via Corepack)
 - Docker (for containerized development)
 - PostgreSQL database (we recommend [Neon](https://neon.tech))
 
@@ -57,6 +57,12 @@ Access the app at http://localhost:3001
 ```bash
 # Build and run production container
 yarn docker:prod
+
+# View logs
+yarn docker:logs
+
+# Stop all containers
+yarn docker:down
 ```
 
 ## 🛠 Tech Stack
@@ -68,20 +74,25 @@ yarn docker:prod
 - **Deployment:** Docker, Vercel
 - **Admin:** Custom admin panel with authentication
 
-## 📁 Project Structure
+## Project Structure
 
 ```
 ├── app/                 # Next.js 15 app directory
+│   ├── (public)/       # Public pages (homepage, etc.)
 │   ├── admin/          # Admin panel pages
 │   ├── api/            # API routes
 │   └── blog/           # Blog pages
 ├── components/         # React components
 │   ├── sections/       # Page sections
 │   └── ui/            # Reusable UI components
+├── hooks/              # Custom React hooks
+├── lib/                # Utility libraries
 ├── prisma/            # Database schema and seeders
-│   ├── seeders/       # Modular seed files
 │   └── schema.prisma  # Database schema
+├── public/            # Static assets
 ├── scripts/           # Build and deployment scripts
+│   ├── database/      # Database scripts
+│   └── deployment/    # Deployment scripts
 └── docker-compose.yml # Docker configuration
 ```
 
@@ -127,7 +138,7 @@ The portfolio uses PostgreSQL with the following main models:
 - Performance metrics
 - Client testimonials
 
-## 🚀 Deployment
+## Deployment
 
 ### Vercel (Recommended)
 1. Connect your GitHub repository
@@ -139,7 +150,7 @@ The portfolio uses PostgreSQL with the following main models:
 docker-compose up --build -d
 ```
 
-## 📊 Performance
+## Performance
 
 - **Lighthouse Score:** 100/100
 - **Loading Speed:** < 1 second

@@ -2,8 +2,8 @@
 
 import { AdminAuthGuard } from '@/components/admin/AdminAuthGuard'
 import { AdminAuthProvider } from '@/components/admin/AdminAuthProvider'
+import { AdminNavigation } from '@/components/admin/AdminNavigation'
 import { usePathname } from 'next/navigation'
-
 
 export default function AdminLayout({
   children,
@@ -19,7 +19,8 @@ export default function AdminLayout({
         children
       ) : (
         <AdminAuthGuard>
-          <div className="admin-page">
+          <AdminNavigation />
+          <div className="w-full">
             {children}
           </div>
         </AdminAuthGuard>

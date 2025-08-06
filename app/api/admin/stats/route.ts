@@ -1,7 +1,5 @@
-import { getAnalyticsData } from "@/lib/analytics"
-import { getDatabaseInfo } from "@/lib/db"
-import { envConfig } from "@/lib/envConfig"
-import { prisma } from "@/lib/prisma"
+import { envConfig, getDatabaseInfo, prisma } from "@/lib/config"
+import { getAnalyticsData } from "@/lib/integrations"
 import { NextResponse } from "next/server"
 import { verifyAdminToken } from "../auth/route"
 

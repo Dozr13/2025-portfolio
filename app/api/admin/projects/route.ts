@@ -1,5 +1,5 @@
 import { Prisma } from '@/generated/client'
-import { prisma } from "@/lib/prisma"
+import { prisma } from "@/lib/config"
 import { NextResponse } from "next/server"
 import { verifyAdminToken } from "../auth/route"
 

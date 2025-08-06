@@ -1,4 +1,4 @@
-import { envConfig } from "@/lib/envConfig"
+import { envConfig } from "@/lib/config"
 import { SignJWT, jwtVerify } from "jose"
 import { NextResponse } from "next/server"
 

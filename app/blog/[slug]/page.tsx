@@ -1,4 +1,4 @@
-import { prisma } from "@/lib/prisma"
+import { prisma } from "@/lib/config"
 import { notFound } from "next/navigation"
 import { BlogPostClient } from "./blog-post-client"
 

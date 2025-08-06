@@ -1,4 +1,4 @@
-import { PostStatus, PrismaClient } from '../generated/client'
+import { PostStatus, PrismaClient } from '../../generated/client'
 
 const prisma = new PrismaClient()
 

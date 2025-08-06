@@ -78,7 +78,8 @@ export function SkillsDisplay({
 
   const displaySkills = getDisplaySkills()
   const categories = Object.keys(skillsByCategory)
-  const hasMore = limit && skills.length > limit && !showAll
+
+  const hasMore = !selectedCategory && limit && skills.length > limit
 
   return (
     <div className={`space-y-6 ${className}`}>
@@ -163,7 +164,7 @@ export function SkillsDisplay({
         </AnimatePresence>
       </motion.div>
 
-      {/* Show More/Less Button */}
+      {/* Show More/Less Button - Only on "All Skills" tab */}
       {hasMore && (
         <div className="text-center">
           <button

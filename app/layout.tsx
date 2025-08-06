@@ -1,5 +1,5 @@
 import { ThemeProvider } from "@/components/theme-provider"
-import { AnalyticsProvider } from "@/lib/analytics"
+import { AnalyticsProvider } from "@/lib/integrations"
 import type { Metadata } from "next"
 import { Inter, JetBrains_Mono } from "next/font/google"
 import "./globals.css"
@@ -67,7 +67,9 @@ export default function RootLayout({
           enableSystem
         >
           <AnalyticsProvider>
-            {children}
+            <main>
+              {children}
+            </main>
           </AnalyticsProvider>
         </ThemeProvider>
       </body>

@@ -2,50 +2,62 @@
 
 import { Icon } from "@/components/ui/icon"
 import { motion } from "framer-motion"
+import { useEffect, useState } from "react"
 
-const experiences = [
-  {
-    title: "Senior Software Engineer",
-    company: "Tech Solutions Inc.",
-    period: "2022 - Present",
-    location: "Remote",
-    description: "Leading development of scalable web applications and mentoring junior developers.",
-    achievements: [
-      "Architected microservices infrastructure serving 100K+ users",
-      "Reduced application load time by 60% through optimization",
-      "Led team of 5 developers in agile environment",
-      "Implemented CI/CD pipeline reducing deployment time by 80%"
-    ]
-  },
-  {
-    title: "Full Stack Developer",
-    company: "Digital Innovations",
-    period: "2020 - 2022",
-    location: "San Francisco, CA",
-    description: "Developed and maintained full-stack applications using modern technologies.",
-    achievements: [
-      "Built responsive web applications using React and Node.js",
-      "Integrated third-party APIs and payment systems",
-      "Improved code quality through test-driven development",
-      "Collaborated with UX/UI team to enhance user experience"
-    ]
-  },
-  {
-    title: "Software Developer",
-    company: "StartupXYZ",
-    period: "2019 - 2020",
-    location: "Austin, TX",
-    description: "Contributed to product development and learned modern web technologies.",
-    achievements: [
-      "Developed features for customer-facing web application",
-      "Participated in code reviews and team planning sessions",
-      "Learned React, TypeScript, and cloud technologies",
-      "Transitioned into professional development role"
-    ]
-  }
-]
+interface Experience {
+  id: string
+  title: string
+  company: string
+  location: string | null
+  startDate: string
+  endDate: string | null
+  current: boolean
+  description: string | null
+  technologies: string[]
+  achievements: string[]
+  order: number | null
+  period: string
+}
+
+// Hook to fetch experiences from API
+function useExperiences() {
+  const [experiences, setExperiences] = useState<Experience[]>([])
+  const [loading, setLoading] = useState(true)
+
+  useEffect(() => {
+    fetch('/api/experiences')
+      .then(res => res.json())
+      .then(data => {
+        setExperiences(data.experiences || [])
+      })
+      .catch(error => {
+        console.error('Failed to fetch experiences:', error)
+      })
+      .finally(() => {
+        setLoading(false)
+      })
+  }, [])
+
+  return { experiences, loading }
+}
 
 export function Experience() {
+  const { experiences, loading } = useExperiences()
+
+  if (loading) {
+    return (
+      <section id="experience" className="py-20 bg-background">
+        <div className="container mx-auto px-4">
+          <div className="text-center">
+            <div className="animate-pulse">
+              <div className="h-8 bg-muted rounded-lg w-64 mx-auto mb-4"></div>
+              <div className="h-4 bg-muted rounded-lg w-96 mx-auto"></div>
+            </div>
+          </div>
+        </div>
+      </section>
+    )
+  }
   return (
     <section id="experience" className="py-20 bg-background">
       <div>
@@ -71,7 +83,7 @@ export function Experience() {
           <div className="space-y-12">
             {experiences.map((experience, index) => (
               <motion.div
-                key={experience.title}
+                key={experience.id}
                 initial={{ opacity: 0, y: 50 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 transition={{ delay: index * 0.2, duration: 0.8 }}
