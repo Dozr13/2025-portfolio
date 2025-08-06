@@ -1,7 +1,6 @@
 "use client"
 
 import { Icon } from "@/components/ui/icon"
-import { useAdminAuth } from "@/hooks/useAdminAuth"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
 import { useCallback, useEffect, useState } from "react"
@@ -24,19 +23,11 @@ interface BlogPostData {
 }
 
 export default function EditBlogPost({ params }: { params: { id: string } }) {
-  const { isLoading: authLoading, isAuthenticated, redirectToLogin } = useAdminAuth()
   const [postData, setPostData] = useState<BlogPostData | null>(null)
   const [loading, setLoading] = useState(true)
   const [saving, setSaving] = useState(false)
   const [previewMode, setPreviewMode] = useState(false)
   const router = useRouter()
-
-  // Redirect if not authenticated
-  useEffect(() => {
-    if (!authLoading && !isAuthenticated) {
-      redirectToLogin()
-    }
-  }, [authLoading, isAuthenticated, redirectToLogin])
 
 
   const fetchBlogPost = useCallback(async () => {
@@ -65,10 +56,8 @@ export default function EditBlogPost({ params }: { params: { id: string } }) {
 
   // Fetch blog post data
   useEffect(() => {
-    if (!authLoading && isAuthenticated) {
-      fetchBlogPost()
-    }
-  }, [authLoading, isAuthenticated, fetchBlogPost, params.id])
+    fetchBlogPost()
+  }, [fetchBlogPost, params.id])
 
   const handleSave = async () => {
     if (!postData) return
@@ -106,7 +95,7 @@ export default function EditBlogPost({ params }: { params: { id: string } }) {
     } : null)
   }
 
-  if (authLoading || loading) {
+  if (loading) {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center">
         <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
@@ -114,7 +103,7 @@ export default function EditBlogPost({ params }: { params: { id: string } }) {
     )
   }
 
-  if (!isAuthenticated || !postData) {
+  if (!postData) {
     return null
   }
 

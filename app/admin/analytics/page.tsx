@@ -1,10 +1,11 @@
 "use client"
-
+import { useAdminAuthContext } from '@/components/admin/AdminAuthProvider'
+import { AdminError, AdminLoading } from "@/components/admin/AdminErrorBoundary"
 import { Icon } from "@/components/ui/icon"
-import { useAdminAuth } from "@/hooks/useAdminAuth"
+import { useAdminSearch } from "@/hooks/useAdminSearch"
 import { motion } from "framer-motion"
 import Link from "next/link"
-import { useCallback, useEffect, useState } from "react"
+import { useCallback } from "react"
 
 interface AnalyticsData {
   pageViews: { today: number; total: number; trend: number }
@@ -27,78 +28,72 @@ interface AnalyticsData {
   }
 }
 
+interface AnalyticsFilters {
+  timeRange: "1d" | "7d" | "30d" | "90d"
+  [key: string]: string | number | boolean | undefined
+}
+
 export default function Analytics() {
-  const { user, isLoading: authLoading, isAuthenticated, redirectToLogin, logout } = useAdminAuth()
-  const [analytics, setAnalytics] = useState<AnalyticsData | null>(null)
-  const [loading, setLoading] = useState(true)
-  const [timeRange, setTimeRange] = useState("7d")
+  const { user, logout } = useAdminAuthContext()
 
-  // Redirect if not authenticated
-  useEffect(() => {
-    if (!authLoading && !isAuthenticated) {
-      redirectToLogin()
-    }
-  }, [authLoading, isAuthenticated, redirectToLogin])
-
-  const fetchAnalytics = useCallback(async () => {
-    try {
-      const response = await fetch(`/api/admin/stats?timeRange=${timeRange}`, {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("adminToken")}`
-        }
-      })
-
-      if (response.ok) {
-        const data = await response.json()
-
-        // Transform the stats data into analytics format
-        setAnalytics({
-          pageViews: {
-            today: data.pageViews?.today || 0,
-            total: data.pageViews?.total || 0,
-            trend: 5.2 // Mock trend data
-          },
-          visitors: {
-            today: data.visitors?.today || 0,
-            total: data.visitors?.total || 0,
-            trend: 3.1 // Mock trend data
-          },
-          avgTimeOnSite: data.avgTimeOnSite || 0,
-          topPages: [
-            { page: "/", views: Math.floor(Math.random() * 1000) + 500 },
-            { page: "/blog", views: Math.floor(Math.random() * 500) + 200 },
-            { page: "/projects", views: Math.floor(Math.random() * 300) + 100 },
-            { page: "/contact", views: Math.floor(Math.random() * 200) + 50 }
-          ],
-          recentContacts: data.recentContacts || [],
-          blogStats: {
-            totalPosts: data.blogPosts?.total || 0,
-            publishedPosts: data.blogPosts?.published || 0,
-            totalViews: data.blogPosts?.totalViews || 0,
-            avgReadingTime: 6 // Mock data
-          }
-        })
+  const fetchAnalytics = useCallback(async (filters: AnalyticsFilters) => {
+    const response = await fetch(`/api/admin/stats?timeRange=${filters.timeRange}`, {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("adminToken")}`
       }
-    } catch (error) {
-      console.error("Error fetching analytics:", error)
-    } finally {
-      setLoading(false)
-    }
-  }, [timeRange])
+    })
 
-  useEffect(() => {
-    if (!authLoading && isAuthenticated) {
-      fetchAnalytics()
+    if (!response.ok) {
+      throw new Error('Failed to fetch analytics data')
     }
-  }, [authLoading, isAuthenticated, timeRange, fetchAnalytics])
 
-  if (authLoading || loading) {
-    return (
-      <div className="min-h-screen bg-background flex items-center justify-center">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
-      </div>
-    )
-  }
+    const data = await response.json()
+
+    // Transform the stats data into analytics format
+    return {
+      pageViews: {
+        today: data.pageViews?.today || 0,
+        total: data.pageViews?.total || 0,
+        trend: 5.2 // Mock trend data
+      },
+      visitors: {
+        today: data.visitors?.today || 0,
+        total: data.visitors?.total || 0,
+        trend: 3.1 // Mock trend data
+      },
+      avgTimeOnSite: data.avgTimeOnSite || 0,
+      topPages: [
+        { page: "/", views: Math.floor(Math.random() * 1000) + 500 },
+        { page: "/blog", views: Math.floor(Math.random() * 500) + 200 },
+        { page: "/projects", views: Math.floor(Math.random() * 300) + 100 },
+        { page: "/contact", views: Math.floor(Math.random() * 200) + 50 }
+      ],
+      recentContacts: data.recentContacts || [],
+      blogStats: {
+        totalPosts: data.blogPosts?.total || 0,
+        publishedPosts: data.blogPosts?.published || 0,
+        totalViews: data.blogPosts?.totalViews || 0,
+        avgReadingTime: 6 // Mock data
+      }
+    }
+  }, [])
+
+  // All complexity replaced with one hook!
+  const {
+    data: analytics,
+    loading,
+    error,
+    filters,
+    updateFilter,
+    invalidateData
+  } = useAdminSearch<AnalyticsData, AnalyticsFilters>({
+    fetchFn: fetchAnalytics,
+    initialFilters: { timeRange: "7d" }
+  })
+
+  // Clean error/loading states
+  if (loading) return <AdminLoading message="Loading analytics..." />
+  if (error) return <AdminError error={error} onRetry={invalidateData} title="Analytics Error" />
 
   return (
     <div className="min-h-screen bg-background">
@@ -119,8 +114,8 @@ export default function Analytics() {
             </div>
             <div className="flex items-center gap-4">
               <select
-                value={timeRange}
-                onChange={(e) => setTimeRange(e.target.value)}
+                value={filters.timeRange}
+                onChange={(e) => updateFilter('timeRange', e.target.value as AnalyticsFilters['timeRange'])}
                 className="px-3 py-1 text-sm bg-card border border-border rounded focus:outline-none focus:ring-2 focus:ring-primary/50"
               >
                 <option value="1d">Last 24 hours</option>

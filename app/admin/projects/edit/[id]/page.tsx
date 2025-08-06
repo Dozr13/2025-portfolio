@@ -1,7 +1,7 @@
 "use client"
 
+import { useAdminAuthContext } from "@/components/admin/AdminAuthProvider"
 import { Icon } from "@/components/ui/icon"
-import { useAdminAuth } from "@/hooks/useAdminAuth"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
 import { useCallback, useEffect, useState } from "react"
@@ -26,7 +26,7 @@ interface ProjectData {
 }
 
 export default function EditProject({ params }: { params: { id: string } }) {
-  const { isLoading: authLoading, isAuthenticated, redirectToLogin } = useAdminAuth()
+  const { isLoading: authLoading, isAuthenticated, redirectToLogin } = useAdminAuthContext()
   const [projectData, setProjectData] = useState<ProjectData | null>(null)
   const [loading, setLoading] = useState(true)
   const [saving, setSaving] = useState(false)

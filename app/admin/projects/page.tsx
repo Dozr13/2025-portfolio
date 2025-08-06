@@ -1,10 +1,13 @@
 "use client"
 
+import { useAdminAuthContext } from "@/components/admin/AdminAuthProvider"
+import { AdminError, AdminLoading } from "@/components/admin/AdminErrorBoundary"
 import { Icon } from "@/components/ui/icon"
-import { useAdminAuth } from "@/hooks/useAdminAuth"
+import { ProjectCategory, ProjectStatus } from "@/generated/client"
+import { useAdminSearch } from "@/hooks/useAdminSearch"
 import { projectsService } from "@/lib/services/admin"
 import Link from "next/link"
-import { useCallback, useEffect, useState } from "react"
+import { useCallback } from "react"
 
 interface Project {
   id: string
@@ -23,90 +26,68 @@ interface Project {
   }
 }
 
-export default function ProjectsManagement() {
-  const { user, isLoading: authLoading, isAuthenticated, redirectToLogin } = useAdminAuth()
-  const [projects, setProjects] = useState<Project[]>([])
-  const [loading, setLoading] = useState(true)
-  const [page, setPage] = useState(1)
-  const [totalPages, setTotalPages] = useState(1)
-  const [searchTerm, setSearchTerm] = useState("")
-  const [statusFilter, setStatusFilter] = useState("")
-  const [categoryFilter, setCategoryFilter] = useState("")
+interface ProjectFilters {
+  page: number
+  search?: string
+  status?: ProjectStatus | ""
+  category?: ProjectCategory | ""
+  [key: string]: string | number | boolean | undefined
+}
 
-  console.log("[PROJECTS PAGE] Component state:", {
-    authLoading,
-    isAuthenticated,
-    user: user?.username,
-    loading
+interface ProjectsData {
+  projects: Project[]
+  pagination: {
+    pages: number
+    total: number
+  }
+}
+
+export default function ProjectsManagement() {
+  const { user, logout } = useAdminAuthContext()
+
+  const fetchProjects = useCallback(async (filters: ProjectFilters) => {
+    const data = await projectsService.fetchProjects({
+      page: filters.page,
+      limit: 10,
+      search: filters.search || undefined,
+      status: filters.status || undefined,
+      category: filters.category || undefined
+    })
+    return data
+  }, [])
+
+  // All complexity replaced with one hook!
+  const {
+    data,
+    loading,
+    error,
+    filters,
+    searchInput,
+    setSearchInput,
+    updateFilter,
+    invalidateData
+  } = useAdminSearch<ProjectsData, ProjectFilters>({
+    fetchFn: fetchProjects,
+    initialFilters: { page: 1, search: undefined, status: "", category: "" }
   })
 
-  // Redirect if not authenticated
-  useEffect(() => {
-    console.log("[PROJECTS PAGE] Auth effect:", { authLoading, isAuthenticated })
-    if (!authLoading && !isAuthenticated) {
-      console.log("[PROJECTS PAGE] Not authenticated, redirecting...")
-      redirectToLogin()
-    }
-  }, [authLoading, isAuthenticated, redirectToLogin])
-
-  const fetchProjects = useCallback(async () => {
-    try {
-      setLoading(true)
-
-      const data = await projectsService.fetchProjects({
-        page,
-        limit: 10,
-        search: searchTerm || undefined,
-        status: statusFilter || undefined,
-        category: categoryFilter || undefined
-      })
-
-      setProjects(data.projects)
-      setTotalPages(data.pagination.pages)
-    } catch (error) {
-      console.error("Error fetching projects:", error)
-    } finally {
-      setLoading(false)
-    }
-  }, [page, searchTerm, statusFilter, categoryFilter])
-
-  useEffect(() => {
-    console.log("[PROJECTS PAGE] Data fetch effect:", { authLoading, isAuthenticated })
-    if (!authLoading && isAuthenticated) {
-      fetchProjects()
-    }
-  }, [authLoading, isAuthenticated, page, searchTerm, statusFilter, categoryFilter, fetchProjects])
+  const projects = data?.projects || []
+  const totalPages = data?.pagination?.pages || 1
 
   const handleDelete = async (id: string) => {
     if (!confirm("Are you sure you want to delete this project?")) return
 
     try {
       await projectsService.deleteProject(id)
-      fetchProjects() // Refresh the list
+      invalidateData() // Trigger refresh using invalidation pattern
     } catch (error) {
       console.error("Error deleting project:", error)
     }
   }
 
-  const handleLogout = () => {
-    localStorage.removeItem("adminToken")
-    localStorage.removeItem("adminUser")
-    window.location.href = "/admin"
-  }
-
-  if (authLoading || loading) {
-    console.log("[PROJECTS PAGE] Showing loading state:", { authLoading, loading })
-    return (
-      <div className="min-h-screen bg-background flex items-center justify-center">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
-      </div>
-    )
-  }
-
-  if (!isAuthenticated) {
-    console.log("[PROJECTS PAGE] Not authenticated, should redirect...")
-    return null // This should not render as useEffect will redirect
-  }
+  // Clean error/loading states
+  if (loading) return <AdminLoading message="Loading projects..." />
+  if (error) return <AdminError error={error} onRetry={invalidateData} title="Projects Error" />
 
   return (
     <div className="min-h-screen bg-background">
@@ -130,7 +111,7 @@ export default function ProjectsManagement() {
                 Welcome, {user?.username}
               </span>
               <button
-                onClick={handleLogout}
+                onClick={logout}
                 className="text-sm text-muted-foreground hover:text-foreground transition-colors"
               >
                 Logout
@@ -147,14 +128,14 @@ export default function ProjectsManagement() {
             <input
               type="text"
               placeholder="Search projects..."
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
+              value={searchInput}
+              onChange={(e) => setSearchInput(e.target.value)}
               className="w-full px-4 py-2 bg-card border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/50"
             />
           </div>
           <select
-            value={statusFilter}
-            onChange={(e) => setStatusFilter(e.target.value)}
+            value={filters.status || ""}
+            onChange={(e) => updateFilter('status', e.target.value as ProjectStatus | "")}
             className="px-4 py-2 bg-card border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/50"
           >
             <option value="">All Statuses</option>
@@ -165,8 +146,8 @@ export default function ProjectsManagement() {
             <option value="ARCHIVED">Archived</option>
           </select>
           <select
-            value={categoryFilter}
-            onChange={(e) => setCategoryFilter(e.target.value)}
+            value={filters.category || ""}
+            onChange={(e) => updateFilter('category', e.target.value as ProjectCategory | "")}
             className="px-4 py-2 bg-card border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/50"
           >
             <option value="">All Categories</option>
@@ -278,19 +259,19 @@ export default function ProjectsManagement() {
         {totalPages > 1 && (
           <div className="flex items-center justify-between mt-6">
             <div className="text-sm text-muted-foreground">
-              Page {page} of {totalPages}
+              Page {filters.page} of {totalPages}
             </div>
             <div className="flex gap-2">
               <button
-                onClick={() => setPage(p => Math.max(1, p - 1))}
-                disabled={page === 1}
+                onClick={() => updateFilter('page', Math.max(1, filters.page - 1))}
+                disabled={filters.page === 1}
                 className="px-3 py-1 text-sm bg-card border border-border rounded hover:bg-muted/50 disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 Previous
               </button>
               <button
-                onClick={() => setPage(p => Math.min(totalPages, p + 1))}
-                disabled={page === totalPages}
+                onClick={() => updateFilter('page', Math.min(totalPages, filters.page + 1))}
+                disabled={filters.page === totalPages}
                 className="px-3 py-1 text-sm bg-card border border-border rounded hover:bg-muted/50 disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 Next

@@ -1,10 +1,12 @@
 "use client"
 
+import { useAdminAuthContext } from "@/components/admin/AdminAuthProvider"
+import { AdminError, AdminLoading } from "@/components/admin/AdminErrorBoundary"
 import { Icon } from "@/components/ui/icon"
-import { useAdminAuth } from "@/hooks/useAdminAuth"
+import { useAdminData } from "@/hooks/useAdminData"
 import { motion } from "framer-motion"
 import Link from "next/link"
-import { useCallback, useEffect, useState } from "react"
+import { useCallback } from "react"
 
 interface DashboardStats {
   contacts: {
@@ -33,66 +35,44 @@ interface RecentContact {
   createdAt: string
 }
 
-export default function AdminDashboard() {
-  const { user, isLoading: authLoading, isAuthenticated, redirectToLogin, logout } = useAdminAuth()
-  const [stats, setStats] = useState<DashboardStats | null>(null)
-  const [recentContacts, setRecentContacts] = useState<RecentContact[]>([])
-  const [loading, setLoading] = useState(true)
+interface DashboardData {
+  stats: DashboardStats
+  recentContacts: RecentContact[]
+}
 
-  // Redirect if not authenticated
-  useEffect(() => {
-    if (!authLoading && !isAuthenticated) {
-      redirectToLogin()
-    }
-  }, [authLoading, isAuthenticated, redirectToLogin])
+export default function AdminDashboard() {
+  const { user, logout } = useAdminAuthContext()
 
   const fetchDashboardData = useCallback(async () => {
-    try {
-      const token = localStorage.getItem("adminToken")
+    const token = localStorage.getItem("adminToken")
 
-      // Fetch dashboard stats
-      const [statsRes, contactsRes] = await Promise.all([
-        fetch("/api/admin/stats", {
-          headers: { "Authorization": `Bearer ${token}` }
-        }),
-        fetch("/api/admin/contacts", {
-          headers: { "Authorization": `Bearer ${token}` }
-        })
-      ])
+    const [statsRes, contactsRes] = await Promise.all([
+      fetch("/api/admin/stats", {
+        headers: { "Authorization": `Bearer ${token}` }
+      }),
+      fetch("/api/admin/contacts", {
+        headers: { "Authorization": `Bearer ${token}` }
+      })
+    ])
 
-      if (statsRes.ok) {
-        const statsData = await statsRes.json()
-        setStats(statsData)
-      }
+    const [statsData, contactsData] = await Promise.all([
+      statsRes.ok ? statsRes.json() : null,
+      contactsRes.ok ? contactsRes.json() : null
+    ])
 
-      if (contactsRes.ok) {
-        const contactsData = await contactsRes.json()
-        setRecentContacts(contactsData.contacts.slice(0, 5))
-      }
-
-    } catch (error) {
-      console.error("Failed to fetch dashboard data:", error)
-    } finally {
-      setLoading(false)
+    return {
+      stats: statsData,
+      recentContacts: contactsData?.contacts?.slice(0, 5) || []
     }
   }, [])
 
-  useEffect(() => {
-    if (!authLoading && isAuthenticated) {
-      fetchDashboardData()
-    }
-  }, [authLoading, isAuthenticated, fetchDashboardData])
+  const { data, loading, error, invalidateData } = useAdminData<DashboardData>({
+    fetchFn: fetchDashboardData
+  })
 
-  if (authLoading || loading) {
-    return (
-      <div className="min-h-screen bg-background flex items-center justify-center">
-        <div className="text-center">
-          <div className="w-12 h-12 border-4 border-primary border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
-          <p className="text-muted-foreground">Loading dashboard...</p>
-        </div>
-      </div>
-    )
-  }
+  // Clean error/loading states
+  if (loading) return <AdminLoading message="Loading dashboard..." />
+  if (error) return <AdminError error={error} onRetry={invalidateData} title="Dashboard Error" />
 
   return (
     <div className="min-h-screen bg-background">
@@ -149,9 +129,9 @@ export default function AdminDashboard() {
                 <Icon name="mail" size="md" className="text-blue-500" />
               </div>
               <div>
-                <p className="text-2xl font-bold text-foreground">{stats?.contacts.total || 0}</p>
+                <p className="text-2xl font-bold text-foreground">{data?.stats?.contacts.total || 0}</p>
                 <p className="text-sm text-muted-foreground">Total Contacts</p>
-                <p className="text-xs text-green-500">+{stats?.contacts.new || 0} new</p>
+                <p className="text-xs text-green-500">+{data?.stats?.contacts.new || 0} new</p>
               </div>
             </div>
           </div>
@@ -162,9 +142,9 @@ export default function AdminDashboard() {
                 <Icon name="file-text" size="md" className="text-green-500" />
               </div>
               <div>
-                <p className="text-2xl font-bold text-foreground">{stats?.blog.published || 0}</p>
+                <p className="text-2xl font-bold text-foreground">{data?.stats?.blog.published || 0}</p>
                 <p className="text-sm text-muted-foreground">Published Posts</p>
-                <p className="text-xs text-muted-foreground">{stats?.blog.drafts || 0} drafts</p>
+                <p className="text-xs text-muted-foreground">{data?.stats?.blog.drafts || 0} drafts</p>
               </div>
             </div>
           </div>
@@ -175,7 +155,7 @@ export default function AdminDashboard() {
                 <Icon name="eye" size="md" className="text-purple-500" />
               </div>
               <div>
-                <p className="text-2xl font-bold text-foreground">{stats?.blog.totalViews || 0}</p>
+                <p className="text-2xl font-bold text-foreground">{data?.stats?.blog.totalViews || 0}</p>
                 <p className="text-sm text-muted-foreground">Blog Views</p>
                 <p className="text-xs text-green-500">This month</p>
               </div>
@@ -188,7 +168,7 @@ export default function AdminDashboard() {
                 <Icon name="users" size="md" className="text-orange-500" />
               </div>
               <div>
-                <p className="text-2xl font-bold text-foreground">{stats?.analytics.visitors || 0}</p>
+                <p className="text-2xl font-bold text-foreground">{data?.stats?.analytics.visitors || 0}</p>
                 <p className="text-sm text-muted-foreground">Visitors</p>
                 <p className="text-xs text-muted-foreground">This week</p>
               </div>
@@ -300,9 +280,9 @@ export default function AdminDashboard() {
             </div>
 
             <div className="bg-card border border-border rounded-xl overflow-hidden">
-              {recentContacts.length > 0 ? (
+              {data?.recentContacts && data.recentContacts.length > 0 ? (
                 <div className="divide-y divide-border">
-                  {recentContacts.map((contact) => (
+                  {data.recentContacts.map((contact) => (
                     <div key={contact.id} className="p-4">
                       <div className="flex items-start justify-between">
                         <div className="flex-1">

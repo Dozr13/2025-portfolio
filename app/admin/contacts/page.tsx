@@ -1,11 +1,14 @@
 "use client"
 
+import { useAdminAuthContext } from "@/components/admin/AdminAuthProvider"
+import { AdminError, AdminLoading } from "@/components/admin/AdminErrorBoundary"
 import { Icon } from "@/components/ui/icon"
-import { useAdminAuth } from "@/hooks/useAdminAuth"
+import { ContactStatus } from "@/generated/client"
+import { useAdminSearch } from "@/hooks/useAdminSearch"
 import { contactsService } from "@/lib/services/admin"
 import { motion } from "framer-motion"
 import Link from "next/link"
-import { useCallback, useEffect, useState } from "react"
+import { useCallback, useState } from "react"
 
 interface Contact {
   id: string
@@ -27,49 +30,55 @@ interface Contact {
   respondedAt: string | null
 }
 
+interface ContactFilters {
+  status?: ContactStatus | ""
+  search?: string
+  [key: string]: string | number | boolean | undefined
+}
+
+interface ContactsData {
+  contacts: Contact[]
+  pagination: {
+    total: number
+    pages: number
+  }
+}
+
 export default function ContactsManagement() {
-  const [contacts, setContacts] = useState<Contact[]>([])
-  const [loading, setLoading] = useState(true)
+  const { logout } = useAdminAuthContext()
   const [selectedContact, setSelectedContact] = useState<Contact | null>(null)
-  const [filters, setFilters] = useState({
-    status: "",
-    search: ""
+
+  const fetchContacts = useCallback(async (filters: ContactFilters) => {
+    const data = await contactsService.fetchContacts({
+      status: filters.status || undefined,
+      search: filters.search || undefined
+    })
+    return data
+  }, [])
+
+  // All complexity replaced with one hook!
+  const {
+    data,
+    loading,
+    error,
+    filters,
+    searchInput,
+    setSearchInput,
+    updateFilter,
+    invalidateData
+  } = useAdminSearch<ContactsData, ContactFilters>({
+    fetchFn: fetchContacts,
+    initialFilters: { status: "", search: undefined }
   })
 
-
-  const { isLoading: authLoading, isAuthenticated, redirectToLogin } = useAdminAuth()
-
-  const fetchContacts = useCallback(async () => {
-    try {
-      setLoading(true)
-
-      const data = await contactsService.fetchContacts({
-        status: filters.status || undefined,
-        search: filters.search || undefined
-      })
-
-      setContacts(data.contacts)
-    } catch (error) {
-      console.error("Failed to fetch contacts:", error)
-    } finally {
-      setLoading(false)
-    }
-  }, [filters.status, filters.search])
-
-  useEffect(() => {
-    if (!authLoading && !isAuthenticated) {
-      redirectToLogin()
-    } else if (!authLoading && isAuthenticated) {
-      fetchContacts()
-    }
-  }, [authLoading, isAuthenticated, redirectToLogin, fetchContacts])
+  const contacts = data?.contacts || []
 
   const updateContactStatus = async (contactId: string, status: string, priority?: string, notes?: string) => {
     try {
       await contactsService.updateContactStatus(contactId, status, priority, notes)
-      fetchContacts() // Refresh the list
+      invalidateData() // Trigger refresh using invalidation pattern
       if (selectedContact?.id === contactId) {
-        setSelectedContact(prev => prev ? { ...prev, status, ...(priority && { priority }), ...(notes !== undefined && { notes }) } : null)
+        setSelectedContact((prev: Contact | null) => prev ? { ...prev, status, ...(priority && { priority }), ...(notes !== undefined && { notes }) } : null)
       }
     } catch (error) {
       console.error("Failed to update contact:", error)
@@ -97,16 +106,9 @@ export default function ContactsManagement() {
     }
   }
 
-  if (loading) {
-    return (
-      <div className="min-h-screen bg-background flex items-center justify-center">
-        <div className="text-center">
-          <div className="w-12 h-12 border-4 border-primary border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
-          <p className="text-muted-foreground">Loading contacts...</p>
-        </div>
-      </div>
-    )
-  }
+  // Clean error/loading states
+  if (loading) return <AdminLoading message="Loading contacts..." />
+  if (error) return <AdminError error={error} onRetry={invalidateData} title="Contacts Error" />
 
   return (
     <div className="min-h-screen bg-background">
@@ -126,6 +128,15 @@ export default function ContactsManagement() {
                 <p className="text-muted-foreground">{contacts.length} total contacts</p>
               </div>
             </div>
+
+            <div className="flex items-center gap-4">
+              <button
+                onClick={logout}
+                className="text-sm text-muted-foreground hover:text-foreground transition-colors"
+              >
+                Logout
+              </button>
+            </div>
           </div>
         </div>
       </div>
@@ -142,14 +153,14 @@ export default function ContactsManagement() {
               <input
                 type="text"
                 placeholder="Search contacts..."
-                value={filters.search}
-                onChange={(e) => setFilters({ ...filters, search: e.target.value })}
+                value={searchInput}
+                onChange={(e) => setSearchInput(e.target.value)}
                 className="w-full px-4 py-2 bg-background border border-border rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
               />
             </div>
             <select
-              value={filters.status}
-              onChange={(e) => setFilters({ ...filters, status: e.target.value })}
+              value={filters.status || ""}
+              onChange={(e) => updateFilter('status', e.target.value as ContactStatus | "")}
               className="px-4 py-2 bg-background border border-border rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
             >
               <option value="">All Status</option>

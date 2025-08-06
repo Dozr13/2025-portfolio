@@ -1,10 +1,16 @@
 import { Prisma } from '../../generated/client'
 
 // Admin API service functions
-const getAuthHeaders = () => ({
-  'Authorization': `Bearer ${localStorage.getItem("adminToken")}`,
-  'Content-Type': 'application/json'
-})
+const getAuthHeaders = () => {
+  if (typeof window === 'undefined') {
+    throw new Error('Auth headers can only be accessed on the client side')
+  }
+  
+  return {
+    'Authorization': `Bearer ${localStorage.getItem("adminToken")}`,
+    'Content-Type': 'application/json'
+  }
+}
 
 // Auth services
 export const authService = {

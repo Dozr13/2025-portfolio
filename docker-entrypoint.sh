@@ -17,7 +17,7 @@ if [ "$NODE_ENV" != "development" ]; then
   yarn build
 fi
 
-echo "🎉 Application ready! Starting server..."
+echo "Application ready! Starting server..."
 
 # Execute the main command
 exec "$@"

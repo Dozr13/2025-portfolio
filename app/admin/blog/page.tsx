@@ -1,10 +1,13 @@
 "use client"
 
+import { useAdminAuthContext } from "@/components/admin/AdminAuthProvider"
+import { AdminError, AdminLoading } from "@/components/admin/AdminErrorBoundary"
 import { Icon } from "@/components/ui/icon"
-import { useAdminAuth } from "@/hooks/useAdminAuth"
+import { PostStatus } from "@/generated/client"
+import { useAdminSearch } from "@/hooks/useAdminSearch"
 import { blogService } from "@/lib/services/admin"
 import Link from "next/link"
-import { useCallback, useEffect, useState } from "react"
+import { useCallback } from "react"
 
 interface BlogPost {
   id: string
@@ -23,77 +26,66 @@ interface BlogPost {
   }
 }
 
-export default function BlogManagement() {
-  const { user, isLoading: authLoading, isAuthenticated, redirectToLogin, logout } = useAdminAuth()
-  const [posts, setPosts] = useState<BlogPost[]>([])
-  const [loading, setLoading] = useState(true)
-  const [page, setPage] = useState(1)
-  const [totalPages, setTotalPages] = useState(1)
-  const [searchTerm, setSearchTerm] = useState("")
-  const [statusFilter, setStatusFilter] = useState("")
+interface BlogFilters {
+  page: number
+  search?: string
+  status?: PostStatus | ""
+  [key: string]: string | number | boolean | undefined
+}
 
-  console.log("[BLOG PAGE] Component state:", {
-    authLoading,
-    isAuthenticated,
-    user: user?.username,
-    loading
+interface BlogData {
+  posts: BlogPost[]
+  pagination: {
+    pages: number
+    total: number
+  }
+}
+
+export default function BlogManagement() {
+  const { user, logout } = useAdminAuthContext()
+
+  const fetchPosts = useCallback(async (filters: BlogFilters) => {
+    const data = await blogService.fetchPosts({
+      page: filters.page,
+      limit: 10,
+      search: filters.search || undefined,
+      status: filters.status || undefined
+    })
+    return data
+  }, [])
+
+  // All complexity replaced with one hook!
+  const {
+    data,
+    loading,
+    error,
+    filters,
+    searchInput,
+    setSearchInput,
+    updateFilter,
+    invalidateData
+  } = useAdminSearch<BlogData, BlogFilters>({
+    fetchFn: fetchPosts,
+    initialFilters: { page: 1, search: undefined, status: "" }
   })
 
-  // Redirect if not authenticated
-  useEffect(() => {
-    console.log("[BLOG PAGE] Auth effect:", { authLoading, isAuthenticated })
-    if (!authLoading && !isAuthenticated) {
-      console.log("[BLOG PAGE] Not authenticated, redirecting...")
-      redirectToLogin()
-    }
-  }, [authLoading, isAuthenticated, redirectToLogin])
-
-  const fetchPosts = useCallback(async () => {
-    try {
-      setLoading(true)
-
-      const data = await blogService.fetchPosts({
-        page,
-        limit: 10,
-        search: searchTerm || undefined,
-        status: statusFilter || undefined
-      })
-
-      setPosts(data.posts)
-      setTotalPages(data.pagination.pages)
-    } catch (error) {
-      console.error("Error fetching posts:", error)
-    } finally {
-      setLoading(false)
-    }
-  }, [page, searchTerm, statusFilter])
-
-  useEffect(() => {
-    console.log("[BLOG PAGE] Data fetch effect:", { authLoading, isAuthenticated })
-    if (!authLoading && isAuthenticated) {
-      console.log("[BLOG PAGE] Authenticated, fetching posts...")
-      fetchPosts()
-    }
-  }, [authLoading, isAuthenticated, page, searchTerm, statusFilter, fetchPosts])
+  const posts = data?.posts || []
+  const totalPages = data?.pagination?.pages || 1
 
   const handleDelete = async (id: string) => {
     if (!confirm("Are you sure you want to delete this post?")) return
 
     try {
       await blogService.deletePost(id)
-      fetchPosts() // Refresh the list
+      invalidateData() // Trigger refresh using invalidation pattern
     } catch (error) {
       console.error("Error deleting post:", error)
     }
   }
 
-  if (authLoading || loading) {
-    return (
-      <div className="min-h-screen bg-background flex items-center justify-center">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
-      </div>
-    )
-  }
+  // Clean error/loading states
+  if (loading) return <AdminLoading message="Loading posts..." />
+  if (error) return <AdminError error={error} onRetry={invalidateData} title="Blog Error" />
 
   return (
     <div className="min-h-screen bg-background">
@@ -134,14 +126,14 @@ export default function BlogManagement() {
             <input
               type="text"
               placeholder="Search posts..."
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
+              value={searchInput}
+              onChange={(e) => setSearchInput(e.target.value)}
               className="w-full px-4 py-2 bg-card border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/50"
             />
           </div>
           <select
-            value={statusFilter}
-            onChange={(e) => setStatusFilter(e.target.value)}
+            value={filters.status || ""}
+            onChange={(e) => updateFilter('status', e.target.value as PostStatus | "")}
             className="px-4 py-2 bg-card border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/50"
           >
             <option value="">All Status</option>
@@ -259,19 +251,19 @@ export default function BlogManagement() {
         {totalPages > 1 && (
           <div className="flex items-center justify-between mt-6">
             <div className="text-sm text-muted-foreground">
-              Page {page} of {totalPages}
+              Page {filters.page} of {totalPages}
             </div>
             <div className="flex gap-2">
               <button
-                onClick={() => setPage(p => Math.max(1, p - 1))}
-                disabled={page === 1}
+                onClick={() => updateFilter('page', Math.max(1, filters.page - 1))}
+                disabled={filters.page === 1}
                 className="px-3 py-1 text-sm bg-card border border-border rounded hover:bg-muted/50 disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 Previous
               </button>
               <button
-                onClick={() => setPage(p => Math.min(totalPages, p + 1))}
-                disabled={page === totalPages}
+                onClick={() => updateFilter('page', Math.min(totalPages, filters.page + 1))}
+                disabled={filters.page === totalPages}
                 className="px-3 py-1 text-sm bg-card border border-border rounded hover:bg-muted/50 disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 Next

@@ -46,5 +46,5 @@ build*.log
 run*.log
 
 /lib/generated/prisma
-/generated/client
+# /generated/client
 

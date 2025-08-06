@@ -1,0 +1,446 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "../generated/client"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// Analytics and Visitor Tracking
+model PageView {
+  id        String   @id @default(cuid())
+  page      String
+  userAgent String?
+  ipAddress String?
+  country   String?
+  device    String?
+  referrer  String?
+  timestamp DateTime @default(now())
+
+  @@map("page_views")
+}
+
+model Visitor {
+  id         String   @id @default(cuid())
+  sessionId  String   @unique
+  ipAddress  String?
+  userAgent  String?
+  country    String?
+  city       String?
+  device     String?
+  browser    String?
+  os         String?
+  firstVisit DateTime @default(now())
+  lastVisit  DateTime @updatedAt
+  pageViews  Int      @default(1)
+  timeOnSite Int? // in seconds
+  bounceRate Boolean  @default(false)
+
+  @@map("visitors")
+}
+
+// Contact Management
+model Contact {
+  id          String        @id @default(cuid())
+  name        String
+  email       String
+  subject     String?
+  message     String
+  phone       String?
+  company     String?
+  website     String?
+  budget      String?
+  timeline    String?
+  source      String? // How they found the portfolio
+  status      ContactStatus @default(NEW)
+  priority    Priority      @default(MEDIUM)
+  notes       String? // Internal notes
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+  respondedAt DateTime?
+
+  @@map("contacts")
+}
+
+enum ContactStatus {
+  NEW
+  IN_PROGRESS
+  RESPONDED
+  CLOSED
+  SPAM
+}
+
+enum Priority {
+  LOW
+  MEDIUM
+  HIGH
+  URGENT
+}
+
+// Blog Content Management
+model BlogPost {
+  id              String     @id @default(cuid())
+  title           String
+  slug            String     @unique
+  excerpt         String?
+  content         String // Markdown content
+  htmlContent     String? // Rendered HTML
+  tags            String? // Comma-separated tags
+  category        String?
+  author          String     @default("Wade Pate")
+  status          PostStatus @default(DRAFT)
+  featured        Boolean    @default(false)
+  metaTitle       String?
+  metaDescription String?
+  readingTime     Int? // estimated reading time in minutes
+  views           Int        @default(0)
+  likes           Int        @default(0)
+  publishedAt     DateTime?
+  createdAt       DateTime   @default(now())
+  updatedAt       DateTime   @updatedAt
+
+  // Relations
+  comments Comment[]
+
+  @@map("blog_posts")
+}
+
+enum PostStatus {
+  DRAFT
+  PUBLISHED
+  ARCHIVED
+}
+
+model Comment {
+  id        String   @id @default(cuid())
+  name      String
+  email     String
+  website   String?
+  content   String
+  approved  Boolean  @default(false)
+  createdAt DateTime @default(now())
+
+  // Relations
+  postId String
+  post   BlogPost @relation(fields: [postId], references: [id], onDelete: Cascade)
+
+  // Optional parent comment for replies
+  parentId String?
+  parent   Comment?  @relation("CommentReplies", fields: [parentId], references: [id])
+  replies  Comment[] @relation("CommentReplies")
+
+  @@map("comments")
+}
+
+// Testimonials and Recommendations
+model Testimonial {
+  id        String   @id @default(cuid())
+  name      String
+  title     String?
+  company   String?
+  email     String?
+  content   String
+  rating    Int?     @default(5) // 1-5 stars
+  avatar    String? // URL to avatar image
+  featured  Boolean  @default(false)
+  approved  Boolean  @default(false)
+  source    String? // LinkedIn, Email, etc.
+  projectId String? // Related project if applicable
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("testimonials")
+}
+
+// Project Analytics
+model ProjectView {
+  id        String   @id @default(cuid())
+  projectId String // Reference to Project model
+  userAgent String?
+  country   String?
+  referrer  String?
+  timestamp DateTime @default(now())
+
+  // Relations
+  project Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
+
+  @@map("project_views")
+}
+
+// Newsletter Subscriptions
+model Subscriber {
+  id             String             @id @default(cuid())
+  email          String             @unique
+  name           String?
+  status         SubscriptionStatus @default(ACTIVE)
+  source         String? // Where they subscribed from
+  tags           String? // Comma-separated tags
+  subscribedAt   DateTime           @default(now())
+  unsubscribedAt DateTime?
+
+  @@map("subscribers")
+}
+
+enum SubscriptionStatus {
+  ACTIVE
+  UNSUBSCRIBED
+  BOUNCED
+}
+
+// Waitlist for Services
+model Waitlist {
+  id        String         @id @default(cuid())
+  name      String
+  email     String         @unique
+  service   String // Type of service interested in
+  priority  Priority       @default(MEDIUM)
+  budget    String?
+  timeline  String?
+  notes     String?
+  status    WaitlistStatus @default(WAITING)
+  createdAt DateTime       @default(now())
+  updatedAt DateTime       @updatedAt
+
+  @@map("waitlist")
+}
+
+enum WaitlistStatus {
+  WAITING
+  CONTACTED
+  CONVERTED
+  DECLINED
+}
+
+// Resume Downloads Tracking
+model ResumeDownload {
+  id        String   @id @default(cuid())
+  userAgent String?
+  country   String?
+  referrer  String?
+  timestamp DateTime @default(now())
+
+  @@map("resume_downloads")
+}
+
+// Skills and Technologies
+model Skill {
+  id          String        @id @default(cuid())
+  name        String        @unique
+  category    SkillCategory
+  level       SkillLevel    @default(INTERMEDIATE)
+  years       Int? // Years of experience
+  description String?
+  icon        String? // Icon identifier (lucide icon name)
+  featured    Boolean       @default(false)
+  order       Int? // Display order
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+
+  // Relations
+  projectSkills ProjectSkill[]
+
+  @@map("skills")
+}
+
+enum SkillCategory {
+  FRONTEND
+  BACKEND
+  DATABASE
+  DEVOPS
+  TOOLS
+  DESIGN
+  SOFT_SKILLS
+}
+
+enum SkillLevel {
+  BEGINNER
+  INTERMEDIATE
+  ADVANCED
+  EXPERT
+}
+
+// Work Experience
+model Experience {
+  id           String    @id @default(cuid())
+  company      String
+  position     String
+  description  String?
+  startDate    DateTime
+  endDate      DateTime?
+  current      Boolean   @default(false)
+  location     String?
+  companyUrl   String?
+  companyLogo  String?
+  achievements String? // JSON array of achievements
+  technologies String? // Comma-separated tech stack
+  featured     Boolean   @default(false)
+  order        Int?
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+
+  @@unique([company, position])
+  @@map("experiences")
+}
+
+// Projects (Portfolio Projects)
+model Project {
+  id              String          @id @default(cuid())
+  title           String
+  slug            String          @unique
+  description     String
+  longDescription String?
+  category        ProjectCategory
+  status          ProjectStatus   @default(COMPLETED)
+  featured        Boolean         @default(false)
+  demoUrl         String?
+  githubUrl       String?
+  images          String? // JSON array of image URLs
+  thumbnail       String?
+  startDate       DateTime?
+  endDate         DateTime?
+  client          String?
+  teamSize        Int?
+  role            String?
+  challenges      String? // JSON array of challenges
+  solutions       String? // JSON array of solutions
+  metrics         String? // JSON object with performance metrics
+  order           Int?
+  createdAt       DateTime        @default(now())
+  updatedAt       DateTime        @updatedAt
+
+  // Relations
+  projectSkills ProjectSkill[]
+  projectViews  ProjectView[] // Reference to existing model
+
+  @@map("projects")
+}
+
+enum ProjectCategory {
+  WEB_APP
+  MOBILE_APP
+  API
+  LIBRARY
+  TOOL
+  WEBSITE
+  ECOMMERCE
+  DASHBOARD
+}
+
+enum ProjectStatus {
+  PLANNING
+  IN_PROGRESS
+  COMPLETED
+  MAINTAINED
+  ARCHIVED
+}
+
+// Junction table for Project-Skill many-to-many
+model ProjectSkill {
+  id         String                 @id @default(cuid())
+  projectId  String
+  skillId    String
+  importance ProjectSkillImportance @default(SECONDARY)
+  createdAt  DateTime               @default(now())
+
+  // Relations
+  project Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  skill   Skill   @relation(fields: [skillId], references: [id], onDelete: Cascade)
+
+  @@unique([projectId, skillId])
+  @@map("project_skills")
+}
+
+enum ProjectSkillImportance {
+  PRIMARY // Core technology
+  SECONDARY // Supporting technology
+  TOOL // Development tool
+}
+
+// Education & Certifications
+model Education {
+  id           String    @id @default(cuid())
+  institution  String
+  degree       String
+  field        String?
+  startDate    DateTime
+  endDate      DateTime?
+  current      Boolean   @default(false)
+  gpa          Float?
+  description  String?
+  achievements String? // JSON array
+  logo         String?
+  featured     Boolean   @default(false)
+  order        Int?
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+
+  @@unique([institution, degree, field])
+  @@map("education")
+}
+
+// Certifications
+model Certification {
+  id            String    @id @default(cuid())
+  name          String
+  issuer        String
+  issueDate     DateTime
+  expiryDate    DateTime?
+  credentialId  String?
+  credentialUrl String?
+  logo          String?
+  description   String?
+  featured      Boolean   @default(false)
+  order         Int?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  @@unique([name, issuer])
+  @@map("certifications")
+}
+
+// Services Offered
+model Service {
+  id          String          @id @default(cuid())
+  name        String
+  slug        String          @unique
+  description String
+  features    String? // JSON array of features
+  pricing     String? // Pricing info or "Contact for quote"
+  duration    String? // Typical project duration
+  category    ServiceCategory
+  featured    Boolean         @default(false)
+  available   Boolean         @default(true)
+  order       Int?
+  createdAt   DateTime        @default(now())
+  updatedAt   DateTime        @updatedAt
+
+  @@map("services")
+}
+
+enum ServiceCategory {
+  WEB_DEVELOPMENT
+  MOBILE_DEVELOPMENT
+  CONSULTING
+  MAINTENANCE
+  TRAINING
+  DESIGN
+}
+
+// FAQ System
+model FAQ {
+  id        String   @id @default(cuid())
+  question  String   @unique
+  answer    String
+  category  String?
+  featured  Boolean  @default(false)
+  order     Int?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("faqs")
+}

@@ -176,7 +176,7 @@ cleanup() {
 
 # Main deployment function
 main() {
-    echo "🎯 Deployment Target: ${DEPLOY_TARGET:-docker}"
+    echo "Deployment Target: ${DEPLOY_TARGET:-docker}"
     echo "🌍 Environment: ${NODE_ENV:-production}"
     echo ""
     
@@ -203,7 +203,7 @@ main() {
             ;;
     esac
     
-    print_success "🎉 Deployment completed successfully!"
+    print_success "Deployment completed successfully!"
     
     if [ "${DEPLOY_TARGET:-docker}" = "docker" ]; then
         echo ""

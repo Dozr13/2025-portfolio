@@ -766,7 +766,7 @@ async function main() {
     console.log('📝 Seeding blog posts...')
     await seedBlog()
     
-    console.log('\n🎉 Database seeding completed successfully!')
+    console.log('\nDatabase seeding completed successfully!')
     console.log('📊 Summary:')
     console.log(`   • ${skills.length} skills`)
     console.log(`   • ${experiences.length} work experiences`)
