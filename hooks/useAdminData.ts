@@ -43,7 +43,7 @@ export function useAdminData<T>({
 
     loadData()
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [refreshTrigger, fetchFn, immediate, ...dependencies])
+  }, [refreshTrigger, immediate, ...dependencies])
 
   return {
     data,

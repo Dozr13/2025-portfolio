@@ -6,6 +6,7 @@ import { refreshAuthState } from "@/hooks/useAdminAuth"
 import { motion } from "framer-motion"
 import { useRouter } from "next/navigation"
 import { useEffect, useState } from "react"
+import '../globals.css'
 
 export default function AdminLogin() {
   const [credentials, setCredentials] = useState({ username: "", password: "" })
@@ -56,11 +57,11 @@ export default function AdminLogin() {
   }
 
   return (
-    <div className="min-h-screen bg-background flex items-center justify-center px-4">
+    <div className="min-h-screen bg-background flex items-center justify-center">
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        className="w-full max-w-md"
+        className="w-full max-w-md mx-20"
       >
         <div className="bg-card border border-border rounded-2xl p-8 shadow-lg">
           {/* Header */}

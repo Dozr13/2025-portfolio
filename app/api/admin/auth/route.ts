@@ -1,14 +1,13 @@
+import { envConfig } from "@/lib/envConfig"
 import { SignJWT, jwtVerify } from "jose"
 import { NextResponse } from "next/server"
 
-const JWT_SECRET = new TextEncoder().encode(
-  process.env.JWT_SECRET || "your-super-secret-jwt-key-change-in-production"
-)
+const JWT_SECRET = new TextEncoder().encode(envConfig.JWT_SECRET)
 
 // Admin credentials (in production, use a proper user management system)
 const ADMIN_CREDENTIALS = {
-  username: process.env.ADMIN_USERNAME,
-  password: process.env.ADMIN_PASSWORD
+  username: envConfig.ADMIN_USERNAME,
+  password: envConfig.ADMIN_PASSWORD
 }
 
 export async function POST(request: Request) {
