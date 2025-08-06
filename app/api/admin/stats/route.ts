@@ -71,7 +71,7 @@ export async function GET(request: Request) {
       pageViews = pageViewsCount
       avgTimeOnSite = avgTime._avg.timeOnSite || 0
     } catch (error) {
-      console.log("Analytics tables not available or empty:", error)
+      console.error("Analytics tables not available or empty:", error)
     }
 
     return NextResponse.json({

@@ -65,20 +65,20 @@ export function Contact() {
   }
 
   const validateForm = (): string | null => {
-    console.log('DEBUG: Starting validation...')
-    console.log('DEBUG: Honeypot value:', JSON.stringify(honeypot))
-    console.log('DEBUG: Honeypot length:', honeypot.length)
+
+
+
 
     // Honeypot check (if filled, it's likely a bot) - but be lenient for false positives
     if (honeypot && honeypot.trim().length > 0) {
-      console.log('DEBUG: Honeypot triggered with value:', JSON.stringify(honeypot))
+
       // Only block if it looks like bot behavior (long strings or common spam patterns)
       if (honeypot.length > 10 || /http|www\.|\.com|\.net|\.org/i.test(honeypot)) {
-        console.log('DEBUG: Blocking submission due to suspicious honeypot content')
+
         return 'Invalid form submission. Please try again.'
       }
       // For short values, just log but don't block (could be auto-fill)
-      console.log('DEBUG: Honeypot has short value, allowing submission')
+
     }
 
     // Rate limiting check
@@ -87,51 +87,42 @@ export function Contact() {
       const timeSinceLastSubmission = Date.now() - parseInt(lastSubmission)
       if (timeSinceLastSubmission < RATE_LIMIT_DURATION) {
         const secondsLeft = Math.ceil((RATE_LIMIT_DURATION - timeSinceLastSubmission) / 1000)
-        console.log('DEBUG: Rate limit triggered:', secondsLeft, 'seconds left')
+
         return `Please wait ${secondsLeft} seconds before submitting again.`
       }
     }
 
     // Enhanced validation
     if (formData.name.length < 2 || formData.name.length > 50) {
-      console.log('DEBUG: Name validation failed:', formData.name.length, 'characters')
+
       return 'Name must be between 2 and 50 characters.'
     }
 
     if (formData.subject.length < 5 || formData.subject.length > 100) {
-      console.log('DEBUG: Subject validation failed:', formData.subject.length, 'characters')
+
       return 'Subject must be between 5 and 100 characters.'
     }
 
     if (formData.message.length < 10 || formData.message.length > 1000) {
-      console.log('DEBUG: Message validation failed:', formData.message.length, 'characters')
+
       return 'Message must be between 10 and 1000 characters.'
     }
 
     // Time-based validation (temporarily reduced for testing)
     const timeSpent = Date.now() - submissionTimeRef.current
-    console.log('DEBUG: Time spent filling form:', timeSpent, 'ms')
+
     if (timeSpent < 1000) { // Reduced from 3000ms to 1000ms for easier testing
-      console.log('DEBUG: Time validation failed:', timeSpent, 'ms')
+
       return 'Please take your time filling out the form.'
     }
 
     // Email format validation (additional check)
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
     if (!emailRegex.test(formData.email)) {
-      console.log('DEBUG: Email format validation failed')
+
       return 'Please enter a valid email address.'
     }
 
-    console.log('DEBUG: All validations passed!')
-    console.log('DEBUG: Final form state:', {
-      nameLength: formData.name.length,
-      emailValid: /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email),
-      subjectLength: formData.subject.length,
-      messageLength: formData.message.length,
-      timeSpent,
-      honeypotValue: JSON.stringify(honeypot)
-    })
     return null
   }
 
@@ -208,7 +199,7 @@ export function Contact() {
           },
           process.env.NEXT_PUBLIC_EMAILJS_PUBLIC_KEY!
         )
-        console.log('Email notification sent successfully')
+
       } catch (emailError) {
         console.warn('Email notification failed, but contact was saved:', emailError)
       }

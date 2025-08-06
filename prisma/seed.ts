@@ -501,7 +501,7 @@ const contacts: Array<{
 ]
 
 async function seedSkills() {
-  console.log('🔧 Seeding skills...')
+  console.log("Seeding skills...")
   
   for (const skill of skills) {
     await prisma.skill.upsert({
@@ -511,11 +511,11 @@ async function seedSkills() {
     })
   }
   
-  console.log(`Seeded ${skills.length} skills`)
+  
 }
 
 async function seedExperiences() {
-  console.log('💼 Seeding experiences...')
+  console.log("Seeding experiences...")
   
   for (const experience of experiences) {
     await prisma.experience.upsert({
@@ -530,11 +530,11 @@ async function seedExperiences() {
     })
   }
   
-  console.log(`Seeded ${experiences.length} experiences`)
+  
 }
 
 async function seedProjects() {
-  console.log('🚀 Seeding projects...')
+  console.log("Seeding projects...")
   
   for (const project of projects) {
     await prisma.project.upsert({
@@ -544,11 +544,11 @@ async function seedProjects() {
     })
   }
   
-  console.log(`Seeded ${projects.length} projects`)
+  
 }
 
 async function seedEducation() {
-  console.log('🎓 Seeding education...')
+  console.log("Seeding education...")
   
   for (const edu of education) {
     await prisma.education.upsert({
@@ -564,11 +564,11 @@ async function seedEducation() {
     })
   }
   
-  console.log(`Seeded ${education.length} education records`)
+  
 }
 
 async function seedCertifications() {
-  console.log('📜 Seeding certifications...')
+  console.log("Seeding certifications...")
   
   for (const cert of certifications) {
     await prisma.certification.upsert({
@@ -583,11 +583,11 @@ async function seedCertifications() {
     })
   }
   
-  console.log(`Seeded ${certifications.length} certifications`)
+  
 }
 
 async function seedServices() {
-  console.log('🛠️  Seeding services...')
+  console.log("Seeding services...")
   
   for (const service of services) {
     await prisma.service.upsert({
@@ -597,11 +597,11 @@ async function seedServices() {
     })
   }
   
-  console.log(`Seeded ${services.length} services`)
+  
 }
 
 async function seedFAQs() {
-  console.log('❓ Seeding FAQs...')
+  console.log("Seeding FAQs...")
   
   for (const faq of faqs) {
     await prisma.fAQ.upsert({
@@ -611,11 +611,11 @@ async function seedFAQs() {
     })
   }
   
-  console.log(`Seeded ${faqs.length} FAQs`)
+  
 }
 
 async function seedTestimonials() {
-  console.log('⭐ Seeding testimonials...')
+  console.log("Seeding testimonials...")
   
   for (const testimonial of testimonials) {
     // Check if testimonial exists by email first
@@ -638,11 +638,11 @@ async function seedTestimonials() {
     }
   }
   
-  console.log(`Seeded ${testimonials.length} testimonials`)
+  
 }
 
 async function seedContacts() {
-  console.log('📧 Seeding sample contacts...')
+  console.log("Seeding contacts...")
   
   for (const contact of contacts) {
     // Check if contact exists by email first
@@ -665,11 +665,11 @@ async function seedContacts() {
     }
   }
   
-  console.log(`Seeded ${contacts.length} sample contacts`)
+  
 }
 
 async function seedProjectSkills() {
-  console.log('🔗 Linking projects with skills...')
+  console.log("Seeding project skills...")
   
   // Get all projects and skills
   const allProjects = await prisma.project.findMany()
@@ -763,22 +763,22 @@ async function main() {
     await seedContacts()
     
     // Seed blog posts (from existing script)
-    console.log('📝 Seeding blog posts...')
+    
     await seedBlog()
     
-    console.log('\nDatabase seeding completed successfully!')
-    console.log('📊 Summary:')
-    console.log(`   • ${skills.length} skills`)
-    console.log(`   • ${experiences.length} work experiences`)
-    console.log(`   • ${education.length} education records`)
-    console.log(`   • ${certifications.length} certifications`)
-    console.log(`   • ${projects.length} projects`)
-    console.log(`   • ${services.length} services`)
-    console.log(`   • ${faqs.length} FAQs`)
-    console.log(`   • ${testimonials.length} testimonials`)
-    console.log(`   • ${contacts.length} sample contacts`)
-    console.log('   • 3 blog posts')
-    console.log('   • Project-skill relationships')
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     
   } catch (error) {
     console.error('Error during seeding:', error)

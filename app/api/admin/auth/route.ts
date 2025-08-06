@@ -65,16 +65,13 @@ export async function GET(request: Request) {
     const token = authHeader?.replace("Bearer ", "") || cookieToken
 
     if (!token) {
-      console.log("[AUTH API] No token provided")
       return NextResponse.json(
         { error: "No token provided" },
         { status: 401 }
       )
     }
 
-    console.log("[AUTH API] Verifying JWT token...")
     const { payload } = await jwtVerify(token, JWT_SECRET)
-    console.log("[AUTH API] Token verified for user:", payload.username)
 
     return NextResponse.json({
       authenticated: true,
@@ -85,7 +82,7 @@ export async function GET(request: Request) {
     })
 
   } catch (error) {
-    console.log("[AUTH API] Verifying JWT token failed:", error)
+    console.error("Token verification error:", error)
     return NextResponse.json(
       { error: "Invalid token" },
       { status: 401 }

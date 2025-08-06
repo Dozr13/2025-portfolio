@@ -481,7 +481,7 @@ Proper database optimization requires ongoing attention to query patterns, index
 ]
 
 async function seedBlogPosts() {
-  console.log('Seeding blog posts...')
+  console.log("Seeding blog posts...")
   
   for (const post of blogPosts) {
     await prisma.blogPost.upsert({
@@ -489,10 +489,10 @@ async function seedBlogPosts() {
       update: post,
       create: post
     })
-    console.log(`✓ Created/updated post: ${post.title}`)
+    console.log(`Blog post ${post.title} seeded successfully`)
   }
-  
-  console.log('Blog posts seeded successfully!')
+
+  console.log("Blog posts seeded successfully")
 }
 
 async function main() {

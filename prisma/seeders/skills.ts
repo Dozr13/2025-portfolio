@@ -40,7 +40,7 @@ export const skills = [
 ]
 
 export async function seedSkills() {
-  console.log('Seeding skills...')
+  console.log("Seeding skills...")
   
   for (const skill of skills) {
     await prisma.skill.upsert({
@@ -49,6 +49,6 @@ export async function seedSkills() {
       create: skill
     })
   }
-  
-  console.log('✓ Skills seeded successfully!')
+
+  console.log("Skills seeded successfully")
 }

@@ -77,6 +77,6 @@ export async function seedExperiences() {
       create: experience
     })
   }
+  console.log('Experiences seeded successfully')
   
-  console.log('✓ Experiences seeded successfully!')
 }

@@ -21,21 +21,21 @@ const notifyListeners = () => {
 
 // Global function to refresh auth state
 export const refreshAuthState = async () => {
-  console.log("[AUTH] Manual auth refresh triggered...")
+  
   
   if (typeof window === 'undefined') {
-    console.log("[AUTH] Server-side rendering, skipping refresh")
+    
     return
   }
 
   const token = localStorage.getItem("adminToken")
   const userData = localStorage.getItem("adminUser")
 
-  console.log("[AUTH REFRESH] Token exists:", !!token)
-  console.log("[AUTH REFRESH] User data exists:", !!userData)
+  
+  
 
   if (!token || !userData) {
-    console.log("[AUTH REFRESH] Missing token or user data")
+    
     globalAuthState.isAuthenticated = false
     globalAuthState.isLoading = false
     globalAuthState.user = null
@@ -52,12 +52,12 @@ export const refreshAuthState = async () => {
 
     if (response.ok) {
       const authData = await response.json()
-      console.log("[AUTH REFRESH] Authentication successful for user:", authData.user?.username)
+      
       globalAuthState.user = authData.user
       globalAuthState.isAuthenticated = true
       globalAuthState.isLoading = false
     } else {
-      console.log("[AUTH REFRESH] Server rejected token, clearing storage")
+      
       localStorage.removeItem("adminToken")
       localStorage.removeItem("adminUser")
       globalAuthState.isAuthenticated = false
@@ -98,12 +98,12 @@ export function useAdminAuth() {
     const checkAuth = async () => {
       // ⚡ Prevent multiple simultaneous auth checks
       if (globalAuthState.isChecking) {
-        console.log("[AUTH] Auth check already in progress, skipping...")
+        
         return
       }
 
       globalAuthState.isChecking = true
-      console.log("[AUTH] Starting authentication check...")
+      
       
       // Add small delay to ensure localStorage is available
       await new Promise(resolve => setTimeout(resolve, 100))
@@ -111,19 +111,19 @@ export function useAdminAuth() {
       try {
         // Check if we're in the browser
         if (typeof window === 'undefined') {
-          console.log("[AUTH] Server-side rendering, skipping auth check")
+          
           return
         }
 
         const token = localStorage.getItem("adminToken")
         const userData = localStorage.getItem("adminUser")
 
-        console.log("[AUTH] Token exists:", !!token)
-        console.log("[AUTH] User data exists:", !!userData)
-        console.log("[AUTH] Token value:", token ? token.substring(0, 20) + "..." : "null")
+        
+        
+        
 
         if (!token || !userData) {
-          console.log("[AUTH] Missing token or user data")
+          
           globalAuthState.isAuthenticated = false
           globalAuthState.isLoading = false
           globalAuthState.user = null
@@ -131,7 +131,7 @@ export function useAdminAuth() {
           return
         }
 
-        console.log("[AUTH] Verifying token with server...")
+        
         // Verify token with server
         const response = await fetch('/api/admin/auth', {
           headers: {
@@ -139,16 +139,16 @@ export function useAdminAuth() {
           }
         })
 
-        console.log("[AUTH] Server response status:", response.status)
-        console.log("[AUTH] Server response ok:", response.ok)
+        
+        
 
         if (response.ok) {
           const authData = await response.json()
-          console.log("[AUTH] Authentication successful for user:", authData.user?.username)
+          
           globalAuthState.user = authData.user
           globalAuthState.isAuthenticated = true
         } else {
-          console.log("[AUTH] Server rejected token, clearing storage")
+          
           // Token invalid, clear storage
           localStorage.removeItem("adminToken")
           localStorage.removeItem("adminUser")
@@ -169,7 +169,7 @@ export function useAdminAuth() {
     // Listen for storage changes (login in another tab)
     const handleStorageChange = (e: StorageEvent) => {
       if (e.key === 'adminToken' || e.key === 'adminUser') {
-        console.log("[AUTH] Storage change detected, refreshing auth state...")
+        
         refreshAuthState()
       }
     }
@@ -201,13 +201,13 @@ export function useAdminAuth() {
   }
 
   const redirectToLogin = useCallback(() => {
-    console.log("[AUTH] Redirecting to login...")
+    
     router.push("/admin")
   }, [router])
 
   // Debug current state
   useEffect(() => {
-    console.log("[AUTH HOOK] State changed:", { isLoading, isAuthenticated, user: user?.username })
+    
   }, [isLoading, isAuthenticated, user])
 
   return {
