@@ -88,19 +88,3 @@ export async function GET(request: Request) {
     )
   }
 }
-
-// Utility function to verify admin token (for other API routes)
-export async function verifyAdminToken(request: Request): Promise<boolean> {
-  try {
-    const authHeader = request.headers.get("authorization")
-    const token = authHeader?.replace("Bearer ", "") || 
-                  request.headers.get("cookie")?.split("adminToken=")[1]?.split(";")[0]
-
-    if (!token) return false
-
-    await jwtVerify(token, JWT_SECRET)
-    return true
-  } catch {
-    return false
-  }
-}

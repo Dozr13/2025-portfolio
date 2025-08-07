@@ -33,7 +33,7 @@ export const experiences = [
     endDate: new Date('2023-04-30'),
     current: false,
     location: 'Meridian, ID',
-    companyUrl: 'https://intimetek.com',
+    companyUrl: 'https://intimetec.com',
     achievements: JSON.stringify([
       'Delivered global WPF desktop app, cutting sales review time by 80% and modernizing legacy workflows',
       'Boosted enterprise performance by 30% via framework upgrades and technical debt reduction',
@@ -41,9 +41,23 @@ export const experiences = [
       'Led cross-team initiatives to improve development processes and code quality',
       'Implemented modern development practices including automated testing and CI/CD'
     ]),
-    technologies: 'C#, WPF, .NET, SQL Server, TypeScript, React, Node.js',
+    technologies: 'TypeScript, React, Node.js, PostgreSQL, MongoDB, Docker, CI/CD, GraphQL, C#, WPF, .NET, SQL Server',
     featured: true,
     order: 2
+  },
+  {
+    company: 'Freelance',
+    position: 'Full-Stack Developer',
+    description: 'Provided web development services to various clients including e-commerce, portfolio websites, and business applications.	',
+    startDate: new Date('2020-05-01'),
+    endDate: null,
+    current: false,
+    location: 'Remote',
+    companyUrl: 'https://intimetec.com',
+    achievements: JSON.stringify(["Delivered 25+ projects with 100% client satisfaction","Specialized in e-commerce and business automation solutions","Built long-term relationships with repeat clients","Expanded skill set across multiple technologies and frameworks"]	),
+    technologies: 'React, Vue.js, Node.js, PHP, MySQL, PostgreSQL, Flutter, Dart, Python, Go, MongoDB, Docker, CI/CD, GraphQL',
+    featured: true,
+    order: 3
   }
 ]
 

@@ -11,7 +11,7 @@ export const skills = [
   { name: 'React Native', category: SkillCategory.FRONTEND, level: SkillLevel.EXPERT, years: 4, icon: 'smartphone', featured: true, order: 4 },
   { name: 'JavaScript', category: SkillCategory.FRONTEND, level: SkillLevel.EXPERT, years: 5, icon: 'code-2', featured: true, order: 5 },
   { name: 'Tailwind CSS', category: SkillCategory.FRONTEND, level: SkillLevel.EXPERT, years: 3, icon: 'palette', featured: true, order: 6 },
-  { name: 'ShadCN UI', category: SkillCategory.FRONTEND, level: SkillLevel.ADVANCED, years: 2, icon: 'layout', featured: true, order: 7 },
+  { name: 'ShadCN UI', category: SkillCategory.FRONTEND, level: SkillLevel.ADVANCED, years: 2, icon: 'layout-dashboard', featured: true, order: 7 },
   { name: 'Material UI', category: SkillCategory.FRONTEND, level: SkillLevel.ADVANCED, years: 3, icon: 'layers', featured: false, order: 8 },
   
   // Backend - From resume experience

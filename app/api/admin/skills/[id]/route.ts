@@ -1,22 +1,25 @@
 import { PrismaClient } from '@/generated/client'
+import { verifyAdminToken } from '@/lib/utils/auth'
 import { NextResponse } from 'next/server'
-import { verifyAdminToken } from '../../auth/route'
 
 const prisma = new PrismaClient()
 
 export async function GET(
   request: Request,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const resolvedParams = await params 
+
     // Verify admin authentication
     const isAuthorized = await verifyAdminToken(request)
     if (!isAuthorized) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
 
+
     const skill = await prisma.skill.findUnique({
-      where: { id: params.id }
+      where: { id: resolvedParams.id }
     })
 
     if (!skill) {
@@ -35,9 +38,11 @@ export async function GET(
 
 export async function PUT(
   request: Request,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const resolvedParams = await params
+
     // Verify admin authentication
     const isAuthorized = await verifyAdminToken(request)
     if (!isAuthorized) {
@@ -63,10 +68,10 @@ export async function PUT(
         { status: 400 }
       )
     }
-
+ 
     // Check if skill exists
     const existingSkill = await prisma.skill.findUnique({
-      where: { id: params.id }
+      where: { id: resolvedParams.id }
     })
 
     if (!existingSkill) {
@@ -77,7 +82,7 @@ export async function PUT(
     const nameConflict = await prisma.skill.findFirst({
       where: {
         name,
-        id: { not: params.id }
+        id: { not: resolvedParams.id }
       }
     })
 
@@ -89,7 +94,7 @@ export async function PUT(
     }
 
     const skill = await prisma.skill.update({
-      where: { id: params.id },
+      where: { id: resolvedParams.id },
       data: {
         name,
         category,
@@ -114,18 +119,21 @@ export async function PUT(
 
 export async function DELETE(
   request: Request,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const resolvedParams = await params
+    
     // Verify admin authentication
     const isAuthorized = await verifyAdminToken(request)
     if (!isAuthorized) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
 
+
     // Check if skill exists
     const existingSkill = await prisma.skill.findUnique({
-      where: { id: params.id }
+      where: { id: resolvedParams.id }
     })
 
     if (!existingSkill) {
@@ -133,7 +141,7 @@ export async function DELETE(
     }
 
     await prisma.skill.delete({
-      where: { id: params.id }
+      where: { id: resolvedParams.id }
     })
 
     return NextResponse.json({ message: 'Skill deleted successfully' })

@@ -1,12 +1,14 @@
 import { prisma } from "@/lib/config/database"
+import { verifyAdminToken } from "@/lib/utils/auth"
 import { NextResponse } from "next/server"
-import { verifyAdminToken } from "../../auth/route"
 
 // GET - Fetch single blog post
 export async function GET(
   request: Request,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
+  const resolvedParams = await params
+
   // Verify admin authentication
   const isAuthenticated = await verifyAdminToken(request)
   if (!isAuthenticated) {
@@ -15,7 +17,7 @@ export async function GET(
 
   try {
     const post = await prisma.blogPost.findUnique({
-      where: { id: params.id },
+      where: { id: resolvedParams.id },
       include: {
         _count: {
           select: {
@@ -49,8 +51,10 @@ export async function GET(
 // PUT - Update blog post
 export async function PUT(
   request: Request,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
+  const resolvedParams = await params
+
   // Verify admin authentication
   const isAuthenticated = await verifyAdminToken(request)
   if (!isAuthenticated) {
@@ -64,7 +68,7 @@ export async function PUT(
     const readingTime = Math.ceil(data.content.split(/\s+/).length / 200)
 
     const updatedPost = await prisma.blogPost.update({
-      where: { id: params.id },
+      where: { id: resolvedParams.id },
       data: {
         title: data.title,
         slug: data.slug,
@@ -100,8 +104,10 @@ export async function PUT(
 // DELETE - Delete blog post  
 export async function DELETE(
   request: Request,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
+  const resolvedParams = await params
+  
   // Verify admin authentication
   const isAuthenticated = await verifyAdminToken(request)
   if (!isAuthenticated) {
@@ -110,7 +116,7 @@ export async function DELETE(
 
   try {
     await prisma.blogPost.delete({
-      where: { id: params.id }
+      where: { id: resolvedParams.id }
     })
 
     return NextResponse.json({

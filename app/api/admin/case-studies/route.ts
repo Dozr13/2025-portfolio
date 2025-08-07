@@ -1,5 +1,5 @@
+import { verifyAdminToken } from "@/lib/utils/auth"
 import { NextResponse } from "next/server"
-import { verifyAdminToken } from "../auth/route"
 
 // Since case studies are currently hardcoded in the component,
 // this API will manage them in a JSON file or could be extended to use database

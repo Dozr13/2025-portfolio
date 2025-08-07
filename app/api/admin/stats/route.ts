@@ -1,7 +1,7 @@
 import { envConfig, getDatabaseInfo, prisma } from "@/lib/config"
 import { getAnalyticsData } from "@/lib/integrations"
+import { verifyAdminToken } from "@/lib/utils/auth"
 import { NextResponse } from "next/server"
-import { verifyAdminToken } from "../auth/route"
 
 export async function GET(request: Request) {
   // Verify admin authentication

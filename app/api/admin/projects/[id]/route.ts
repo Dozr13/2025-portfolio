@@ -1,12 +1,14 @@
 import { prisma } from "@/lib/config"
+import { verifyAdminToken } from "@/lib/utils/auth"
 import { NextResponse } from "next/server"
-import { verifyAdminToken } from "../../auth/route"
 
 // GET - Fetch single project
 export async function GET(
   request: Request,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
+  const resolvedParams = await params
+
   // Verify admin authentication
   const isAuthenticated = await verifyAdminToken(request)
   if (!isAuthenticated) {
@@ -15,7 +17,7 @@ export async function GET(
 
   try {
     const project = await prisma.project.findUnique({
-      where: { id: params.id },
+      where: { id: resolvedParams.id },
       include: {
         _count: {
           select: {
@@ -49,8 +51,10 @@ export async function GET(
 // PUT - Update project
 export async function PUT(
   request: Request,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
+  const resolvedParams = await params
+  
   // Verify admin authentication
   const isAuthenticated = await verifyAdminToken(request)
   if (!isAuthenticated) {
@@ -61,7 +65,7 @@ export async function PUT(
     const data = await request.json()
 
     const updatedProject = await prisma.project.update({
-      where: { id: params.id },
+      where: { id: resolvedParams.id },
       data: {
         title: data.title,
         slug: data.slug,
@@ -98,8 +102,10 @@ export async function PUT(
 // DELETE - Delete project  
 export async function DELETE(
   request: Request,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
+  const resolvedParams = await params
+
   // Verify admin authentication
   const isAuthenticated = await verifyAdminToken(request)
   if (!isAuthenticated) {
@@ -108,7 +114,7 @@ export async function DELETE(
 
   try {
     await prisma.project.delete({
-      where: { id: params.id }
+      where: { id: resolvedParams.id }
     })
 
     return NextResponse.json({
