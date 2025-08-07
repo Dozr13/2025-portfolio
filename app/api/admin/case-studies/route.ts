@@ -1,5 +1,10 @@
 import { verifyAdminToken } from "@/lib/utils/auth"
+import { handleCors } from "@/lib/utils/cors"
 import { NextResponse } from "next/server"
+
+export async function OPTIONS() {
+  return handleCors()
+}
 
 // Since case studies are currently hardcoded in the component,
 // this API will manage them in a JSON file or could be extended to use database

@@ -41,7 +41,7 @@ export const projectStatuses = [
   { value: "ON_HOLD", label: "On Hold" }
 ]
 
-export function ProjectFormFields({ formData, onChange }: ProjectFormFieldsProps) {
+export const ProjectFormFields = ({ formData, onChange }: ProjectFormFieldsProps) => {
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value, type } = e.target
     onChange(name as keyof ProjectFormData, type === "checkbox" ? (e.target as HTMLInputElement).checked : value)

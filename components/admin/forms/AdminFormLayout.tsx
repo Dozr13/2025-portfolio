@@ -18,11 +18,11 @@ interface AdminFormLayoutProps {
   disabled?: boolean
 }
 
-export function AdminFormLayout({
+export const AdminFormLayout = ({
   title,
   subtitle,
   backHref,
-  backLabel = "Back",
+  // backLabel = "Back",
   onSubmit,
   loading,
   loadingText,
@@ -31,7 +31,7 @@ export function AdminFormLayout({
   preview,
   actionButtons,
   disabled = false
-}: AdminFormLayoutProps) {
+}: AdminFormLayoutProps) => {
   return (
     <div className="min-h-screen bg-background">
       {/* Header */}

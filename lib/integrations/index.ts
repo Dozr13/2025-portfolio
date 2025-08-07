@@ -4,10 +4,5 @@
 
 // Analytics Integration
 export {
-  analyticsConfig,
-  trackEvent,
-  trackPageView,
-  trackAdminAction,
-  getAnalyticsData,
-  AnalyticsProvider
+  AnalyticsProvider, trackAdminAction
 } from './analytics'

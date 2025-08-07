@@ -1240,7 +1240,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@radix-ui/react-slot@npm:1.2.3":
+"@radix-ui/react-slot@npm:1.2.3, @radix-ui/react-slot@npm:^1.2.3":
   version: 1.2.3
   resolution: "@radix-ui/react-slot@npm:1.2.3"
   dependencies:
@@ -6810,6 +6810,7 @@ __metadata:
     "@next/eslint-plugin-next": "npm:^15.4.5"
     "@prisma/client": "npm:6.13.0"
     "@radix-ui/react-select": "npm:^2.2.5"
+    "@radix-ui/react-slot": "npm:^1.2.3"
     "@radix-ui/react-switch": "npm:^1.2.5"
     "@radix-ui/react-tabs": "npm:^1.1.12"
     "@radix-ui/react-toast": "npm:^1.2.14"

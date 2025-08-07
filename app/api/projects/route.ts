@@ -1,6 +1,11 @@
 import { prisma } from "@/lib/config"
 import { calculateDuration, safeJsonParse } from "@/lib/utils"
+import { handleCors } from "@/lib/utils/cors"
 import { NextResponse } from "next/server"
+
+export async function OPTIONS() {
+  return handleCors()
+}
 
 export async function GET() {
   try {

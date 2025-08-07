@@ -67,7 +67,7 @@ export const availableIcons = [
   { value: "palette", label: "Colors/CSS" }
 ]
 
-export function SkillFormFields({ formData, onChange, showPreview = false }: SkillFormFieldsProps) {
+export const SkillFormFields = ({ formData, onChange, showPreview = false }: SkillFormFieldsProps) => {
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value, type } = e.target
     onChange(name as keyof SkillFormData, type === "checkbox" ? (e.target as HTMLInputElement).checked : value)

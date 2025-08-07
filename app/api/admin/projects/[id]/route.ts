@@ -1,6 +1,11 @@
 import { prisma } from "@/lib/config"
 import { verifyAdminToken } from "@/lib/utils/auth"
+import { handleCors } from "@/lib/utils/cors"
 import { NextResponse } from "next/server"
+
+export async function OPTIONS() {
+  return handleCors()
+}
 
 // GET - Fetch single project
 export async function GET(

@@ -10,7 +10,7 @@ interface FormFieldProps {
   help?: string
 }
 
-export function FormField({ label, required = false, children, className = "", help }: FormFieldProps) {
+export const FormField = ({ label, required = false, children, className = "", help }: FormFieldProps) => {
   return (
     <div className={className}>
       <label className="block text-sm font-medium mb-2">

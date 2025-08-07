@@ -1,13 +1,15 @@
 "use client"
 
 import { AnalyticsCard } from '@/components/admin/analytics/AnalyticsCard'
+import { AdminSuspense } from '@/components/admin/shared/AdminSuspense'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Icon } from "@/components/ui/icon"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { StatsData, useAnalytics } from '@/hooks/useAnalytics'
+import { useAnalytics } from '@/hooks/useAnalytics'
 import { trackAdminAction } from '@/lib/integrations'
+import { StatsData } from '@/lib/types/admin/analytics'
 import { formatNumber, formatPercentage } from "@/lib/utils"
-import { Suspense, useEffect, useState } from "react"
+import { useEffect, useState } from "react"
 
 // Loading skeleton component
 function AnalyticsSkeleton() {
@@ -315,8 +317,8 @@ function AnalyticsContent({ initialData }: { initialData?: StatsData }) {
 // Main streaming component
 export function AnalyticsStreaming({ initialData }: { initialData?: StatsData }) {
   return (
-    <Suspense fallback={<AnalyticsSkeleton />}>
+    <AdminSuspense fallback={<AnalyticsSkeleton />} message="Loading analytics data...">
       <AnalyticsContent initialData={initialData} />
-    </Suspense>
+    </AdminSuspense>
   )
 }

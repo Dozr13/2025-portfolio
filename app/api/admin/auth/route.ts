@@ -1,13 +1,17 @@
 import { envConfig } from "@/lib/config"
+import { handleCors } from "@/lib/utils/cors"
+import { JWT_SECRET } from "@/lib/utils/jwt"
 import { SignJWT, jwtVerify } from "jose"
 import { NextResponse } from "next/server"
-
-const JWT_SECRET = new TextEncoder().encode(envConfig.JWT_SECRET)
 
 // Admin credentials (in production, use a proper user management system)
 const ADMIN_CREDENTIALS = {
   username: envConfig.ADMIN_USERNAME,
   password: envConfig.ADMIN_PASSWORD
+}
+
+export async function OPTIONS() {
+  return handleCors()
 }
 
 export async function POST(request: Request) {

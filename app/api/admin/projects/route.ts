@@ -1,7 +1,12 @@
 import { Prisma } from '@/generated/client'
 import { prisma } from "@/lib/config"
 import { verifyAdminToken } from "@/lib/utils/auth"
+import { handleCors } from "@/lib/utils/cors"
 import { NextResponse } from "next/server"
+
+export async function OPTIONS() {
+  return handleCors()
+}
 
 export async function GET(request: Request) {
   // Verify admin authentication

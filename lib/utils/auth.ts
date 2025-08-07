@@ -1,6 +1,5 @@
 import { jwtVerify } from 'jose'
-
-const JWT_SECRET = new TextEncoder().encode(process.env.JWT_SECRET || 'fallback-secret')
+import { JWT_SECRET } from './jwt'
 
 /**
  * Utility function to verify admin token (for API routes)

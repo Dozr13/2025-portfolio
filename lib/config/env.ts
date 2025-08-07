@@ -49,6 +49,29 @@ export const envConfig = {
   
 } as const
 
+// Utility function to get the appropriate base URL for API calls
+export function getApiBaseUrl(): string {
+  // In development, use the configured URL or localhost
+  if (envConfig.NODE_ENV === 'development') {
+    return envConfig.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'
+  }
+  
+  // In production, we need to use the actual domain
+  // For Vercel, we can use the VERCEL_URL environment variable
+  if (process.env.VERCEL_URL) {
+    return `https://${process.env.VERCEL_URL}`
+  }
+  
+  // Fallback to NEXT_PUBLIC_APP_URL if available
+  if (envConfig.NEXT_PUBLIC_APP_URL && envConfig.NEXT_PUBLIC_APP_URL !== 'http://localhost:3000') {
+    return envConfig.NEXT_PUBLIC_APP_URL
+  }
+  
+  // Last resort - this should not happen in production
+  console.warn('No valid base URL found for production environment')
+  return 'http://localhost:3000'
+}
+
 // Validation function
 export function validateEnvConfig() {
   const requiredEnvVars = [

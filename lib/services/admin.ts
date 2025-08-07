@@ -155,11 +155,11 @@ export const adminService = {
           name: string
           category: string
           level: string
-          years: number | null
+          years: number
           description: string | null
-          icon: string | null
+          icon: string
           featured: boolean
-          order: number | null
+          order: number
           createdAt: string
           updatedAt: string
         }>

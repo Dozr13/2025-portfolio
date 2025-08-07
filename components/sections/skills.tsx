@@ -1,7 +1,7 @@
 "use client"
 
 import { SkillsDisplay } from "@/components/ui/skills-display"
-import { skillsService } from "@/lib/services/public"
+import { skillsService } from "@/lib/services"
 import { motion } from "framer-motion"
 import { useEffect, useState } from "react"
 
@@ -24,7 +24,7 @@ export const Skills = () => {
     const fetchSkills = async () => {
       try {
         const data = await skillsService.fetchSkills()
-        setSkills(data.skills)
+        setSkills(data.skills as Skill[])
       } catch (error) {
         console.error('Failed to fetch skills:', error)
       } finally {

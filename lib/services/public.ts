@@ -1,63 +1,112 @@
-// Public API service functions
+import { prisma } from "@/lib/config"
 
-// Skills services
-export const skillsService = {
-  async fetchSkills(params: { featured?: boolean; category?: string } = {}) {
-    const searchParams = new URLSearchParams()
-    
-    if (params.featured) searchParams.append('featured', 'true')
-    if (params.category) searchParams.append('category', params.category)
+// Public service functions for server-side data fetching
+// These don't require authentication and fetch data directly from the database
 
-    const response = await fetch(`/api/skills?${searchParams}`)
-    
-    if (!response.ok) throw new Error('Failed to fetch skills')
-    return response.json()
+export const getPublicProjectsData = async () => {
+  try {
+    const projects = await prisma.project.findMany({
+      where: {
+        status: 'COMPLETED', // Only show completed projects on public site
+        featured: true // Only show featured projects
+      },
+      orderBy: [
+        { featured: 'desc' },
+        { order: 'asc' },
+        { endDate: 'desc' }
+      ],
+      select: {
+        id: true,
+        title: true,
+        slug: true,
+        description: true,
+        category: true,
+        status: true,
+        featured: true,
+        demoUrl: true,
+        githubUrl: true,
+        images: true,
+        thumbnail: true,
+        startDate: true,
+        endDate: true,
+        client: true,
+        teamSize: true,
+        role: true,
+        challenges: true,
+        solutions: true,
+        metrics: true,
+        order: true,
+        createdAt: true,
+        updatedAt: true,
+        projectSkills: {
+          select: {
+            skill: {
+              select: {
+                name: true,
+                icon: true
+              }
+            },
+            importance: true
+          },
+          orderBy: {
+            importance: 'asc' // PRIMARY first, then SECONDARY
+          }
+        }
+      }
+    })
+
+    return { projects }
+  } catch (error) {
+    console.error('[Public Projects Service] Error fetching projects:', error)
+    return { projects: [] }
   }
 }
 
-// Blog services  
-export const publicBlogService = {
-  async fetchPosts(params: { page?: number; limit?: number } = {}) {
-    const searchParams = new URLSearchParams({
-      page: params.page?.toString() || '1',
-      limit: params.limit?.toString() || '10'
+export const getPublicSkillsData = async () => {
+  try {
+    const skills = await prisma.skill.findMany({
+      where: {
+        featured: true // Only show featured skills on public site
+      },
+      orderBy: [
+        { featured: 'desc' }, // Featured first
+        { order: 'asc' }       // Then by order
+      ]
     })
 
-    const response = await fetch(`/api/blog?${searchParams}`)
-    
-    if (!response.ok) throw new Error('Failed to fetch blog posts')
-    return response.json()
-  },
-
-  async fetchPost(slug: string) {
-    const response = await fetch(`/api/blog/${slug}`)
-    
-    if (!response.ok) throw new Error('Failed to fetch blog post')
-    return response.json()
+    return skills
+  } catch (error) {
+    console.error('[Public Skills Service] Error fetching skills:', error)
+    return []
   }
 }
 
-// Contact services
-export const contactService = {
-  async submitContact(data: {
-    name: string
-    email: string
-    subject?: string
-    message: string
-    phone?: string
-    company?: string
-    website?: string
-    budget?: string
-    timeline?: string
-    source?: string
-  }) {
-    const response = await fetch('/api/contact', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(data)
+export const getPublicBlogData = async () => {
+  try {
+    const posts = await prisma.blogPost.findMany({
+      where: {
+        status: "PUBLISHED"
+      },
+      orderBy: {
+        publishedAt: "desc"
+      },
+      select: {
+        id: true,
+        title: true,
+        slug: true,
+        excerpt: true,
+        category: true,
+        tags: true,
+        readingTime: true,
+        views: true,
+        publishedAt: true,
+        author: true
+      }
     })
-    
-    if (!response.ok) throw new Error('Failed to submit contact form')
-    return response.json()
+
+    return { posts }
+  } catch (error) {
+    console.error('[Public Blog Service] Error fetching blog posts:', error)
+    return { posts: [] }
   }
 }

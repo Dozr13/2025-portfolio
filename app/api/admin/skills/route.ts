@@ -1,8 +1,11 @@
-import { PrismaClient } from '@/generated/client'
-import { verifyAdminToken } from '@/lib/utils/auth'
-import { NextResponse } from 'next/server'
+import { prisma } from "@/lib/config"
+import { verifyAdminToken } from "@/lib/utils/auth"
+import { handleCors } from "@/lib/utils/cors"
+import { NextResponse } from "next/server"
 
-const prisma = new PrismaClient()
+export async function OPTIONS() {
+  return handleCors()
+}
 
 export async function GET(request: Request) {
   try {
