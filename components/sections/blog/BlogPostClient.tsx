@@ -3,6 +3,7 @@
 import { Icon } from "@/components/ui/icon"
 import { motion } from "framer-motion"
 import Link from "next/link"
+import { useEffect, useState } from "react"
 
 interface BlogPost {
   id: string
@@ -42,35 +43,128 @@ interface BlogPostClientProps {
 }
 
 function markdownToHtml(markdown: string): string {
-  return markdown
-    .split('\n')
-    .map(paragraph => {
-      if (paragraph.startsWith('# ')) {
-        return `<h1 class="text-3xl font-bold mb-6 text-foreground">${paragraph.slice(2)}</h1>`
+  // Split into lines and process
+  const lines = markdown.split('\n')
+  const result: string[] = []
+  let inCodeBlock = false
+  let codeBlockContent: string[] = []
+  let currentParagraph: string[] = []
+
+  const processParagraph = (paragraph: string[]) => {
+    if (paragraph.length === 0) return
+
+    const text = paragraph.join(' ').trim()
+    if (text === '') return
+
+    // Check for headers
+    if (text.startsWith('# ')) {
+      result.push(`<h1 class="text-4xl lg:text-5xl font-bold mb-8 text-foreground leading-tight">${text.slice(2)}</h1>`)
+    } else if (text.startsWith('## ')) {
+      result.push(`<h2 class="text-2xl lg:text-3xl font-semibold mb-6 mt-12 text-foreground leading-tight border-b border-border/30 pb-2">${text.slice(3)}</h2>`)
+    } else if (text.startsWith('### ')) {
+      result.push(`<h3 class="text-xl lg:text-2xl font-semibold mb-4 mt-8 text-foreground leading-tight">${text.slice(4)}</h3>`)
+    } else {
+      // Check for lists
+      if (text.match(/^\d+\.\s/)) {
+        // Ordered list
+        result.push(`<ol class="mb-6 ml-6 space-y-2 text-lg lg:text-xl text-foreground/90"><li class="leading-relaxed">${text.replace(/^\d+\.\s/, '')}</li></ol>`)
+      } else if (text.match(/^[-*]\s/)) {
+        // Unordered list
+        result.push(`<ul class="mb-6 ml-6 space-y-2 text-lg lg:text-xl text-foreground/90"><li class="leading-relaxed">${text.replace(/^[-*]\s/, '')}</li></ul>`)
+      } else {
+        // Regular paragraph
+        result.push(`<p class="mb-6 leading-relaxed text-foreground/90 text-lg lg:text-xl">${text}</p>`)
       }
-      if (paragraph.startsWith('## ')) {
-        return `<h2 class="text-2xl font-semibold mb-4 mt-8 text-foreground">${paragraph.slice(3)}</h2>`
+    }
+  }
+
+  for (let i = 0; i < lines.length; i++) {
+    const line = lines[i]
+
+    // Handle code blocks
+    if (line.trim().startsWith('```')) {
+      if (inCodeBlock) {
+        // End of code block
+        inCodeBlock = false
+        const codeContent = codeBlockContent.join('\n')
+        result.push(`<pre class="bg-muted/50 p-6 rounded-xl overflow-x-auto my-6 border border-border/50 shadow-lg backdrop-blur-sm"><code class="text-sm text-foreground/90 font-mono leading-relaxed">${codeContent}</code></pre>`)
+        codeBlockContent = []
+      } else {
+        // Start of code block
+        inCodeBlock = true
+        // Process any pending paragraph
+        processParagraph(currentParagraph)
+        currentParagraph = []
       }
-      if (paragraph.startsWith('### ')) {
-        return `<h3 class="text-xl font-semibold mb-3 mt-6 text-foreground">${paragraph.slice(4)}</h3>`
-      }
-      if (paragraph.startsWith('```')) {
-        return `<pre class="bg-muted p-4 rounded-lg overflow-x-auto my-4"><code class="text-sm">${paragraph.slice(3)}</code></pre>`
-      }
-      if (paragraph.trim() === '') {
-        return ''
-      }
-      return `<p class="mb-8 leading-relaxed text-foreground/90 text-lg lg:text-xl">${paragraph.trim()}</p>`
-    })
-    .join('\n')
+      continue
+    }
+
+    if (inCodeBlock) {
+      codeBlockContent.push(line)
+      continue
+    }
+
+    // Handle empty lines (paragraph breaks)
+    if (line.trim() === '') {
+      processParagraph(currentParagraph)
+      currentParagraph = []
+      continue
+    }
+
+    // Check for headers (single line)
+    if (line.startsWith('# ')) {
+      processParagraph(currentParagraph)
+      currentParagraph = []
+      result.push(`<h1 class="text-4xl lg:text-5xl font-bold mb-8 text-foreground leading-tight">${line.slice(2)}</h1>`)
+    } else if (line.startsWith('## ')) {
+      processParagraph(currentParagraph)
+      currentParagraph = []
+      result.push(`<h2 class="text-2xl lg:text-3xl font-semibold mb-6 mt-12 text-foreground leading-tight border-b border-border/30 pb-2">${line.slice(3)}</h2>`)
+    } else if (line.startsWith('### ')) {
+      processParagraph(currentParagraph)
+      currentParagraph = []
+      result.push(`<h3 class="text-xl lg:text-2xl font-semibold mb-4 mt-8 text-foreground leading-tight">${line.slice(4)}</h3>`)
+    } else {
+      // Regular text line
+      currentParagraph.push(line)
+    }
+  }
+
+  // Process any remaining paragraph
+  processParagraph(currentParagraph)
+
+  return result.join('\n')
 }
 
 export function BlogPostClient({ post }: BlogPostClientProps) {
   const tags = post.tags ? post.tags.split(',').filter(tag => tag.trim()) : []
   const htmlContent = markdownToHtml(post.content)
 
+  // Reading progress hook
+  const [readingProgress, setReadingProgress] = useState(0)
+
+  useEffect(() => {
+    const updateReadingProgress = () => {
+      const scrollTop = window.scrollY
+      const docHeight = document.documentElement.scrollHeight - window.innerHeight
+      const progress = (scrollTop / docHeight) * 100
+      setReadingProgress(Math.min(progress, 100))
+    }
+
+    window.addEventListener('scroll', updateReadingProgress)
+    return () => window.removeEventListener('scroll', updateReadingProgress)
+  }, [])
+
   return (
     <div className="min-h-screen bg-background w-full overflow-x-hidden">
+      {/* Reading Progress Bar */}
+      <div className="fixed top-0 left-0 w-full h-1 bg-muted z-50">
+        <div
+          className="h-full bg-gradient-to-r from-primary to-purple-500 transition-all duration-300 ease-out"
+          style={{ width: `${readingProgress}%` }}
+        />
+      </div>
+
       {/* Navigation */}
       <motion.nav
         initial={{ y: -100 }}
@@ -223,7 +317,7 @@ export function BlogPostClient({ post }: BlogPostClientProps) {
                   {tags.map((tag, index) => (
                     <span
                       key={index}
-                      className="px-3 py-1 bg-muted text-muted-foreground rounded-full text-sm"
+                      className="px-4 py-2 bg-primary/10 text-primary border border-primary/20 rounded-full text-sm font-medium hover:bg-primary/20 transition-colors"
                     >
                       {tag.trim()}
                     </span>
@@ -243,7 +337,10 @@ export function BlogPostClient({ post }: BlogPostClientProps) {
         className="max-w-4xl mx-auto px-5 sm:px-8 lg:px-12 xl:px-16 py-16 lg:py-24"
       >
         <article className="prose prose-lg lg:prose-xl max-w-none">
-          <div dangerouslySetInnerHTML={{ __html: htmlContent }} />
+          <div
+            className="prose-headings:scroll-mt-20 prose-pre:bg-transparent prose-pre:p-0 prose-pre:border-0 prose-pre:shadow-none"
+            dangerouslySetInnerHTML={{ __html: htmlContent }}
+          />
         </article>
 
         {/* Comments Section */}
