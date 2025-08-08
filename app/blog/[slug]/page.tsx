@@ -26,10 +26,12 @@ export default async function BlogPostPage({
 
   // Increment view count
   try {
-    await prisma.blogPost.update({
+    const updated = await prisma.blogPost.update({
       where: { id: postData.id },
       data: { views: { increment: 1 } }
     })
+      // Ensure client sees the incremented value immediately
+      ; (postData as typeof postData & { views: number }).views = updated.views
   } catch (error) {
     console.error('Error updating view count:', error)
   }

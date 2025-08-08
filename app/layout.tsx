@@ -1,7 +1,9 @@
+import { PageViewTracker } from "@/components/analytics/PageViewTracker"
 import { ThemeProvider } from "@/components/theme-provider"
 import { AnalyticsProvider } from "@/lib/integrations"
 import type { Metadata } from "next"
 import { Inter, JetBrains_Mono } from "next/font/google"
+import { Suspense } from "react"
 import "./globals.css"
 
 const inter = Inter({
@@ -70,6 +72,9 @@ export default function RootLayout({
             <main>
               {children}
             </main>
+            <Suspense fallback={null}>
+              <PageViewTracker />
+            </Suspense>
           </AnalyticsProvider>
         </ThemeProvider>
       </body>

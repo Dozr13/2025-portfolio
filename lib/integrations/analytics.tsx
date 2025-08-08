@@ -22,7 +22,7 @@ export function trackAdminAction(action: string, details?: Record<string, string
 // Analytics component with environment-aware setup
 export function AnalyticsProvider({ children }: { children: ReactNode }) {
   // Only load analytics in production with proper configuration
-  if (!analyticsConfig.enabled || !analyticsConfig.vercelAnalyticsId) {
+  if (!analyticsConfig.enabled) {
     return <>{children}</>
   }
 

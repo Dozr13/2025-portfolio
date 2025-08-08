@@ -27,10 +27,6 @@ export const envConfig = {
   ADMIN_PASSWORD: process.env.ADMIN_PASSWORD!,
   JWT_SECRET: process.env.JWT_SECRET!,
   
-  // Analytics & Monitoring
-  NEXT_PUBLIC_VERCEL_ANALYTICS_ID: process.env.NEXT_PUBLIC_VERCEL_ANALYTICS_ID,
-  VERCEL_ANALYTICS_ID: process.env.VERCEL_ANALYTICS_ID,
-  
   // App Configuration
   NEXT_PUBLIC_APP_URL: process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000',
   
@@ -105,7 +101,6 @@ export function getDatabaseConfig() {
 export function getAnalyticsConfig() {
   return {
     enabled: envConfig.ENABLE_ANALYTICS,
-    vercelAnalyticsId: envConfig.NEXT_PUBLIC_VERCEL_ANALYTICS_ID,
     trackingEnabled: envConfig.NODE_ENV === 'production'
   }
 }
