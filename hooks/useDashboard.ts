@@ -1,8 +1,11 @@
 "use client"
 
+import { listContacts } from "@/app/actions/admin/contacts"
+import { getAdminStats } from "@/app/actions/admin/stats"
+import type { AnalyticsData } from "@/lib/types"
 import { useCallback, useEffect, useState } from "react"
 
-interface DashboardStats {
+export interface DashboardStats {
   contacts: {
     total: number
     new: number
@@ -13,28 +16,24 @@ interface DashboardStats {
     drafts: number
     totalViews: number
   }
-  analytics: {
-    visitors: number
-    pageViews: number
-    avgTimeOnSite: number
-  }
+  analytics: AnalyticsData & { environment: string; enabled: boolean }
 }
 
-interface RecentContact {
+export interface RecentContact {
   id: string
   name: string
   email: string
   subject: string
   status: string
-  createdAt: string
+  createdAt: Date
 }
 
-interface DashboardData {
+export interface DashboardData {
   stats: DashboardStats
   recentContacts: RecentContact[]
 }
 
-interface UseDashboardOptions {
+export interface UseDashboardOptions {
   initialData?: DashboardData | null
 }
 
@@ -48,25 +47,23 @@ export function useDashboard(options: UseDashboardOptions = {}) {
     setError(null)
 
     try {
-      const token = localStorage.getItem("adminToken")
-
-      const [statsRes, contactsRes] = await Promise.all([
-        fetch("/api/admin/stats", {
-          headers: { "Authorization": `Bearer ${token}` }
-        }),
-        fetch("/api/admin/contacts", {
-          headers: { "Authorization": `Bearer ${token}` }
-        })
-      ])
-
       const [statsData, contactsData] = await Promise.all([
-        statsRes.ok ? statsRes.json() : null,
-        contactsRes.ok ? contactsRes.json() : null
+        getAdminStats(),
+        listContacts({ page: 1, limit: 20, status: null, search: null })
       ])
 
-      const dashboardData = {
-        stats: statsData,
-        recentContacts: contactsData?.contacts?.slice(0, 5) || []
+      const contacts = (contactsData && 'contacts' in (contactsData as object)) ? (contactsData as { contacts: Array<{ id: string; name: string; email: string; subject: string | null; status: string; createdAt: string | Date }> }).contacts : []
+      const recentContacts: RecentContact[] = contacts.map((c) => ({
+        id: c.id,
+        name: c.name,
+        email: c.email,
+        subject: c.subject ?? "",
+        status: c.status,
+        createdAt: typeof c.createdAt === 'string' ? new Date(c.createdAt) : new Date(c.createdAt),
+      }))
+      const dashboardData: DashboardData = {
+        stats: statsData as unknown as DashboardStats,
+        recentContacts: recentContacts.slice(0, 5)
       }
 
       setData(dashboardData)

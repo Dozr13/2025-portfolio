@@ -31,7 +31,7 @@ const highlights: {
     }
   ]
 
-export function About() {
+export const About = () => {
   return (
     <section id="about" className="py-20 bg-muted/50">
       <div>

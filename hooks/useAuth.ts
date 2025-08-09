@@ -1,6 +1,7 @@
 "use client"
 
-import { isValidToken } from "@/lib/utils/auth"
+// Client-side session validation via protected endpoint
+import { getAdminAuth } from "@/app/actions/admin/auth"
 import { useRouter } from "next/navigation"
 import { useCallback } from "react"
 
@@ -11,16 +12,22 @@ interface UseAuthOptions {
 
 export function useAuth(options: UseAuthOptions = {}) {
   const router = useRouter()
-  const { onAuthError, redirectTo = "/admin" } = options
+  const { onAuthError, redirectTo = "/admin/login" } = options
 
-  const validateAndRedirect = useCallback(async (token: string | null): Promise<boolean> => {
-    if (!token || !(await isValidToken(token))) {
-      const message = "Authentication required"
-      onAuthError?.(message)
+  const validateSession = useCallback(async (): Promise<boolean> => {
+    try {
+      const data = await getAdminAuth()
+      if (!data.authenticated) {
+        onAuthError?.('Authentication required')
+        router.push(redirectTo)
+        return false
+      }
+      return true
+    } catch {
+      onAuthError?.('Authentication required')
       router.push(redirectTo)
       return false
     }
-    return true
   }, [onAuthError, redirectTo, router])
 
   const handleAuthError = useCallback((status: number, message: string) => {
@@ -34,7 +41,7 @@ export function useAuth(options: UseAuthOptions = {}) {
   }, [onAuthError, redirectTo, router])
 
   return {
-    validateAndRedirect,
+    validateSession,
     handleAuthError
   }
 }

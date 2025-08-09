@@ -1,5 +1,5 @@
 import { PageViewTracker } from "@/components/analytics/PageViewTracker"
-import { ThemeProvider } from "@/components/theme-provider"
+import { ThemeProvider } from "@/components/layout"
 import { AnalyticsProvider } from "@/lib/integrations"
 import type { Metadata } from "next"
 import { Inter, JetBrains_Mono } from "next/font/google"

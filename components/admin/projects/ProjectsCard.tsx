@@ -75,7 +75,9 @@ export const ProjectsCard = ({ project, onDelete, deleting }: ProjectsCardProps)
       </div>
 
       <div className="flex items-center justify-between text-xs text-muted-foreground">
-        <span>Updated {new Date(project.updatedAt).toLocaleDateString()}</span>
+        <span>
+          {project.updatedAt ? `Updated ${new Date(project.updatedAt).toLocaleDateString()}` : 'Updated —'}
+        </span>
         <div className="flex items-center gap-4">
           {project.demoUrl && (
             <a

@@ -1,3 +1,5 @@
+// hooks/useAdminAuth.ts
+import { getAdminAuth, logoutAdmin } from '@/app/actions/admin/auth'
 import { useRouter } from 'next/navigation'
 import { useCallback, useEffect, useState } from 'react'
 
@@ -6,7 +8,7 @@ interface AdminUser {
   role: string
 }
 
-// 🚨 SINGLETON AUTH STATE - Prevents multiple auth checks
+// SINGLETON AUTH STATE - Prevents multiple auth checks
 const globalAuthState = {
   isChecking: false,
   isAuthenticated: false,
@@ -21,57 +23,24 @@ const notifyListeners = () => {
 
 // Global function to refresh auth state
 export const refreshAuthState = async () => {
-  
-  
-  if (typeof window === 'undefined') {
-    
-    return
-  }
-
-  const token = localStorage.getItem("adminToken")
-  const userData = localStorage.getItem("adminUser")
-
-  
-  
-
-  if (!token || !userData) {
-    
-    globalAuthState.isAuthenticated = false
-    globalAuthState.isLoading = false
-    globalAuthState.user = null
-    notifyListeners()
-    return
-  }
-
+  if (typeof window === 'undefined') return
   try {
-    const response = await fetch('/api/admin/auth', {
-      headers: {
-        Authorization: `Bearer ${token}`
-      }
-    })
-
-    if (response.ok) {
-      const authData = await response.json()
-      
-      globalAuthState.user = authData.user
+    const data = await getAdminAuth()
+    if (data.authenticated) {
+      globalAuthState.user = data.user
       globalAuthState.isAuthenticated = true
-      globalAuthState.isLoading = false
     } else {
-      
-      localStorage.removeItem("adminToken")
-      localStorage.removeItem("adminUser")
       globalAuthState.isAuthenticated = false
       globalAuthState.user = null
-      globalAuthState.isLoading = false
     }
   } catch (error) {
     console.error('[AUTH REFRESH] Auth refresh failed:', error)
     globalAuthState.isAuthenticated = false
     globalAuthState.user = null
+  } finally {
     globalAuthState.isLoading = false
+    notifyListeners()
   }
-  
-  notifyListeners()
 }
 
 export function useAdminAuth() {
@@ -96,15 +65,13 @@ export function useAdminAuth() {
 
   useEffect(() => {
     const checkAuth = async () => {
-      // ⚡ Prevent multiple simultaneous auth checks
-      if (globalAuthState.isChecking) {
-        
+      // Prevent multiple simultaneous auth checks
+      if (globalAuthState.isChecking) {        
         return
       }
 
       globalAuthState.isChecking = true
-      
-      
+            
       // Add small delay to ensure localStorage is available
       await new Promise(resolve => setTimeout(resolve, 100))
       
@@ -115,43 +82,11 @@ export function useAdminAuth() {
           return
         }
 
-        const token = localStorage.getItem("adminToken")
-        const userData = localStorage.getItem("adminUser")
-
-        
-        
-        
-
-        if (!token || !userData) {
-          
-          globalAuthState.isAuthenticated = false
-          globalAuthState.isLoading = false
-          globalAuthState.user = null
-          notifyListeners()
-          return
-        }
-
-        
-        // Verify token with server
-        const response = await fetch('/api/admin/auth', {
-          headers: {
-            Authorization: `Bearer ${token}`
-          }
-        })
-
-        
-        
-
-        if (response.ok) {
-          const authData = await response.json()
-          
-          globalAuthState.user = authData.user
+        const data = await getAdminAuth()
+        if (data.authenticated) {
+          globalAuthState.user = data.user
           globalAuthState.isAuthenticated = true
         } else {
-          
-          // Token invalid, clear storage
-          localStorage.removeItem("adminToken")
-          localStorage.removeItem("adminUser")
           globalAuthState.isAuthenticated = false
           globalAuthState.user = null
         }
@@ -188,27 +123,18 @@ export function useAdminAuth() {
   }, [])
 
   const logout = () => {
-    localStorage.removeItem("adminToken")
-    localStorage.removeItem("adminUser")
-    
-    // Update global state
-    globalAuthState.user = null
-    globalAuthState.isAuthenticated = false
-    globalAuthState.isLoading = false
-    notifyListeners()
-    
-    router.push("/admin")
+    logoutAdmin().finally(() => {
+      globalAuthState.user = null
+      globalAuthState.isAuthenticated = false
+      globalAuthState.isLoading = false
+      notifyListeners()
+      router.push("/admin/login")
+    })
   }
 
-  const redirectToLogin = useCallback(() => {
-    
-    router.push("/admin")
+  const redirectToLogin = useCallback(() => {    
+    router.push("/admin/login")
   }, [router])
-
-  // Debug current state
-  useEffect(() => {
-    
-  }, [isLoading, isAuthenticated, user])
 
   return {
     user,

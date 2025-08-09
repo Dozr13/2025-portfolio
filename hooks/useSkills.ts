@@ -1,6 +1,6 @@
 "use client"
 
-import { adminService } from "@/lib/services/admin"
+import { listSkills } from "@/app/actions/admin/skills"
 import type { Skill } from "@/lib/types"
 import { useCallback, useEffect, useState } from "react"
 
@@ -20,7 +20,7 @@ export function useSkills(options: UseSkillsOptions = {}) {
       setLoading(true)
       setError(null)
       console.log('[Skills Hook] Fetching skills from API...')
-      const data = await adminService.skills.fetchSkills()
+      const data = await listSkills()
       setSkills(data.skills || [])
       console.log('[Skills Hook] Skills fetched successfully:', data.skills?.length || 0, 'skills')
     } catch (error) {
@@ -36,7 +36,7 @@ export function useSkills(options: UseSkillsOptions = {}) {
 
     setDeleting(id)
     try {
-      await adminService.skills.deleteSkill(id)
+      await deleteSkill(id, name)
       setSkills(prev => prev.filter(skill => skill.id !== id))
       return true
     } catch (error) {

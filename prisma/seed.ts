@@ -1,6 +1,7 @@
-import { PrismaClient, Project, ProjectSkillImportance, Skill } from '../generated/client'
-import '../lib/config'; // Load environment configuration
+import type { Project, Skill } from '@/generated/client'
+import { ProjectSkillImportance } from '@/generated/client'
 import { envConfig } from '../lib/config'
+import { prisma } from '../lib/prisma'
 import { seedBlog } from '../scripts/database/seed-blog'
 import { seedCertifications } from './seeders/certifications'
 import { seedContacts } from './seeders/contacts'
@@ -12,7 +13,6 @@ import { seedServices } from './seeders/services'
 import { seedSkills } from './seeders/skills'
 import { seedTestimonials } from './seeders/testimonials'
 
-const prisma = new PrismaClient()
 
 // Project-Skills relationship seeding
 async function seedProjectSkills() {

@@ -5,7 +5,7 @@ import { Icon, IconName } from "@/components/ui/icon"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 
-export function AdminNavigation() {
+export const AdminNavigation = () => {
   const { user, logout } = useAdminAuthContext()
   const pathname = usePathname()
 
@@ -15,6 +15,7 @@ export function AdminNavigation() {
     { href: '/admin/projects', label: 'Projects', icon: 'folder' },
     { href: '/admin/blog', label: 'Blog', icon: 'file-text' },
     { href: '/admin/skills', label: 'Skills', icon: 'code' },
+    { href: '/admin/case-studies', label: 'Case Studies', icon: 'book-open' },
     { href: '/admin/analytics', label: 'Analytics', icon: 'chart-bar' },
   ]
 
@@ -29,12 +30,12 @@ export function AdminNavigation() {
             </div>
             <div>
               <h1 className="text-lg font-bold">Portfolio Admin</h1>
-              <p className="text-xs text-muted-foreground">Welcome back, {user?.username}</p>
+              <p className="text-xs text-muted-foreground">Welcome back!</p>
             </div>
           </div>
 
           {/* Navigation */}
-          <nav className="hidden md:flex items-center gap-1">
+          <nav className="hidden md:flex items-center justify-around gap-1">
             {navItems.map((item) => (
               <Link
                 key={item.href}

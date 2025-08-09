@@ -1,43 +1,12 @@
 "use client"
 
 import { AdminSuspense } from "@/components/admin/shared/AdminSuspense"
+import type { DashboardData } from "@/hooks/useDashboard"
 import { DashboardContent } from "./DashboardContent"
 import { DashboardSkeleton } from "./DashboardSkeleton"
 
-interface DashboardStats {
-  contacts: {
-    total: number
-    new: number
-    thisWeek: number
-  }
-  blog: {
-    published: number
-    drafts: number
-    totalViews: number
-  }
-  analytics: {
-    visitors: number
-    pageViews: number
-    avgTimeOnSite: number
-  }
-}
-
-interface RecentContact {
-  id: string
-  name: string
-  email: string
-  subject: string
-  status: string
-  createdAt: string
-}
-
-interface DashboardData {
-  stats: DashboardStats
-  recentContacts: RecentContact[]
-}
-
 interface DashboardStreamingProps {
-  initialData?: DashboardData | null
+  initialData: DashboardData | null
 }
 
 export const DashboardStreaming = ({ initialData }: DashboardStreamingProps) => {

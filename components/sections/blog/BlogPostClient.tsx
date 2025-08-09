@@ -2,7 +2,6 @@
 
 import { Icon } from "@/components/ui/icon"
 import { motion } from "framer-motion"
-import Link from "next/link"
 import { useEffect, useState } from "react"
 
 interface BlogPost {
@@ -24,7 +23,7 @@ interface BlogPost {
   likes: number
   publishedAt: Date | null
   createdAt: Date
-  updatedAt: Date
+  updatedAt: Date | null
   comments: {
     id: string
     name: string
@@ -142,8 +141,22 @@ export function BlogPostClient({ post }: BlogPostClientProps) {
 
   // Reading progress hook
   const [readingProgress, setReadingProgress] = useState(0)
+  const [localViews, setLocalViews] = useState<number>(post.views)
 
   useEffect(() => {
+    // Increment view once per session per slug
+    try {
+      const key = `viewed_${post.slug}`
+      if (typeof window !== 'undefined' && !sessionStorage.getItem(key)) {
+        ; (async () => {
+          const { incrementBlogView } = await import('@/app/actions/public/blog')
+          await incrementBlogView(post.slug)
+          sessionStorage.setItem(key, '1')
+          setLocalViews((v) => v + 1)
+        })().catch(() => { })
+      }
+    } catch { }
+
     const updateReadingProgress = () => {
       const scrollTop = window.scrollY
       const docHeight = document.documentElement.scrollHeight - window.innerHeight
@@ -153,7 +166,7 @@ export function BlogPostClient({ post }: BlogPostClientProps) {
 
     window.addEventListener('scroll', updateReadingProgress)
     return () => window.removeEventListener('scroll', updateReadingProgress)
-  }, [])
+  }, [post.slug])
 
   return (
     <div className="min-h-screen bg-background w-full overflow-x-hidden">
@@ -164,73 +177,6 @@ export function BlogPostClient({ post }: BlogPostClientProps) {
           style={{ width: `${readingProgress}%` }}
         />
       </div>
-
-      {/* Navigation */}
-      <motion.nav
-        initial={{ y: -100 }}
-        animate={{ y: 0 }}
-        className="border-b border-border bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 sticky top-0 z-50"
-      >
-        <div className="max-w-7xl mx-auto px-5 sm:px-8 lg:px-12 xl:px-16 py-4 lg:py-6">
-          <div className="flex items-center justify-between">
-            {/* Logo */}
-            <Link href="/" className="group flex items-center space-x-3">
-              <motion.div className="relative">
-                <motion.div
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                  className="w-10 h-10 lg:w-12 lg:h-12 xl:w-14 xl:h-14 bg-gradient-to-br from-primary to-purple-500 rounded-xl flex items-center justify-center font-bold text-primary-foreground text-lg lg:text-xl xl:text-2xl shadow-lg group-hover:shadow-xl transition-all duration-300"
-                >
-                  W
-                </motion.div>
-              </motion.div>
-              <div className="flex flex-col items-start">
-                <div className="flex items-center space-x-1">
-                  <span className="text-xl lg:text-2xl xl:text-3xl font-bold text-foreground group-hover:text-primary transition-colors">
-                    Wade
-                  </span>
-                  <span className="text-xl lg:text-2xl xl:text-3xl font-bold gradient-text-inverted">
-                    Pate
-                  </span>
-                </div>
-                <div className="text-xs lg:text-sm xl:text-base text-muted-foreground font-mono tracking-wider opacity-60 group-hover:opacity-80 transition-opacity">
-                  {"{ dev }"}
-                </div>
-              </div>
-            </Link>
-
-            {/* Navigation Links */}
-            <div className="hidden md:flex items-center space-x-6 lg:space-x-8">
-              <Link href="/#about" className="text-foreground hover:text-primary px-4 py-3 text-base lg:text-lg font-medium transition-colors relative group">
-                About
-                <span className="absolute inset-x-0 bottom-0 h-0.5 bg-primary transform scale-x-0 group-hover:scale-x-100 transition-transform origin-left"></span>
-              </Link>
-              <Link href="/#projects" className="text-foreground hover:text-primary px-4 py-3 text-base lg:text-lg font-medium transition-colors relative group">
-                Projects
-                <span className="absolute inset-x-0 bottom-0 h-0.5 bg-primary transform scale-x-0 group-hover:scale-x-100 transition-transform origin-left"></span>
-              </Link>
-              <Link href="/#blog" className="text-primary px-4 py-3 text-base lg:text-lg font-medium transition-colors relative group">
-                Blog
-                <span className="absolute inset-x-0 bottom-0 h-0.5 bg-primary transform scale-x-100 transition-transform origin-left"></span>
-              </Link>
-              <Link href="/#contact" className="text-foreground hover:text-primary px-4 py-3 text-base lg:text-lg font-medium transition-colors relative group">
-                Contact
-                <span className="absolute inset-x-0 bottom-0 h-0.5 bg-primary transform scale-x-0 group-hover:scale-x-100 transition-transform origin-left"></span>
-              </Link>
-            </div>
-
-            {/* Back to Blog Button */}
-            <Link
-              href="/blog"
-              className="group inline-flex items-center gap-2 text-sm lg:text-base font-medium text-muted-foreground hover:text-foreground transition-all duration-200 hover:gap-3"
-            >
-              <Icon name="arrow-right" size="sm" className="rotate-180 transition-transform group-hover:-translate-x-1" />
-              <span className="hidden sm:inline">Back to Blog</span>
-              <span className="sm:hidden">Back</span>
-            </Link>
-          </div>
-        </div>
-      </motion.nav>
 
       {/* Hero Section */}
       <motion.div
@@ -259,7 +205,7 @@ export function BlogPostClient({ post }: BlogPostClientProps) {
                 </span>
                 <span className="inline-flex items-center gap-2">
                   <Icon name="eye" size="sm" />
-                  {post.views} views
+                  {localViews} views
                 </span>
                 {post.category && (
                   <span className="inline-flex items-center gap-2 px-3 py-1 bg-muted text-muted-foreground rounded-full">

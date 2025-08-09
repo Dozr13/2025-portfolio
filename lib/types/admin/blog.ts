@@ -10,9 +10,9 @@ export interface BlogPost {
   tags: string | null
   readingTime: number | null
   views: number
-  publishedAt: string | null
-  createdAt: string
-  updatedAt: string
+  publishedAt: Date | null
+  createdAt: Date
+  updatedAt: Date | null
   author: string
   featured: boolean
   metaTitle?: string

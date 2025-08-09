@@ -6,13 +6,15 @@ import { NextResponse } from 'next/server'
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl
   
-  // Only apply to admin routes, but exclude the login page
-  if (pathname.startsWith('/admin') && pathname !== '/admin') {
+  // Apply auth to admin routes except public admin pages
+  const isAdminRoute = pathname.startsWith('/admin')
+  const isPublicAdmin = pathname === '/admin' || pathname === '/admin/login'
+  if (isAdminRoute && !isPublicAdmin) {
     const token = request.cookies.get('adminToken')?.value
 
     if (!token) {
       // No token, redirect to login
-      return NextResponse.redirect(new URL('/admin', request.url))
+      return NextResponse.redirect(new URL('/admin/login', request.url))
     }
 
     try {
@@ -23,7 +25,7 @@ export async function middleware(request: NextRequest) {
       return NextResponse.next()
     } catch {
       // Token is invalid, redirect to login
-      return NextResponse.redirect(new URL('/admin', request.url))
+      return NextResponse.redirect(new URL('/admin/login', request.url))
     }
   }
 

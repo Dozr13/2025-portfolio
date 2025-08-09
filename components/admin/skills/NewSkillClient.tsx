@@ -1,10 +1,10 @@
 "use client"
 
+import { createSkill } from "@/app/actions/admin/skills"
 import { AdminFormLayout } from "@/components/admin/forms/AdminFormLayout"
 import { SkillFormData, SkillFormFields } from "@/components/admin/forms/SkillFormFields"
-import { SkillCategory, SkillLevel } from '@/generated/client'
 import { useAdminForm } from "@/hooks/useAdminForm"
-import { adminService } from "@/lib/services/admin"
+import type { SkillCategory, SkillLevel } from '@/lib/domain/enums'
 import { useRouter } from "next/navigation"
 
 export const NewSkillClient = () => {
@@ -22,7 +22,7 @@ export const NewSkillClient = () => {
   }
 
   const handleSubmit = async (data: SkillFormData) => {
-    await adminService.skills.createSkill({
+    await createSkill({
       name: data.name,
       category: data.category as SkillCategory,
       level: data.level as SkillLevel,

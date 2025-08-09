@@ -1,5 +1,6 @@
 "use client"
 
+import { AdminHeader } from "@/components/admin/shared/AdminHeader"
 import { Icon } from "@/components/ui/icon"
 import { useBlog } from "@/hooks/useBlog"
 import type { BlogPost } from "@/lib/types"
@@ -48,28 +49,22 @@ export const BlogContent = ({ initialData }: BlogContentProps) => {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-background via-background to-muted/30">
-      {/* Header */}
-      <div className="bg-card/95 backdrop-blur-sm border-b border-border/40 shadow-sm">
-        <div className="container mx-auto px-4 py-4">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-4">
-              <Link
-                href="/admin/dashboard"
-                className="flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors"
-              >
-                <Icon name="arrow-left" size="sm" />
-                Back to Dashboard
-              </Link>
-              <div className="w-px h-6 bg-border"></div>
-              <h1 className="text-2xl font-bold">Blog Management</h1>
-            </div>
-          </div>
-        </div>
-      </div>
+    <div className="min-h-screen">
+      <AdminHeader
+        title="Blog Management"
+        backHref="/admin/dashboard"
+        actions={(
+          <Link
+            href="/admin/blog/new"
+            className="px-4 py-2 bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 transition-colors flex items-center gap-2"
+          >
+            <Icon name="plus" size="sm" />
+            New Post
+          </Link>
+        )}
+      />
 
-      {/* Content */}
-      <div className="container mx-auto px-4 py-8">
+      <div className="py-8">
         {/* Filters and Controls */}
         <div className="flex flex-col sm:flex-row gap-4 mb-6">
           <div className="flex-1">
@@ -91,13 +86,7 @@ export const BlogContent = ({ initialData }: BlogContentProps) => {
             <option value="PUBLISHED">Published</option>
             <option value="ARCHIVED">Archived</option>
           </select>
-          <Link
-            href="/admin/blog/new"
-            className="px-4 py-2 bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 transition-colors flex items-center gap-2"
-          >
-            <Icon name="plus" size="sm" />
-            New Post
-          </Link>
+          {/* New Post button moved to header actions */}
         </div>
 
         {/* Posts Grid */}

@@ -1,5 +1,6 @@
 "use client"
 
+import { createContact } from "@/app/actions/public/contact"
 import { Icon, type IconName } from "@/components/ui/icon"
 import { AnimatePresence, motion } from "framer-motion"
 import { useRef, useState } from "react"
@@ -42,7 +43,7 @@ type FormStatus = 'idle' | 'loading' | 'success' | 'error'
 const RATE_LIMIT_KEY = 'contact_form_last_submission'
 const RATE_LIMIT_DURATION = 60000
 
-export function Contact() {
+export const Contact = () => {
   const [formData, setFormData] = useState<FormData>({
     name: '',
     email: '',
@@ -144,24 +145,14 @@ export function Contact() {
     }
 
     try {
-      // First, save to database
-      const response = await fetch('/api/contact', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          name: formData.name.trim(),
-          email: formData.email.trim(),
-          subject: formData.subject.trim(),
-          message: formData.message.trim(),
-          source: 'Portfolio Contact Form'
-        }),
+      // First, save to database via server action
+      await createContact({
+        name: formData.name.trim(),
+        email: formData.email.trim(),
+        subject: formData.subject.trim(),
+        message: formData.message.trim(),
+        source: 'Portfolio Contact Form'
       })
-
-      if (!response.ok) {
-        throw new Error('Failed to save contact to database')
-      }
 
       // If database save is successful, send email notification
       const emailjsModule = await import('@emailjs/browser')

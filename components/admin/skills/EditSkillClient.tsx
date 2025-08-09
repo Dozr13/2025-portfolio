@@ -1,10 +1,10 @@
 "use client"
 
+import { deleteSkill, getSkill, updateSkill } from "@/app/actions/admin/skills"
 import { AdminFormLayout } from "@/components/admin/forms/AdminFormLayout"
 import { SkillFormData, SkillFormFields } from "@/components/admin/forms/SkillFormFields"
 import { Button } from "@/components/ui/button"
-import { SkillCategory, SkillLevel } from '@/generated/client'
-import { adminService } from "@/lib/services/admin"
+import type { SkillCategory, SkillLevel } from '@/lib/domain/enums'
 import type { Skill } from "@/lib/types"
 import { useRouter } from "next/navigation"
 import { useEffect, useState } from "react"
@@ -52,9 +52,13 @@ export const EditSkillClient = ({ initialData }: EditSkillClientProps) => {
       const fetchSkill = async () => {
         try {
           setLoading(true)
-          const data = await adminService.skills.fetchOne(skillData.id)
-          const skill = (data as { skill: Skill }).skill
-          setSkillData(skill)
+          const { skill } = await getSkill(skillData.id)
+          // Normalize dates to strings to satisfy UI type expectations
+          setSkillData({
+            ...skill,
+            createdAt: typeof skill.createdAt === 'string' ? new Date(skill.createdAt) : skill.createdAt,
+            updatedAt: typeof skill.updatedAt === 'string' ? new Date(skill.updatedAt) : skill.updatedAt,
+          } as unknown as Skill)
         } catch (error) {
           console.error('[Skills Edit] Error fetching skill:', error)
           setError('Failed to load skill')
@@ -91,7 +95,7 @@ export const EditSkillClient = ({ initialData }: EditSkillClientProps) => {
 
     setSubmitting(true)
     try {
-      await adminService.skills.updateSkill(skillData.id, {
+      await updateSkill(skillData.id, {
         name: formData.name,
         category: formData.category as SkillCategory,
         level: formData.level as SkillLevel,
@@ -118,7 +122,7 @@ export const EditSkillClient = ({ initialData }: EditSkillClientProps) => {
 
     setSubmitting(true)
     try {
-      await adminService.skills.deleteSkill(skillData.id)
+      await deleteSkill(skillData.id)
       router.push("/admin/skills")
     } catch (error) {
       console.error('[Skills Edit] Error deleting skill:', error)

@@ -23,7 +23,7 @@ export interface CalendarEvent {
   id: string
   title: string
   start: Date
-  end: Date
+  end: Date | null
   allDay?: boolean
   color?: string
 }

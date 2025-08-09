@@ -1,5 +1,6 @@
 "use client"
 
+import { AdminHeader } from "@/components/admin/shared/AdminHeader"
 import { Icon } from "@/components/ui/icon"
 import { useSkills } from "@/hooks/useSkills"
 import type { Skill } from "@/lib/types"
@@ -43,33 +44,23 @@ export const SkillsContent = ({ initialData }: SkillsContentProps) => {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-background via-background to-muted/30">
-      {/* Header */}
-      <div className="bg-card/95 backdrop-blur-sm border-b border-border/40 shadow-sm">
-        <div className="container mx-auto px-4 py-6">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-4">
-              <Link href="/admin/dashboard" className="text-muted-foreground hover:text-foreground">
-                <Icon name="arrow-left" className="h-5 w-5" />
-              </Link>
-              <div>
-                <h1 className="text-2xl font-bold">Skills Management</h1>
-                <p className="text-muted-foreground">Manage your technical skills and expertise</p>
-              </div>
-            </div>
-            <Link
-              href="/admin/skills/new"
-              className="bg-primary text-primary-foreground px-4 py-2 rounded-md hover:bg-primary/90 transition-colors"
-            >
-              <Icon name="plus" className="h-4 w-4 mr-2" />
-              Add Skill
-            </Link>
-          </div>
-        </div>
-      </div>
+    <div className="min-h-screen">
+      <AdminHeader
+        title="Skills Management"
+        subtitle="Manage your technical skills and expertise"
+        backHref="/admin/dashboard"
+        actions={(
+          <Link
+            href="/admin/skills/new"
+            className="bg-primary text-primary-foreground px-4 py-2 rounded-md hover:bg-primary/90 transition-colors"
+          >
+            <Icon name="plus" className="h-4 w-4 mr-2" />
+            Add Skill
+          </Link>
+        )}
+      />
 
-      {/* Content */}
-      <div className="container mx-auto px-4 py-8">
+      <div className="py-8">
         {skills.length === 0 ? (
           <div className="text-center py-12">
             <Icon name="code" className="h-12 w-12 text-muted-foreground mx-auto mb-4" />

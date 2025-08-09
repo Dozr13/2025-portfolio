@@ -1,7 +1,7 @@
 "use client"
 
+import { deleteAdminBlogPost, getAdminBlogPost, updateAdminBlogPost } from "@/app/actions/admin/blog"
 import { AdminFormLayout } from "@/components/admin/forms/AdminFormLayout"
-import { adminService } from "@/lib/services/admin"
 import type { BlogPost } from "@/lib/types"
 import { useRouter } from "next/navigation"
 import { useEffect, useState } from "react"
@@ -66,9 +66,16 @@ export const EditBlogClient = ({ initialData }: EditBlogClientProps) => {
       const fetchPost = async () => {
         try {
           setLoading(true)
-          const data = await adminService.blog.fetchPost(postData.id)
-          const post = (data as { post: BlogPost }).post
-          setPostData(post)
+          const { post } = await getAdminBlogPost(postData.id)
+          // Normalize to match UI BlogPost type expectations
+          setPostData({
+            ...post,
+            metaTitle: post.metaTitle ?? "",
+            metaDescription: post.metaDescription ?? "",
+            publishedAt: post.publishedAt ? new Date(post.publishedAt) : null,
+            createdAt: new Date(post.createdAt),
+            updatedAt: post.updatedAt ? new Date(post.updatedAt) : null,
+          } as unknown as BlogPost)
         } catch (error) {
           console.error('[Blog Edit] Error fetching post:', error)
           setError('Failed to load blog post')
@@ -105,17 +112,19 @@ export const EditBlogClient = ({ initialData }: EditBlogClientProps) => {
 
     setSaving(true)
     try {
-      await adminService.blog.updatePost(postData.id, {
-        title: formData.title,
-        slug: formData.slug,
-        excerpt: formData.excerpt,
-        content: formData.content,
-        category: formData.category,
-        tags: formData.tags,
-        status: formData.status as "DRAFT" | "PUBLISHED",
-        featured: formData.featured,
-        metaTitle: formData.metaTitle,
-        metaDescription: formData.metaDescription
+      await updateAdminBlogPost({
+        id: postData.id, ...{
+          title: formData.title,
+          slug: formData.slug,
+          excerpt: formData.excerpt,
+          content: formData.content,
+          category: formData.category,
+          tags: formData.tags,
+          status: formData.status as "DRAFT" | "PUBLISHED",
+          featured: formData.featured,
+          metaTitle: formData.metaTitle,
+          metaDescription: formData.metaDescription
+        }
       })
 
       router.push("/admin/blog")
@@ -134,7 +143,7 @@ export const EditBlogClient = ({ initialData }: EditBlogClientProps) => {
 
     setSaving(true)
     try {
-      await adminService.blog.deletePost(postData.id)
+      await deleteAdminBlogPost(postData.id)
       router.push("/admin/blog")
     } catch (error) {
       console.error('[Blog Edit] Error deleting post:', error)

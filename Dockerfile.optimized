@@ -55,7 +55,8 @@ COPY --from=builder /app/public ./public
 COPY --from=builder /app/.next/standalone ./
 COPY --from=builder /app/.next/static ./.next/static
 COPY --from=builder /app/prisma ./prisma
-COPY --from=builder /app/generated ./generated
+# Copy Prisma client output if needed by runtime (kept outside node_modules)
+# COPY --from=builder /app/generated ./generated
 
 # Copy and setup optimized entrypoint script
 COPY docker-entrypoint.optimized.sh /usr/local/bin/docker-entrypoint.sh
@@ -75,9 +76,6 @@ ENV NEXT_TELEMETRY_DISABLED=1
 ENV PORT=3000
 ENV HOSTNAME="0.0.0.0"
 
-# Health check
-HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
-  CMD curl -f http://localhost:3000/api/health || exit 1
 
 ENTRYPOINT ["docker-entrypoint.sh"]
 CMD ["node", "server.js"]

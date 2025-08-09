@@ -1,8 +1,8 @@
 "use client"
 
+import { deleteProject, updateProject } from "@/app/actions/admin/projects"
 import { AdminFormLayout } from "@/components/admin/forms/AdminFormLayout"
-import { ProjectCategory, ProjectStatus } from "@/generated/client"
-import { adminService } from "@/lib/services/admin"
+import type { ProjectCategory, ProjectStatus } from "@/lib/domain/enums"
 import type { Project } from "@/lib/types"
 import { useRouter } from "next/navigation"
 import { useEffect, useState } from "react"
@@ -111,12 +111,14 @@ export const EditProjectClient = ({ initialData }: EditProjectClientProps) => {
 
     setSaving(true)
     try {
-      await adminService.projects.update(initialData.id, {
-        ...formData,
-        category: formData.category as ProjectCategory,
-        status: formData.status as ProjectStatus,
-        teamSize: formData.teamSize ? parseInt(formData.teamSize) : null,
-        order: formData.order ? parseInt(formData.order) : null
+      await updateProject({
+        id: initialData.id, ...{
+          ...formData,
+          category: formData.category as ProjectCategory,
+          status: formData.status as ProjectStatus,
+          teamSize: formData.teamSize ? parseInt(formData.teamSize) : null,
+          order: formData.order ? parseInt(formData.order) : null
+        }
       })
 
       router.push("/admin/projects")
@@ -137,7 +139,7 @@ export const EditProjectClient = ({ initialData }: EditProjectClientProps) => {
 
     setSaving(true)
     try {
-      await adminService.projects.delete(initialData.id)
+      await deleteProject(initialData.id)
       router.push("/admin/projects")
     } catch (error) {
       console.error('[Project Edit] Error deleting project:', error)

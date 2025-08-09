@@ -1,8 +1,8 @@
 "use client"
 
+import { createProject } from "@/app/actions/admin/projects"
 import { AdminFormLayout } from "@/components/admin/forms/AdminFormLayout"
-import { ProjectCategory, ProjectStatus } from "@/generated/client"
-import { adminService } from "@/lib/services/admin"
+import type { ProjectCategory, ProjectStatus } from "@/lib/domain/enums"
 import { useRouter } from "next/navigation"
 import { useState } from "react"
 
@@ -77,7 +77,7 @@ export const NewProjectClient = () => {
 
     setSaving(true)
     try {
-      await adminService.projects.create({
+      await createProject({
         ...formData,
         category: formData.category as ProjectCategory,
         status: formData.status as ProjectStatus,

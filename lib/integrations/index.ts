@@ -1,8 +1,4 @@
-// ============================================================================
-// INTEGRATIONS INDEX - BARREL EXPORTS  
-// ============================================================================
-
-// Analytics Integration
 export {
-  AnalyticsProvider, trackAdminAction
+  AnalyticsProvider, 
+  trackAdminAction
 } from './analytics'

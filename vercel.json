@@ -4,14 +4,6 @@
   "installCommand": "corepack enable yarn && yarn set version 4.9.2 && yarn install",
   "framework": "nextjs",
   "regions": ["iad1"],
-  "functions": {
-    "app/api/**": {
-      "maxDuration": 30
-    },
-    "app/admin/api/**": {
-      "maxDuration": 60
-    }
-  },
   "headers": [
     {
       "source": "/(.*)",
@@ -37,23 +29,6 @@
           "value": "camera=(), microphone=(), geolocation=()"
         }
       ]
-    },
-    {
-      "source": "/api/(.*)",
-      "headers": [
-        {
-          "key": "Access-Control-Allow-Origin",
-          "value": "*"
-        },
-        {
-          "key": "Access-Control-Allow-Methods",
-          "value": "GET, POST, PUT, DELETE, OPTIONS"
-        },
-        {
-          "key": "Access-Control-Allow-Headers",
-          "value": "Content-Type, Authorization"
-        }
-      ]
     }
   ],
   "rewrites": [
@@ -67,16 +42,6 @@
       "source": "/dashboard",
       "destination": "/admin/dashboard",
       "permanent": true
-    }
-  ],
-  "crons": [
-    {
-      "path": "/api/cron/cleanup",
-      "schedule": "0 2 * * *"
-    },
-    {
-      "path": "/api/cron/analytics",
-      "schedule": "0 1 * * *"
     }
   ]
 }

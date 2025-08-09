@@ -1,6 +1,5 @@
-import { PostStatus, PrismaClient } from '../../generated/client'
-
-const prisma = new PrismaClient()
+import { PostStatus } from '@/generated/client'
+import { prisma } from '@/lib/prisma'
 
 const blogPosts = [
   {

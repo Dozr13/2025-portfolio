@@ -50,7 +50,7 @@ model Contact {
   id         String      @id @default(cuid())
   name       String
   email      String
-  subject    String?
+  subject    String
   message    String
   phone      String?
   company    String?

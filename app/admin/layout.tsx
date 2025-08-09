@@ -1,30 +1,13 @@
 "use client"
 
-import { AdminAuthGuard } from '@/components/admin/AdminAuthGuard'
-import { AdminAuthProvider } from '@/components/admin/AdminAuthProvider'
-import { AdminNavigation } from '@/components/admin/AdminNavigation'
-import { usePathname } from 'next/navigation'
+import { AdminAuthProvider } from "@/components/admin/AdminAuthProvider"
 
-export default function AdminLayout({
-  children,
-}: {
-  children: React.ReactNode
-}) {
-  const pathname = usePathname()
-  const isLoginPage = pathname === '/admin'
-
+export default function AdminPublicLayout({ children }: { children: React.ReactNode }) {
   return (
-    <AdminAuthProvider>
-      {isLoginPage ? (
-        children
-      ) : (
-        <AdminAuthGuard>
-          <AdminNavigation />
-          <div className="w-full">
-            {children}
-          </div>
-        </AdminAuthGuard>
-      )}
-    </AdminAuthProvider>
+    <div className="container mx-auto max-w-5xl sm:px-2 lg:px-[15%] min-h-screen bg-background">
+      <AdminAuthProvider>
+        {children}
+      </AdminAuthProvider>
+    </div>
   )
 }

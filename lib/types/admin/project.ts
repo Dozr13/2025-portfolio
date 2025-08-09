@@ -12,8 +12,8 @@ export interface Project {
   githubUrl?: string | null
   images?: string | null
   thumbnail?: string | null
-  startDate?: string | null
-  endDate?: string | null
+  startDate?: Date | null
+  endDate?: Date | null
   client?: string | null
   teamSize?: number | null
   role?: string | null
@@ -21,8 +21,8 @@ export interface Project {
   solutions?: string | null
   metrics?: string | null
   order?: number | null
-  createdAt: string
-  updatedAt: string
+  createdAt: Date
+  updatedAt: Date | null
   _count?: {
     projectViews: number
   }

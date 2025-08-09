@@ -1,15 +1,16 @@
-import { PrismaClient, ProjectCategory, ProjectStatus } from '../../generated/client'
+import type { $Enums, Prisma } from '@/generated/client'
+import { prisma } from '@/lib/prisma'
 
-const prisma = new PrismaClient()
-
-export const projects = [
+export const projects: Array<
+  Omit<Prisma.ProjectCreateInput, 'category' | 'status'> & { category: $Enums.ProjectCategory; status: $Enums.ProjectStatus }
+> = [
   {
     title: "HustleForge",
     slug: "hustleforge",
     description: "AI productivity dashboard for managing and optimizing income from side hustles. Built using Flutter, TypeScript, GraphQL, and Firebase with ML-enhanced recommendations.",
     longDescription: "An innovative AI-powered productivity dashboard designed to help entrepreneurs and freelancers manage and optimize their side hustles. Features include income tracking, productivity analytics, ML-enhanced recommendations for maximizing earnings, goal setting and progress monitoring, and integrated workflow management. Built with modern technologies for cross-platform compatibility and real-time data synchronization.",
-    category: ProjectCategory.WEB_APP,
-    status: ProjectStatus.COMPLETED,
+    category: 'WEB_APP' as $Enums.ProjectCategory,
+    status: 'COMPLETED' as $Enums.ProjectStatus,
     featured: true,
     demoUrl: null,
     githubUrl: "https://github.com/Dozr13/hustleforge",
@@ -49,8 +50,8 @@ export const projects = [
     slug: "comcoms",
     description: "Real-time care service marketplace with Stripe payments and geo-listings. Led full-stack development using React Native, Expo, and secure mobile deployment practices.",
     longDescription: "A comprehensive care service marketplace connecting care providers with families in need. Features include real-time messaging, secure payment processing via Stripe, geolocation-based service listings, user verification and rating system, and advanced search and filtering capabilities. Built with focus on security, user experience, and scalable mobile architecture.",
-    category: ProjectCategory.WEB_APP,
-    status: ProjectStatus.COMPLETED,
+    category: 'WEB_APP' as $Enums.ProjectCategory,
+    status: 'COMPLETED' as $Enums.ProjectStatus,
     featured: true,
     demoUrl: null,
     githubUrl: "https://github.com/Dozr13/comcoms",
@@ -90,8 +91,8 @@ export const projects = [
     slug: "request-hub-saas-platform",
     description: "Enterprise multi-tenant SaaS platform for VC portfolio companies with real-time request management, Linear integration, and admin dashboards. Built in 5 days as a technical assessment.",
     longDescription: "A sophisticated enterprise SaaS platform designed for VC portfolio companies to manage requests efficiently. Features include multi-tenant architecture, real-time request tracking, Linear API integration for seamless workflow management, comprehensive admin dashboards, and role-based access control. The platform was architected and built in just 5 days as a technical assessment, showcasing rapid development capabilities while maintaining enterprise-grade quality and security standards.",
-    category: ProjectCategory.WEB_APP,
-    status: ProjectStatus.COMPLETED,
+    category: 'WEB_APP' as $Enums.ProjectCategory,
+    status: 'COMPLETED' as $Enums.ProjectStatus,
     featured: true,
     demoUrl: "https://request-hub-gamma.vercel.app",
     githubUrl: "https://github.com/Dozr13/request-hub",
@@ -131,8 +132,8 @@ export const projects = [
     slug: "modern-portfolio-website",
     description: "This very portfolio! Built with Next.js 15, TypeScript, and Framer Motion. Features responsive design, dark mode, database integration, and optimized performance.",
     longDescription: "A modern, high-performance portfolio website showcasing advanced frontend development skills. Built with the latest Next.js 15 features, TypeScript for type safety, and Framer Motion for smooth animations. Features include fully responsive design, dark/light mode switching, Prisma database integration, optimized images and fonts, and comprehensive admin interface for content management.",
-    category: ProjectCategory.WEB_APP,
-    status: ProjectStatus.COMPLETED,
+    category: 'WEB_APP' as $Enums.ProjectCategory,
+    status: 'COMPLETED' as $Enums.ProjectStatus,
     featured: true,
     demoUrl: "https://wadepate.vercel.app",
     githubUrl: "https://github.com/Dozr13/2025-portfolio",

@@ -1,7 +1,7 @@
 "use client"
 
+import { createAdminBlogPost } from "@/app/actions/admin/blog"
 import { AdminFormLayout } from "@/components/admin/forms/AdminFormLayout"
-import { adminService } from "@/lib/services/admin"
 import { useRouter } from "next/navigation"
 import { useState } from "react"
 
@@ -71,7 +71,7 @@ export const NewBlogClient = () => {
 
     setSaving(true)
     try {
-      await adminService.blog.createPost({
+      await createAdminBlogPost({
         title: formData.title,
         slug: formData.slug,
         excerpt: formData.excerpt,

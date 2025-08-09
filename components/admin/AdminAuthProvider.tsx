@@ -22,7 +22,7 @@ interface AdminAuthProviderProps {
   children: ReactNode
 }
 
-export function AdminAuthProvider({ children }: AdminAuthProviderProps) {
+export const AdminAuthProvider = ({ children }: AdminAuthProviderProps) => {
   const authData = useAdminAuth()
 
   return (
@@ -32,7 +32,7 @@ export function AdminAuthProvider({ children }: AdminAuthProviderProps) {
   )
 }
 
-export function useAdminAuthContext() {
+export const useAdminAuthContext = () => {
   const context = useContext(AdminAuthContext)
   if (context === undefined) {
     throw new Error('useAdminAuthContext must be used within an AdminAuthProvider')

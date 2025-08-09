@@ -1,5 +1,4 @@
-import { Footer } from "@/components/footer"
-import { Navigation } from "@/components/navigation"
+import { Footer, Navigation } from "@/components/layout"
 
 export default function PublicLayout({
   children,
@@ -9,7 +8,7 @@ export default function PublicLayout({
   return (
     <div className="min-h-screen bg-background w-full overflow-x-hidden">
       <Navigation />
-      <div className="w-full">div
+      <div className="w-full">
         {children}
       </div>
       <Footer />

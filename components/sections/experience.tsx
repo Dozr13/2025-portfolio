@@ -25,17 +25,17 @@ function useExperiences() {
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    fetch('/api/experiences')
-      .then(res => res.json())
-      .then(data => {
-        setExperiences(data.experiences || [])
-      })
-      .catch(error => {
+    ; (async () => {
+      try {
+        const { listExperiences } = await import('@/app/actions/public/experiences')
+        const experiences = await listExperiences()
+        setExperiences(experiences || [])
+      } catch (error) {
         console.error('Failed to fetch experiences:', error)
-      })
-      .finally(() => {
+      } finally {
         setLoading(false)
-      })
+      }
+    })()
   }, [])
 
   return { experiences, loading }

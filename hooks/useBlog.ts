@@ -1,6 +1,6 @@
 "use client"
 
-import { adminService } from "@/lib/services/admin"
+import { deleteAdminBlogPost, listAdminBlogPosts } from "@/app/actions/admin/blog"
 import type { BlogPost } from "@/lib/types"
 import { useCallback, useEffect, useState } from "react"
 
@@ -42,8 +42,8 @@ export function useBlog(options: UseBlogOptions = {}) {
       if (filters.search) params.search = filters.search
       if (filters.status) params.status = filters.status
 
-      const response = await adminService.blog.fetchPosts(params)
-      setData(response)
+      const response = await listAdminBlogPosts({ page: parseInt(params.page), limit: parseInt(params.limit), status: params.status || null, search: params.search || null } as BlogFilters)
+      setData(response as BlogData)
     } catch (error) {
       console.error('[Blog Hook] Error fetching blog data:', error)
       setError('Failed to load blog posts')
@@ -57,7 +57,7 @@ export function useBlog(options: UseBlogOptions = {}) {
 
     setDeleting(id)
     try {
-      await adminService.blog.deletePost(id)
+      await deleteAdminBlogPost(id)
       
       // Refresh the data after deletion
       if (data) {

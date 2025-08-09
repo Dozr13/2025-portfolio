@@ -15,14 +15,14 @@ interface AnalyticsCardProps {
   className?: string
 }
 
-export function AnalyticsCard({
+export const AnalyticsCard = ({
   title,
   value,
   subtitle,
   icon,
   trend,
   className
-}: AnalyticsCardProps) {
+}: AnalyticsCardProps) => {
   return (
     <Card className={cn("transition-all duration-200 hover:shadow-md", className)}>
       <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">

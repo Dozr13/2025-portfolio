@@ -1,5 +1,6 @@
 "use client"
 
+import { AdminHeader } from "@/components/admin/shared/AdminHeader"
 import { Icon } from "@/components/ui/icon"
 import { useContacts } from "@/hooks/useContacts"
 import type { Contact } from "@/lib/types"
@@ -74,6 +75,8 @@ export function ContactsContent({ initialData }: ContactsContentProps) {
 
   return (
     <div className="space-y-6">
+      <AdminHeader title="Manage Contacts" backHref="/admin/dashboard" />
+
       {/* Filters and Controls */}
       <div className="flex flex-col sm:flex-row gap-4">
         <div className="flex-1">

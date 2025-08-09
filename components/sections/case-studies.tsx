@@ -1,34 +1,9 @@
 "use client"
 
 import { Icon } from "@/components/ui/icon"
+import { CaseStudy } from "@/lib/types"
 import { motion } from "framer-motion"
 import Link from "next/link"
-
-interface CaseStudy {
-  id: string
-  title: string
-  company: string
-  duration: string
-  overview: string
-  problem: string
-  solution: string
-  results: string[]
-  technologies: string[]
-  challenges: string[]
-  metrics: {
-    label: string
-    value: string
-    improvement: string
-  }[]
-  testimonial?: {
-    quote: string
-    author: string
-    role: string
-  }
-  githubUrl?: string
-  liveUrl?: string
-  featured: boolean
-}
 
 const caseStudies: CaseStudy[] = [
   {
@@ -106,7 +81,7 @@ const caseStudies: CaseStudy[] = [
 
 ]
 
-export function CaseStudies() {
+export const CaseStudies = () => {
   const featuredStudies = caseStudies.filter(study => study.featured)
 
   return (

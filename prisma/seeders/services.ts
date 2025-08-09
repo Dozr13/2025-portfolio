@@ -1,9 +1,11 @@
-import { PrismaClient, ServiceCategory } from '../../generated/client'
-
-const prisma = new PrismaClient()
+// Use string literals for categories to avoid importing generated enums in seeds
+import type { $Enums, Prisma } from '@/generated/client'
+import { prisma } from '@/lib/prisma'
 
 // Services Data
-export const services = [
+export const services: Array<
+  Omit<Prisma.ServiceCreateInput, 'category'> & { category: $Enums.ServiceCategory }
+> = [
   {
     name: 'Full-Stack Web Development',
     slug: 'full-stack-web-development',
@@ -20,7 +22,7 @@ export const services = [
     ]),
     pricing: 'Starting at $5,000',
     duration: '4-12 weeks',
-    category: ServiceCategory.WEB_DEVELOPMENT,
+    category: 'WEB_DEVELOPMENT' as $Enums.ServiceCategory,
     featured: true,
     available: true,
     order: 1
@@ -41,7 +43,7 @@ export const services = [
     ]),
     pricing: 'Starting at $8,000',
     duration: '6-16 weeks',
-    category: ServiceCategory.WEB_DEVELOPMENT,
+    category: 'WEB_DEVELOPMENT' as $Enums.ServiceCategory,
     featured: true,
     available: true,
     order: 2
@@ -62,7 +64,7 @@ export const services = [
     ]),
     pricing: 'Starting at $3,000',
     duration: '2-8 weeks',
-    category: ServiceCategory.WEB_DEVELOPMENT,
+    category: 'WEB_DEVELOPMENT' as $Enums.ServiceCategory,
     featured: true,
     available: true,
     order: 3
@@ -83,7 +85,7 @@ export const services = [
     ]),
     pricing: '$150/hour',
     duration: 'Project-based',
-    category: ServiceCategory.CONSULTING,
+    category: 'CONSULTING' as $Enums.ServiceCategory,
     featured: false,
     available: true,
     order: 4

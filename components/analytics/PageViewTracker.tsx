@@ -47,15 +47,16 @@ export function PageViewTracker() {
 
     if (!shouldTrackPath(pathWithQuery)) return
 
-    // Fire-and-forget; no need to await
-    fetch("/api/track/page-view", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        path: pathname,
-        referrer: typeof document !== 'undefined' ? document.referrer || null : null
-      })
-    }).catch(() => { })
+      // Fire-and-forget; use Server Action to record page view
+      ; (async () => {
+        const { recordPageView } = await import("@/app/actions/track")
+        await recordPageView({
+          path: pathname,
+          referrer: typeof document !== 'undefined' ? document.referrer || null : null,
+          userAgent: typeof navigator !== 'undefined' ? navigator.userAgent : null,
+          ipAddress: null,
+        })
+      })().catch(() => { })
   }, [pathname, searchParams])
 
   return null

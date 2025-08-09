@@ -38,7 +38,7 @@ const eslintConfig = [
   },
   // Admin-specific overrides
   {
-    files: ['app/admin/**/*', 'app/api/admin/**/*'],
+    files: ['app/actions/**/*', 'app/actions/admin/**/*'],
     rules: {
       '@typescript-eslint/no-explicit-any': 'warn',
       '@typescript-eslint/no-unused-vars': 'warn',

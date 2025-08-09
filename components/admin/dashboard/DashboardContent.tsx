@@ -1,41 +1,9 @@
 "use client"
 
 import { Icon } from "@/components/ui/icon"
-import { useDashboard } from "@/hooks/useDashboard"
+import { useDashboard, type DashboardData } from "@/hooks/useDashboard"
 import { motion } from "framer-motion"
 import Link from "next/link"
-
-interface DashboardStats {
-  contacts: {
-    total: number
-    new: number
-    thisWeek: number
-  }
-  blog: {
-    published: number
-    drafts: number
-    totalViews: number
-  }
-  analytics: {
-    visitors: number
-    pageViews: number
-    avgTimeOnSite: number
-  }
-}
-
-interface RecentContact {
-  id: string
-  name: string
-  email: string
-  subject: string
-  status: string
-  createdAt: string
-}
-
-interface DashboardData {
-  stats: DashboardStats
-  recentContacts: RecentContact[]
-}
 
 interface DashboardContentProps {
   initialData?: DashboardData | null
@@ -74,6 +42,9 @@ export const DashboardContent = ({ initialData }: DashboardContentProps) => {
   }
 
   const stats = data?.stats
+  const visitors = typeof stats?.analytics?.pageViews?.total === 'number' ? stats.analytics.pageViews.total : 0
+  const pageViews = visitors
+  const avgTimeOnSiteSeconds = 0
   const recentContacts = data?.recentContacts || []
 
 
@@ -119,9 +90,9 @@ export const DashboardContent = ({ initialData }: DashboardContentProps) => {
               <Icon name="eye" size="md" className="text-purple-500" />
             </div>
             <div>
-              <p className="text-2xl font-bold text-foreground">{typeof stats?.analytics?.visitors === 'number' ? stats.analytics.visitors : 0}</p>
+              <p className="text-2xl font-bold text-foreground">{visitors}</p>
               <p className="text-sm text-muted-foreground">Visitors</p>
-              <p className="text-xs text-muted-foreground">{typeof stats?.analytics?.pageViews === 'number' ? stats.analytics.pageViews : 0} page views</p>
+              <p className="text-xs text-muted-foreground">{pageViews} page views</p>
             </div>
           </div>
         </div>
@@ -132,7 +103,7 @@ export const DashboardContent = ({ initialData }: DashboardContentProps) => {
               <Icon name="clock" size="md" className="text-orange-500" />
             </div>
             <div>
-              <p className="text-2xl font-bold text-foreground">{Math.round((typeof stats?.analytics?.avgTimeOnSite === 'number' ? stats.analytics.avgTimeOnSite : 0) / 60)}m</p>
+              <p className="text-2xl font-bold text-foreground">{Math.round(avgTimeOnSiteSeconds / 60)}m</p>
               <p className="text-sm text-muted-foreground">Avg. Time</p>
               <p className="text-xs text-muted-foreground">on site</p>
             </div>

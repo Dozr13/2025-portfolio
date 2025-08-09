@@ -36,7 +36,7 @@ export const BlogCard = ({ post, onDelete, deleting }: BlogCardProps) => {
 
       <div className="flex items-center justify-between">
         <div className="text-xs text-muted-foreground">
-          Updated: {new Date(post.updatedAt).toLocaleDateString()}
+          {post.updatedAt ? `Updated: ${new Date(post.updatedAt).toLocaleDateString()}` : 'Updated: —'}
         </div>
         <div className="flex items-center gap-2">
           <Link

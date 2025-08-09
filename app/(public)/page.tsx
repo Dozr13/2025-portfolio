@@ -1,3 +1,6 @@
+import { listPublicBlogPosts } from "@/app/actions/public/blog"
+import { listExperiences } from "@/app/actions/public/experiences"
+import { listPublicProjects } from "@/app/actions/public/projects"
 import { About } from "@/components/sections/about"
 import { BlogSuspense } from "@/components/sections/blog/BlogSuspense"
 import { CaseStudies } from "@/components/sections/case-studies"
@@ -6,18 +9,16 @@ import { Experience } from "@/components/sections/experience"
 import { Hero } from "@/components/sections/hero"
 import { ProjectsSuspense } from "@/components/sections/projects/ProjectsSuspense"
 import { SkillsSuspense } from "@/components/sections/skills/SkillsSuspense"
-import { getPublicBlogData, getPublicProjectsData, getPublicSkillsData } from "@/lib/services/public"
 
 export default async function Home() {
-  // Fetch data server-side using public services (no authentication required)
-  const [projectsData, skillsData, blogData] = await Promise.all([
-    getPublicProjectsData(),
-    getPublicSkillsData(),
-    getPublicBlogData()
+  const [projects, , blogPosts] = await Promise.all([
+    listPublicProjects(),
+    listExperiences(),
+    listPublicBlogPosts()
   ])
 
   // Transform admin data to public types
-  const projects = (projectsData?.projects || []).map(project => ({
+  const projectsPublic = projects.map(project => ({
     id: project.id,
     title: project.title,
     slug: project.slug,
@@ -29,18 +30,9 @@ export default async function Home() {
     githubUrl: project.githubUrl || null
   }))
 
-  const skills = (skillsData || []).map(skill => ({
-    id: skill.id,
-    name: skill.name,
-    category: skill.category,
-    level: skill.level,
-    years: skill.years || 0,
-    icon: skill.icon || '',
-    featured: skill.featured,
-    order: skill.order || 0
-  }))
+  // skills section now reads directly via SkillsSuspense
 
-  const blogPosts = (blogData?.posts || []).map(post => ({
+  const blogPublic = blogPosts.map(post => ({
     id: post.id,
     title: post.title,
     slug: post.slug,
@@ -57,11 +49,11 @@ export default async function Home() {
     <>
       <Hero />
       <About />
-      <SkillsSuspense skills={skills} />
-      <ProjectsSuspense projects={projects} />
+      <SkillsSuspense skills={[]} />
+      <ProjectsSuspense projects={projectsPublic} />
       <CaseStudies />
       <Experience />
-      <BlogSuspense posts={blogPosts} />
+      <BlogSuspense posts={blogPublic} />
       <Contact />
     </>
   )

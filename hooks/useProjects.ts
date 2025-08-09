@@ -1,6 +1,6 @@
 "use client"
 
-import { adminService } from "@/lib/services/admin"
+import { listProjects } from "@/app/actions/admin/projects"
 import type { Project } from "@/lib/types"
 import { useCallback, useEffect, useState } from "react"
 
@@ -43,8 +43,69 @@ export function useProjects(options: UseProjectsOptions = {}) {
       if (filters.status) params.status = filters.status
       if (filters.category) params.category = filters.category
 
-      const result = await adminService.projects.fetchProjects(params)
-      setData(result)
+      const result = await listProjects({
+        page: parseInt(params.page || '1'),
+        limit: parseInt(params.limit || '10'),
+        status: params.status || null,
+        category: params.category || null,
+        search: params.search || null,
+      } as ProjectFilters)
+      type ActionProject = {
+        id: string
+        title: string
+        slug: string
+        description: string
+        longDescription?: string | null
+        category: string
+        status: string
+        featured: boolean
+        demoUrl?: string | null
+        githubUrl?: string | null
+        images?: string | null
+        thumbnail?: string | null
+        startDate: Date | null
+        endDate: Date | null
+        client?: string | null
+        teamSize?: number | null
+        role?: string | null
+        challenges?: string | null
+        solutions?: string | null
+        metrics?: string | null
+        order?: number | null
+        createdAt: Date
+        updatedAt: Date | null
+        _count?: { projectViews: number }
+      }
+      const normalized: ProjectsData = {
+        projects: (result.projects as ActionProject[]).map((p) => ({
+          id: p.id,
+          title: p.title,
+          slug: p.slug,
+          description: p.description,
+          longDescription: p.longDescription ?? null,
+          category: p.category,
+          status: p.status,
+          featured: p.featured,
+          demoUrl: p.demoUrl ?? null,
+          githubUrl: p.githubUrl ?? null,
+          images: p.images ?? null,
+          thumbnail: p.thumbnail ?? null,
+          startDate: p.startDate ?? null,
+          endDate: p.endDate ?? null,
+          client: p.client ?? null,
+          teamSize: p.teamSize ?? null,
+          role: p.role ?? null,
+          challenges: p.challenges ?? null,
+          solutions: p.solutions ?? null,
+          metrics: p.metrics ?? null,
+          order: p.order ?? null,
+          createdAt: p.createdAt,
+          updatedAt: p.updatedAt,
+          _count: p._count,
+        })),
+        pagination: result.pagination,
+      }
+      setData(normalized)
     } catch (err) {
       console.error('[useProjects] Error fetching projects:', err)
       setError('Failed to fetch projects')
@@ -58,7 +119,7 @@ export function useProjects(options: UseProjectsOptions = {}) {
 
     setDeleting(id)
     try {
-      await adminService.projects.delete(id)
+      await deleteProject(id)
       // Refresh the data after deletion
       if (data) {
         await fetchProjects({ page: data.pagination.pages > 1 ? data.pagination.pages : 1 })

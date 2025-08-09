@@ -9,8 +9,8 @@ export interface Skill {
   icon: string | null
   featured: boolean
   order: number | null
-  createdAt: string
-  updatedAt: string
+  createdAt: Date
+  updatedAt: Date | null
 }
 
 export interface SkillFormData {

@@ -1,5 +1,6 @@
 "use client"
 
+import { AdminHeader } from "@/components/admin/shared/AdminHeader"
 import { Icon } from "@/components/ui/icon"
 import { useProjects } from "@/hooks/useProjects"
 import type { Project } from "@/lib/types"
@@ -83,6 +84,20 @@ export const ProjectsContent = ({ initialData }: ProjectsContentProps) => {
 
   return (
     <div className="space-y-6">
+      <AdminHeader
+        title="Projects Management"
+        backHref="/admin/dashboard"
+        actions={(
+          <Link
+            href="/admin/projects/new"
+            className="px-4 py-2 bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 transition-colors flex items-center gap-2"
+          >
+            <Icon name="plus" size="sm" />
+            New Project
+          </Link>
+        )}
+      />
+
       {/* Filters and Controls */}
       <div className="flex flex-col sm:flex-row gap-4">
         <div className="flex-1">
@@ -121,13 +136,7 @@ export const ProjectsContent = ({ initialData }: ProjectsContentProps) => {
           <option value="ECOMMERCE">E-commerce</option>
           <option value="DASHBOARD">Dashboard</option>
         </select>
-        <Link
-          href="/admin/projects/new"
-          className="px-4 py-2 bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 transition-colors flex items-center gap-2"
-        >
-          <Icon name="plus" size="sm" />
-          New Project
-        </Link>
+        {/* New Project button moved to header actions */}
       </div>
 
       {/* Projects Grid */}

@@ -1,6 +1,4 @@
-import { PrismaClient } from '../../generated/client'
-
-const prisma = new PrismaClient()
+import { prisma } from '@/lib/prisma'
 
 // Education Data - Aligned with Wade's Resume
 export const education = [
