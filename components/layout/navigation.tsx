@@ -6,13 +6,13 @@ import { useEffect, useState } from "react"
 import { useTheme } from "./theme-provider"
 
 const navItems = [
-  { name: "Home", href: "#hero" },
-  { name: "About", href: "#about" },
-  { name: "Skills", href: "#skills" },
-  { name: "Projects", href: "#projects" },
-  { name: "Experience", href: "#experience" },
-  { name: "Blog", href: "#blog" },
-  { name: "Contact", href: "#contact" },
+  { name: "Home", href: "/#hero" },
+  { name: "About", href: "/#about" },
+  { name: "Skills", href: "/#skills" },
+  { name: "Projects", href: "/#projects" },
+  { name: "Experience", href: "/#experience" },
+  { name: "Blog", href: "/blog" },
+  { name: "Contact", href: "/#contact" },
 ]
 
 export const Navigation = () => {
@@ -29,7 +29,37 @@ export const Navigation = () => {
   }, [])
 
   const scrollToSection = (href: string) => {
-    const element = document.querySelector(href)
+    // If href is a full path (e.g., /blog), just navigate
+    if (!href.includes('#')) {
+      window.location.href = href
+      return
+    }
+    // Support navigating from other routes (e.g., /blog). If not on root, go there first.
+    const [, hash] = href.split('#')
+    const isRoot = window.location.pathname === '/'
+
+    const doScroll = () => {
+      const selector = `#${hash}`
+      const element = document.querySelector(selector)
+      if (element) {
+        setIsOpen(false)
+        setTimeout(() => {
+          const headerOffset = window.innerWidth >= 1280 ? 120 : window.innerWidth >= 1024 ? 100 : 90
+          const elementPosition = element.getBoundingClientRect().top
+          const offsetPosition = elementPosition + window.pageYOffset - headerOffset
+          window.scrollTo({ top: offsetPosition, behavior: 'smooth' })
+        }, 100)
+      }
+    }
+
+    if (!isRoot) {
+      window.location.href = href
+      // Let the new page load and then attempt to scroll
+      setTimeout(doScroll, 300)
+      return
+    }
+
+    const element = document.querySelector(`#${hash}`)
     if (element) {
       setIsOpen(false)
 
@@ -37,12 +67,8 @@ export const Navigation = () => {
         const headerOffset = window.innerWidth >= 1280 ? 120 : window.innerWidth >= 1024 ? 100 : 90
         const elementPosition = element.getBoundingClientRect().top
         const offsetPosition = elementPosition + window.pageYOffset - headerOffset
-
-        window.scrollTo({
-          top: offsetPosition,
-          behavior: "smooth"
-        })
-      }, 300)
+        window.scrollTo({ top: offsetPosition, behavior: 'smooth' })
+      }, 100)
     }
   }
 

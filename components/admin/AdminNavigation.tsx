@@ -6,7 +6,7 @@ import Link from "next/link"
 import { usePathname } from "next/navigation"
 
 export const AdminNavigation = () => {
-  const { user, logout } = useAdminAuthContext()
+  const { logout } = useAdminAuthContext()
   const pathname = usePathname()
 
   const navItems = [
