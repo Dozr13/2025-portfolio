@@ -1,4 +1,5 @@
 import { Footer, Navigation } from "@/components/layout"
+import { BackToBlogLink } from "@/components/sections/blog/BackToBlogLink"
 import { ScrollTopOnRouteChange } from "@/components/util/ScrollTopOnRouteChange"
 
 export default function PublicLayout({
@@ -11,6 +12,7 @@ export default function PublicLayout({
       <Navigation />
       <ScrollTopOnRouteChange enabled top={0} />
       <div className="w-full pt-24 lg:pt-28 xl:pt-32">
+        <BackToBlogLink />
         {children}
       </div>
       <Footer />
