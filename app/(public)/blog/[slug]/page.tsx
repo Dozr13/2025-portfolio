@@ -15,7 +15,5 @@ export default async function BlogPostPage({
     notFound()
   }
 
-  // NOTE: Views are incremented via action incrementBlogView when needed
-
   return <BlogPostClient post={postData} />
 }

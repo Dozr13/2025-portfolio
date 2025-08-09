@@ -2,6 +2,7 @@
 
 import { Icon } from "@/components/ui/icon"
 import { AnimatePresence, motion } from "framer-motion"
+import { usePathname, useRouter } from "next/navigation"
 import { useEffect, useState } from "react"
 import { useTheme } from "./theme-provider"
 
@@ -19,6 +20,8 @@ export const Navigation = () => {
   const [isOpen, setIsOpen] = useState(false)
   const [scrolled, setScrolled] = useState(false)
   const { theme, setTheme } = useTheme()
+  const router = useRouter()
+  const pathname = usePathname()
 
   useEffect(() => {
     const handleScroll = () => {
@@ -31,12 +34,12 @@ export const Navigation = () => {
   const scrollToSection = (href: string) => {
     // If href is a full path (e.g., /blog), just navigate
     if (!href.includes('#')) {
-      window.location.href = href
+      router.push(href)
       return
     }
     // Support navigating from other routes (e.g., /blog). If not on root, go there first.
     const [, hash] = href.split('#')
-    const isRoot = window.location.pathname === '/'
+    const isRoot = pathname === '/'
 
     const doScroll = () => {
       const selector = `#${hash}`
@@ -53,7 +56,7 @@ export const Navigation = () => {
     }
 
     if (!isRoot) {
-      window.location.href = href
+      router.push(href)
       // Let the new page load and then attempt to scroll
       setTimeout(doScroll, 300)
       return
@@ -71,6 +74,14 @@ export const Navigation = () => {
       }, 100)
     }
   }
+
+  // Prefetch key routes to avoid white flashes
+  useEffect(() => {
+    try {
+      router.prefetch?.('/')
+      router.prefetch?.('/blog')
+    } catch { }
+  }, [router])
 
   const cycleTheme = () => {
     const themes = ["light", "dark", "system"] as const
