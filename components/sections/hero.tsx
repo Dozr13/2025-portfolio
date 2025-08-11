@@ -255,7 +255,7 @@ export function Hero() {
               </motion.button>
 
               <motion.a
-                href="/resume.pdf"
+                href="/Wade_Pate_Resume.pdf"
                 download="Wade_Pate_Resume.pdf"
                 whileHover={{ scale: 1.05, y: -3 }}
                 whileTap={{ scale: 0.95 }}

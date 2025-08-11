@@ -1,6 +1,5 @@
 import { prisma } from '@/lib/prisma'
 
-// Certifications Data - Aligned with Wade's Resume
 export const certifications = [
   {
     name: 'AWS Certified',
@@ -17,10 +16,10 @@ export const certifications = [
 
 export async function seedCertifications() {
   console.log("Seeding certifications...")
-  
+
   for (const cert of certifications) {
     await prisma.certification.upsert({
-      where: { 
+      where: {
         name_issuer: {
           name: cert.name,
           issuer: cert.issuer

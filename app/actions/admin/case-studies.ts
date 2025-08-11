@@ -90,7 +90,7 @@ export async function listCaseStudies(): Promise<{ caseStudies: CaseStudy[]; pag
       },
       githubUrl: "https://github.com/Dozr13/proc-to-postgres",
       liveUrl: undefined,
-      featured: true,
+      featured: false,
     },
   ]
 
