@@ -1,11 +1,13 @@
-import { BlogListingClient } from "@/components/sections/blog/BlogListingClient"
-import { prisma } from "@/lib/config"
+import { BlogListingClient } from '@/components/sections/blog/BlogListingClient'
+import { prisma } from '@/lib/config'
+import { unstable_noStore as noStore } from 'next/cache'
 
 export default async function BlogListingPage({
   searchParams
 }: {
   searchParams: Promise<{ page?: string; search?: string }>
 }) {
+  noStore()
   const params = await searchParams
   const page = parseInt(params.page || '1')
   const search = params.search || ''
@@ -26,7 +28,7 @@ export default async function BlogListingPage({
   const [posts, total] = await Promise.all([
     prisma.blogPost.findMany({
       where,
-      orderBy: { publishedAt: 'desc' },
+      orderBy: [{ featured: 'desc' }, { publishedAt: 'desc' }],
       skip: (page - 1) * limit,
       take: limit,
       select: {
@@ -49,7 +51,7 @@ export default async function BlogListingPage({
   const totalPages = Math.ceil(total / limit)
 
   // Transform posts to match the expected interface
-  const transformedPosts = posts.map(post => ({
+  const transformedPosts = posts.map((post) => ({
     id: post.id,
     title: post.title,
     slug: post.slug,
