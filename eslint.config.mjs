@@ -1,4 +1,5 @@
 import { FlatCompat } from '@eslint/eslintrc'
+import eslintConfigPrettier from 'eslint-config-prettier'
 import { dirname } from 'path'
 import { fileURLToPath } from 'url'
 
@@ -44,7 +45,8 @@ const eslintConfig = [
       '@typescript-eslint/no-unused-vars': 'warn',
       'react-hooks/exhaustive-deps': 'warn'
     }
-  }
+  },
+  eslintConfigPrettier
 ]
 
 export default eslintConfig
