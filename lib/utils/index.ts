@@ -1,36 +1,46 @@
-// ============================================================================
-// UTILS INDEX - CLEAN IMPORT BARREL
-// ============================================================================
-
-// UI Utilities
-export { cn, createVariantClasses, debounce, throttle } from './ui'
-
-// Date & Time Utilities
+export { estimateReadingTime } from './content'
 export {
-    calculateDuration,
-    formatDate, formatPeriod, getRelativeTime, isDateInRange
-} from './date'
-
-// Formatting Utilities
-export {
-    formatCurrency,
-    formatFileSize, formatNumber,
-    formatPercentage, formatPhoneNumber, truncateText
-} from './formatting'
-
-// Data Utilities
-export {
-    chunk, deepClone, groupBy, isEqual, parseTechnologies, safeJsonParse, unique
+  chunk,
+  deepClone,
+  groupBy,
+  isEqual,
+  parseTechnologies,
+  safeJsonParse,
+  unique
 } from './data'
-
-// String Utilities
+export { calculateDuration, formatDate, formatPeriod, getRelativeTime, isDateInRange } from './date'
 export {
-    camelToKebab, camelToSnake, capitalize, generateSlug, getInitials, isValidEmail,
-    isValidUrl, kebabToCamel, normalizeText, randomString, snakeToCamel, toTitleCase
+  formatCurrency,
+  formatFileSize,
+  formatNumber,
+  formatPercentage,
+  formatPhoneNumber,
+  truncateText
+} from './formatting'
+export { markdownToHtml } from './markdown'
+export {
+  camelToKebab,
+  camelToSnake,
+  capitalize,
+  generateSlug,
+  getInitials,
+  isValidEmail,
+  isValidUrl,
+  kebabToCamel,
+  normalizeText,
+  randomString,
+  snakeToCamel,
+  toTitleCase
 } from './string'
-
-// Validation Utilities
+export { cn, createVariantClasses, debounce, throttle } from './ui'
 export {
-    hasValidationErrors, validateEmail, validateForm, validateLength, validatePassword,
-    validatePasswordMatch, validatePhone, validateRequired, validateUrl
+  hasValidationErrors,
+  validateEmail,
+  validateForm,
+  validateLength,
+  validatePassword,
+  validatePasswordMatch,
+  validatePhone,
+  validateRequired,
+  validateUrl
 } from './validation'
