@@ -3,6 +3,7 @@ import { ProjectSkillImportance } from '@/generated/client'
 import { envConfig } from '../lib/config'
 import { prisma } from '../lib/prisma'
 import { seedBlog } from '../scripts/database/seed-blog'
+import { seedCaseStudies } from './seeders/case-studies'
 import { seedCertifications } from './seeders/certifications'
 import { seedContacts } from './seeders/contacts'
 import { seedEducation } from './seeders/education'
@@ -13,15 +14,14 @@ import { seedServices } from './seeders/services'
 import { seedSkills } from './seeders/skills'
 import { seedTestimonials } from './seeders/testimonials'
 
-
 // Project-Skills relationship seeding
-async function seedProjectSkills() {
-  console.log("Seeding project skills...")
-  
+const seedProjectSkills = async () => {
+  console.log('Seeding project skills...')
+
   // Get all projects and skills
   const allProjects = await prisma.project.findMany()
   const allSkills = await prisma.skill.findMany()
-  
+
   // Project-skill mappings based on  projects
   const projectSkillMappings = [
     {
@@ -35,7 +35,7 @@ async function seedProjectSkills() {
       ]
     },
     {
-      projectSlug: 'comcoms',
+      projectSlug: 'com-coms',
       skills: [
         { name: 'React Native', importance: ProjectSkillImportance.PRIMARY },
         { name: 'Expo', importance: ProjectSkillImportance.PRIMARY },
@@ -67,15 +67,15 @@ async function seedProjectSkills() {
       ]
     }
   ]
-  
+
   for (const mapping of projectSkillMappings) {
     const project = allProjects.find((p: Project) => p.slug === mapping.projectSlug)
     if (!project) continue
-    
+
     for (const skillMapping of mapping.skills) {
       const skill = allSkills.find((s: Skill) => s.name === skillMapping.name)
       if (!skill) continue
-      
+
       await prisma.projectSkill.upsert({
         where: {
           projectId_skillId: {
@@ -94,15 +94,15 @@ async function seedProjectSkills() {
       })
     }
   }
-  
-  console.log("Project skills seeded successfully")
+
+  console.log('Project skills seeded successfully')
 }
 
 // Main seeding function
-async function main() {
+const main = async () => {
   try {
     console.log('Starting database seeding...')
-    
+
     // Core portfolio data (always seed these)
     await seedSkills()
     await seedExperiences()
@@ -111,22 +111,22 @@ async function main() {
     await seedProjects()
     await seedServices()
     await seedFAQs()
-    
+    await seedCaseStudies()
+
     // Link projects with skills (many-to-many)
     await seedProjectSkills()
-    
+
     // Sample data for testing (only in development)
     if (envConfig.ENABLE_SAMPLE_DATA) {
       console.log('Seeding sample data (development environment)...')
-    await seedTestimonials()
-    await seedContacts()
-    await seedBlog()
+      await seedTestimonials()
+      await seedContacts()
+      await seedBlog()
     } else {
       console.log('Production environment - skipping sample data')
     }
-    
+
     console.log('Database seeding completed successfully!')
-    
   } catch (error) {
     console.error('Error during seeding:', error)
     throw error

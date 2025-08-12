@@ -445,3 +445,26 @@ model FAQ {
   
   @@map("faqs")
 }
+
+// Case Studies
+model CaseStudy {
+  id          String   @id @default(cuid())
+  title       String
+  company     String
+  duration    String
+  overview    String
+  problem     String
+  solution    String
+  results     String?   // JSON array
+  technologies String?  // JSON array
+  challenges  String?   // JSON array
+  metrics     String?   // JSON array of objects {label,value,improvement}
+  testimonial String?   // JSON object {quote,author,role}
+  githubUrl   String?
+  liveUrl     String?
+  featured    Boolean  @default(false)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@map("case_studies")
+}
