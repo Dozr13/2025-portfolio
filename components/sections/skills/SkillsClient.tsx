@@ -1,25 +1,11 @@
 "use client"
 
-import { SkillsDisplay } from "@/components/ui/skills-display"
+import { SkillsDisplay } from "@/components/ui/SkillsDisplay"
+import { SkillsClientProps } from "@/lib/types/sections"
 import { motion } from "framer-motion"
+import Link from "next/link"
 
-// Public skill type - only what we need for display
-interface Skill {
-  id: string
-  name: string
-  category: string
-  level: string
-  years: number
-  icon: string
-  featured: boolean
-  order: number
-}
-
-interface SkillsClientProps {
-  skills: Skill[]
-}
-
-export const SkillsClient = ({ skills }: SkillsClientProps) => {
+export const SkillsClient = ({ skills, mode = "full" }: SkillsClientProps) => {
   return (
     <section id="skills" className="py-20 bg-background">
       <div className="container mx-auto px-4">
@@ -41,9 +27,21 @@ export const SkillsClient = ({ skills }: SkillsClientProps) => {
         <SkillsDisplay
           skills={skills}
           showCategories={true}
-          limit={12}
+          mode={mode}
+          showAllTab={mode !== "preview"}
           className="max-w-7xl mx-auto"
         />
+
+        {mode === "preview" && (
+          <div className="text-center mt-8">
+            <Link
+              href="/skills"
+              className="inline-flex items-center gap-2 px-5 py-2 rounded-lg border border-border bg-card hover:bg-muted transition-colors"
+            >
+              See all skills
+            </Link>
+          </div>
+        )}
       </div>
     </section>
   )

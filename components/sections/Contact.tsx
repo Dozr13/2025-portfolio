@@ -1,7 +1,7 @@
 "use client"
 
 import { createContact } from "@/app/actions/public/contact"
-import { Icon, type IconName } from "@/components/ui/icon"
+import { Icon, type IconName } from "@/components/ui/Icon"
 import { AnimatePresence, motion } from "framer-motion"
 import { useRef, useState } from "react"
 
@@ -43,7 +43,7 @@ type FormStatus = 'idle' | 'loading' | 'success' | 'error'
 const RATE_LIMIT_KEY = 'contact_form_last_submission'
 const RATE_LIMIT_DURATION = 60000
 
-export const Contact = () => {
+export const Contact = ({ immediate = false }: { immediate?: boolean }) => {
   const [formData, setFormData] = useState<FormData>({
     name: '',
     email: '',
@@ -227,7 +227,7 @@ export const Contact = () => {
     <section id="contact" className="py-20 bg-muted/50">
       <div>
         <motion.div
-          initial={{ opacity: 0, y: 50 }}
+          initial={immediate ? { opacity: 1, y: 0 } : { opacity: 0, y: 50 }}
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8 }}
           viewport={{ once: true }}
@@ -245,7 +245,7 @@ export const Contact = () => {
         <div className="grid lg:grid-cols-2 gap-12">
           {/* Contact Info */}
           <motion.div
-            initial={{ opacity: 0, x: -50 }}
+            initial={immediate ? { opacity: 1, x: 0 } : { opacity: 0, x: -50 }}
             whileInView={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.8 }}
             viewport={{ once: true }}
@@ -297,7 +297,7 @@ export const Contact = () => {
 
           {/* Contact Form */}
           <motion.div
-            initial={{ opacity: 0, x: 50 }}
+            initial={immediate ? { opacity: 1, x: 0 } : { opacity: 0, x: 50 }}
             whileInView={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.8 }}
             viewport={{ once: true }}

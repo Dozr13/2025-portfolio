@@ -1,6 +1,6 @@
 "use client"
 
-import { Icon, type IconName } from "@/components/ui/icon"
+import { Icon, type IconName } from "@/components/ui/Icon"
 import { motion } from "framer-motion"
 import Image from 'next/image'
 
@@ -31,12 +31,12 @@ const highlights: {
     }
   ]
 
-export const About = () => {
+export const About = ({ immediate = false }: { immediate?: boolean }) => {
   return (
     <section id="about" className="py-20 bg-muted/50">
       <div>
         <motion.div
-          initial={{ opacity: 0, y: 50 }}
+          initial={immediate ? { opacity: 1, y: 0 } : { opacity: 0, y: 50 }}
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8 }}
           viewport={{ once: true }}

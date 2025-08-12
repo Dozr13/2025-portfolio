@@ -1,32 +1,11 @@
 "use client"
 
-import { Icon } from "@/components/ui/icon"
+import { Icon } from "@/components/ui/Icon"
+import { BlogListingClientProps } from "@/lib/types/sections"
 import { motion } from "framer-motion"
 import Link from "next/link"
 import { useRouter, useSearchParams } from "next/navigation"
 import { useState } from "react"
-
-// Public blog post type - only what we need for display
-interface BlogPost {
-  id: string
-  title: string
-  slug: string
-  excerpt: string
-  category: string
-  tags: string
-  readingTime: number
-  views: number
-  publishedAt: string
-  author: string
-}
-
-interface BlogListingClientProps {
-  posts: BlogPost[]
-  currentPage: number
-  totalPages: number
-  totalPosts: number
-  search: string
-}
 
 export const BlogListingClient = ({
   posts,

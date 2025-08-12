@@ -1,21 +1,35 @@
 "use client"
 
-import { Icon } from "@/components/ui/icon"
-import { caseStudies as sharedCaseStudies } from "@/lib/data/case-studies"
-import { CaseStudy } from "@/lib/types"
+import { Icon } from "@/components/ui/Icon"
 import { motion } from "framer-motion"
 import Link from "next/link"
 
-const caseStudies: CaseStudy[] = sharedCaseStudies
+interface CaseStudy {
+  id: string
+  title: string
+  company: string
+  duration: string
+  overview: string
+  problem: string
+  solution: string
+  results: string[]
+  technologies: string[]
+  challenges: string[]
+  metrics: { label: string; value: string; improvement: string }[]
+  testimonial?: { quote: string; author: string; role: string }
+  githubUrl?: string
+  liveUrl?: string
+  featured: boolean
+}
 
-export const CaseStudies = () => {
+export const CaseStudies = ({ caseStudies, immediate = false }: { caseStudies: CaseStudy[]; immediate?: boolean }) => {
   const featuredStudies = caseStudies.filter(study => study.featured)
 
   return (
     <section id="case-studies" className="py-20 bg-background">
       <div className="container mx-auto px-4">
         <motion.div
-          initial={{ opacity: 0, y: 50 }}
+          initial={immediate ? { opacity: 1, y: 0 } : { opacity: 0, y: 50 }}
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8 }}
           viewport={{ once: true }}
@@ -33,7 +47,7 @@ export const CaseStudies = () => {
           {featuredStudies.map((study, index) => (
             <motion.article
               key={study.id}
-              initial={{ opacity: 0, y: 50 }}
+              initial={immediate ? { opacity: 1, y: 0 } : { opacity: 0, y: 50 }}
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ delay: index * 0.2, duration: 0.8 }}
               viewport={{ once: true }}

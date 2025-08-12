@@ -1,150 +1,24 @@
 "use client"
-
-import { Icon } from "@/components/ui/icon"
+import { Icon } from "@/components/ui/Icon"
+import { useReadingProgress } from "@/hooks/useReadingProgress"
+import type { PublicBlogPostDetail } from "@/lib/types/public"
+import { markdownToHtml } from '@/lib/utils'
 import { motion } from "framer-motion"
-import { useEffect, useState } from "react"
+import { useEffect, useMemo, useState } from "react"
+import { ReadingProgressBar } from './ReadingProgressBar'
 
-interface BlogPost {
-  id: string
-  title: string
-  slug: string
-  excerpt: string | null
-  content: string
-  htmlContent: string | null
-  tags: string | null
-  category: string | null
-  author: string
-  status: string
-  featured: boolean
-  metaTitle: string | null
-  metaDescription: string | null
-  readingTime: number | null
-  views: number
-  likes: number
-  publishedAt: Date | null
-  createdAt: Date
-  updatedAt: Date | null
-  comments: {
-    id: string
-    name: string
-    email: string
-    website: string | null
-    content: string
-    approved: boolean
-    postId: string
-    parentId: string | null
-    createdAt: Date
-  }[]
-}
+export function BlogPostClient({ post }: { post: PublicBlogPostDetail }) {
+  const tags = useMemo(
+    () => (post.tags ? post.tags.split(",").map(t => t.trim()).filter(Boolean) : []),
+    [post.tags]
+  )
 
-interface BlogPostClientProps {
-  post: BlogPost
-}
-
-function markdownToHtml(markdown: string): string {
-  // Split into lines and process
-  const lines = markdown.split('\n')
-  const result: string[] = []
-  let inCodeBlock = false
-  let codeBlockContent: string[] = []
-  let currentParagraph: string[] = []
-
-  const processParagraph = (paragraph: string[]) => {
-    if (paragraph.length === 0) return
-
-    const text = paragraph.join(' ').trim()
-    if (text === '') return
-
-    // Check for headers
-    if (text.startsWith('# ')) {
-      result.push(`<h1 class="text-4xl lg:text-5xl font-bold mb-8 text-foreground leading-tight">${text.slice(2)}</h1>`)
-    } else if (text.startsWith('## ')) {
-      result.push(`<h2 class="text-2xl lg:text-3xl font-semibold mb-6 mt-12 text-foreground leading-tight border-b border-border/30 pb-2">${text.slice(3)}</h2>`)
-    } else if (text.startsWith('### ')) {
-      result.push(`<h3 class="text-xl lg:text-2xl font-semibold mb-4 mt-8 text-foreground leading-tight">${text.slice(4)}</h3>`)
-    } else {
-      // Check for lists
-      if (text.match(/^\d+\.\s/)) {
-        // Ordered list
-        result.push(`<ol class="mb-6 ml-6 space-y-2 text-lg lg:text-xl text-foreground/90"><li class="leading-relaxed">${text.replace(/^\d+\.\s/, '')}</li></ol>`)
-      } else if (text.match(/^[-*]\s/)) {
-        // Unordered list
-        result.push(`<ul class="mb-6 ml-6 space-y-2 text-lg lg:text-xl text-foreground/90"><li class="leading-relaxed">${text.replace(/^[-*]\s/, '')}</li></ul>`)
-      } else {
-        // Regular paragraph
-        result.push(`<p class="mb-6 leading-relaxed text-foreground/90 text-lg lg:text-xl">${text}</p>`)
-      }
-    }
-  }
-
-  for (let i = 0; i < lines.length; i++) {
-    const line = lines[i]
-
-    // Handle code blocks
-    if (line.trim().startsWith('```')) {
-      if (inCodeBlock) {
-        // End of code block
-        inCodeBlock = false
-        const codeContent = codeBlockContent.join('\n')
-        result.push(`<pre class="bg-muted/50 p-6 rounded-xl overflow-x-auto my-6 border border-border/50 shadow-lg backdrop-blur-sm"><code class="text-sm text-foreground/90 font-mono leading-relaxed">${codeContent}</code></pre>`)
-        codeBlockContent = []
-      } else {
-        // Start of code block
-        inCodeBlock = true
-        // Process any pending paragraph
-        processParagraph(currentParagraph)
-        currentParagraph = []
-      }
-      continue
-    }
-
-    if (inCodeBlock) {
-      codeBlockContent.push(line)
-      continue
-    }
-
-    // Handle empty lines (paragraph breaks)
-    if (line.trim() === '') {
-      processParagraph(currentParagraph)
-      currentParagraph = []
-      continue
-    }
-
-    // Check for headers (single line)
-    if (line.startsWith('# ')) {
-      processParagraph(currentParagraph)
-      currentParagraph = []
-      result.push(`<h1 class="text-4xl lg:text-5xl font-bold mb-8 text-foreground leading-tight">${line.slice(2)}</h1>`)
-    } else if (line.startsWith('## ')) {
-      processParagraph(currentParagraph)
-      currentParagraph = []
-      result.push(`<h2 class="text-2xl lg:text-3xl font-semibold mb-6 mt-12 text-foreground leading-tight border-b border-border/30 pb-2">${line.slice(3)}</h2>`)
-    } else if (line.startsWith('### ')) {
-      processParagraph(currentParagraph)
-      currentParagraph = []
-      result.push(`<h3 class="text-xl lg:text-2xl font-semibold mb-4 mt-8 text-foreground leading-tight">${line.slice(4)}</h3>`)
-    } else {
-      // Regular text line
-      currentParagraph.push(line)
-    }
-  }
-
-  // Process any remaining paragraph
-  processParagraph(currentParagraph)
-
-  return result.join('\n')
-}
-
-export function BlogPostClient({ post }: BlogPostClientProps) {
-  const tags = post.tags ? post.tags.split(',').filter(tag => tag.trim()) : []
   const htmlContent = markdownToHtml(post.content)
 
-  // Reading progress hook
-  const [readingProgress, setReadingProgress] = useState(0)
+  const readingProgress = useReadingProgress()
   const [localViews, setLocalViews] = useState<number>(post.views)
 
   useEffect(() => {
-    // Increment view once per session per slug
     try {
       const key = `viewed_${post.slug}`
       if (typeof window !== 'undefined' && !sessionStorage.getItem(key)) {
@@ -157,26 +31,13 @@ export function BlogPostClient({ post }: BlogPostClientProps) {
       }
     } catch { }
 
-    const updateReadingProgress = () => {
-      const scrollTop = window.scrollY
-      const docHeight = document.documentElement.scrollHeight - window.innerHeight
-      const progress = (scrollTop / docHeight) * 100
-      setReadingProgress(Math.min(progress, 100))
-    }
-
-    window.addEventListener('scroll', updateReadingProgress)
-    return () => window.removeEventListener('scroll', updateReadingProgress)
+    return
   }, [post.slug])
 
   return (
     <div className="min-h-screen bg-background w-full overflow-x-hidden">
       {/* Reading Progress Bar */}
-      <div className="fixed top-0 left-0 w-full h-1 bg-muted z-50">
-        <div
-          className="h-full bg-gradient-to-r from-primary to-purple-500 transition-all duration-300 ease-out"
-          style={{ width: `${readingProgress}%` }}
-        />
-      </div>
+      <ReadingProgressBar progress={readingProgress} />
 
       {/* Hero Section */}
       <motion.div
@@ -201,7 +62,7 @@ export function BlogPostClient({ post }: BlogPostClientProps) {
                 </span>
                 <span className="inline-flex items-center gap-2">
                   <Icon name="clock" size="sm" />
-                  {post.readingTime || 5} min read
+                  {post.readingTime ?? 5} min read
                 </span>
                 <span className="inline-flex items-center gap-2">
                   <Icon name="eye" size="sm" />

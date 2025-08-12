@@ -1,31 +1,16 @@
 "use client"
 
-import { ProjectCard } from "@/components/ui/project-card"
+import { ProjectCard } from "@/components/ui/ProjectCard"
+import { ProjectsClientProps } from "@/lib/types/sections"
 import { motion } from "framer-motion"
 
-// Public project type - only what we need for display
-interface Project {
-  id: string
-  title: string
-  slug: string
-  description: string
-  category: string
-  status: string
-  featured: boolean
-  demoUrl: string | null
-  githubUrl: string | null
-}
-
-interface ProjectsClientProps {
-  projects: Project[]
-}
-
-export const ProjectsClient = ({ projects }: ProjectsClientProps) => {
+export const ProjectsClient = ({ projects, mode = "full", immediate = false }: ProjectsClientProps) => {
+  const visible = mode === "preview" ? projects.slice(0, 3) : projects
   return (
     <section id="projects" className="py-20 bg-muted/50">
       <div>
         <motion.div
-          initial={{ opacity: 0, y: 50 }}
+          initial={immediate ? { opacity: 1, y: 0 } : { opacity: 0, y: 50 }}
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8 }}
           viewport={{ once: true }}
@@ -40,7 +25,7 @@ export const ProjectsClient = ({ projects }: ProjectsClientProps) => {
         </motion.div>
 
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {projects.map((project, index) => (
+          {visible.map((project, index) => (
             <ProjectCard
               key={project.id}
               title={project.title}
@@ -54,6 +39,16 @@ export const ProjectsClient = ({ projects }: ProjectsClientProps) => {
             />
           ))}
         </div>
+        {mode === "preview" && (
+          <div className="text-center mt-10">
+            <a
+              href="/projects"
+              className="inline-flex items-center gap-2 px-5 py-2 rounded-lg border border-border bg-card hover:bg-muted transition-colors"
+            >
+              View all projects
+            </a>
+          </div>
+        )}
       </div>
     </section>
   )

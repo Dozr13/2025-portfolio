@@ -1,10 +1,10 @@
 "use client"
 
-import { Icon } from "@/components/ui/icon"
+import { Icon } from "@/components/ui"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 
-export function BackToBlogLink() {
+export const BackToBlogLink = () => {
   const pathname = usePathname()
   const isSlugPage = pathname?.startsWith("/blog/") && pathname !== "/blog"
   if (!isSlugPage) return null

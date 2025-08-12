@@ -1,29 +1,11 @@
 "use client"
 
-import { Icon } from "@/components/ui/icon"
+import { Icon } from "@/components/ui/Icon"
+import { BlogClientProps } from "@/lib/types/sections"
 import { motion } from "framer-motion"
 import Link from "next/link"
 
-// Public blog post type - only what we need for display
-interface BlogPost {
-  id: string
-  title: string
-  slug: string
-  excerpt: string
-  category: string
-  tags: string
-  readingTime: number
-  views: number
-  publishedAt: string
-  author: string
-}
-
-interface BlogClientProps {
-  posts: BlogPost[]
-}
-
-export const BlogClient = ({ posts }: BlogClientProps) => {
-  // Featured posts are the first 3 posts
+export const BlogClient = ({ posts, immediate = false }: BlogClientProps) => {
   const featuredPosts = posts.slice(0, 3)
 
   return (
@@ -31,7 +13,7 @@ export const BlogClient = ({ posts }: BlogClientProps) => {
       <div className="container mx-auto px-4">
         {/* Section Header */}
         <motion.div
-          initial={{ opacity: 0, y: 50 }}
+          initial={immediate ? { opacity: 1, y: 0 } : { opacity: 0, y: 50 }}
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8 }}
           viewport={{ once: true }}

@@ -1,6 +1,6 @@
 "use client"
 
-import { Icon, type IconName } from "@/components/ui/icon"
+import { Icon, type IconName } from "@/components/ui/Icon"
 import { motion } from "framer-motion"
 import { useEffect, useState } from "react"
 
@@ -23,7 +23,7 @@ const stats: {
     { label: "AWS Certified", value: "✓", icon: "rocket" },
   ]
 
-export function Hero() {
+export const Hero = () => {
   const [currentRole, setCurrentRole] = useState(0)
   const [displayText, setDisplayText] = useState("")
   const [isDeleting, setIsDeleting] = useState(false)
