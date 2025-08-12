@@ -1,5 +1,5 @@
-@import "tailwindcss";
-@import "tw-animate-css";
+@import 'tailwindcss';
+@import 'tw-animate-css';
 
 @custom-variant dark (&:is(.dark *));
 
@@ -8,7 +8,8 @@
   box-sizing: border-box;
 }
 
-html, body {
+html,
+body {
   overflow-x: hidden;
   width: 100%;
   max-width: 100vw;
@@ -16,13 +17,24 @@ html, body {
   padding: 0;
 }
 
+/* Prevent layout shift when OS scrollbar appears */
+html {
+  scrollbar-gutter: stable both-edges;
+  scrollbar-width: thin;
+  scrollbar-color: color-mix(in oklch, var(--primary) 55%, transparent) transparent;
+}
+
 /* Ensure all elements respect viewport width */
-*, *::before, *::after {
+*,
+*::before,
+*::after {
   max-width: 100vw;
 }
 
 /* Prevent any element from extending beyond viewport */
-#__next, main, section {
+#__next,
+main,
+section {
   width: 100%;
   max-width: 100vw;
   overflow-x: hidden;
@@ -30,15 +42,35 @@ html, body {
 
 /* Custom responsive breakpoints */
 @media (min-width: 475px) {
-  .xs\:text-4xl { font-size: 2.25rem; line-height: 2.5rem; }
-  .xs\:text-xl { font-size: 1.25rem; line-height: 1.75rem; }
-  .xs\:min-h-\[2\.5rem\] { min-height: 2.5rem; }
-  .xs\:h-6 { height: 1.5rem; }
-  .xs\:min-w-\[200px\] { min-width: 200px; }
-  .xs\:flex-row { flex-direction: row; }
-  .xs\:items-baseline { align-items: baseline; }
-  .xs\:gap-2 { gap: 0.5rem; }
-  .xs\:text-left { text-align: left; }
+  .xs\:text-4xl {
+    font-size: 2.25rem;
+    line-height: 2.5rem;
+  }
+  .xs\:text-xl {
+    font-size: 1.25rem;
+    line-height: 1.75rem;
+  }
+  .xs\:min-h-\[2\.5rem\] {
+    min-height: 2.5rem;
+  }
+  .xs\:h-6 {
+    height: 1.5rem;
+  }
+  .xs\:min-w-\[200px\] {
+    min-width: 200px;
+  }
+  .xs\:flex-row {
+    flex-direction: row;
+  }
+  .xs\:items-baseline {
+    align-items: baseline;
+  }
+  .xs\:gap-2 {
+    gap: 0.5rem;
+  }
+  .xs\:text-left {
+    text-align: left;
+  }
 }
 
 /* Modern color system with beautiful gradients */
@@ -64,10 +96,10 @@ html, body {
   --radius: 0.625rem;
 
   /* Custom text color system for proper inversion */
-  --text-primary: #1e293b;          /* Dark text for light mode */
-  --text-secondary: #475569;         /* Medium gray for light mode */
-  --text-muted: #64748b;            /* Light gray for light mode */
-  --text-inverted: #f8fafc;         /* Refined off-white for light mode elements */
+  --text-primary: #1e293b; /* Dark text for light mode */
+  --text-secondary: #475569; /* Medium gray for light mode */
+  --text-muted: #64748b; /* Light gray for light mode */
+  --text-inverted: #f8fafc; /* Refined off-white for light mode elements */
 
   /* Custom gradient variables */
   --gradient-primary: linear-gradient(135deg, #667eea 0%, #fff 100%);
@@ -75,10 +107,24 @@ html, body {
   --gradient-accent: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
 
   /* Light mode: Smooth blue to white background gradient */
-  --gradient-hero: linear-gradient(135deg, #3b82f6 0%, #60a5fa 25%, #93c5fd 50%, #bfdbfe 75%, #ffffff 100%);
+  --gradient-hero: linear-gradient(
+    135deg,
+    #3b82f6 0%,
+    #60a5fa 25%,
+    #93c5fd 50%,
+    #bfdbfe 75%,
+    #ffffff 100%
+  );
 
   /* Light mode: Dark to blue gradients for small elements (inverted from background) */
-  --gradient-hero-inverted: linear-gradient(135deg, #000000 0%, #1e293b 25%, #271ea0 50%, #0d3195 75%, #3b82f6 100%);
+  --gradient-hero-inverted: linear-gradient(
+    135deg,
+    #000000 0%,
+    #1e293b 25%,
+    #271ea0 50%,
+    #0d3195 75%,
+    #3b82f6 100%
+  );
 
   /* Glassmorphism variables */
   --glass-bg: rgba(255, 255, 255, 0.1);
@@ -103,15 +149,15 @@ html, body {
 
 .dark {
   /* Dark theme colors - Updated with charcoal background */
-  --background: oklch(0.129 0.042 264.695);  /* Charcoal background like your image */
+  --background: oklch(0.129 0.042 264.695); /* Charcoal background like your image */
   --foreground: oklch(0.984 0.003 247.858);
-  --muted: oklch(0.279 0.041 260.031);       /* Slightly lighter charcoal for muted areas */
+  --muted: oklch(0.279 0.041 260.031); /* Slightly lighter charcoal for muted areas */
   --muted-foreground: oklch(0.704 0.04 256.788);
-  --card: oklch(0.208 0.042 265.755);        /* Card background matches muted */
+  --card: oklch(0.208 0.042 265.755); /* Card background matches muted */
   --card-foreground: oklch(0.984 0.003 247.858);
   --popover: oklch(0.208 0.042 265.755);
   --popover-foreground: oklch(0.984 0.003 247.858);
-  --border: oklch(1 0 0 / 10%);      /* Improved border visibility */
+  --border: oklch(1 0 0 / 10%); /* Improved border visibility */
   --input: oklch(1 0 0 / 15%);
   --primary: oklch(0.929 0.013 255.508);
   --primary-foreground: oklch(0.208 0.042 265.755);
@@ -124,21 +170,35 @@ html, body {
   --ring: oklch(0.551 0.027 264.364);
 
   /* Custom text color system for dark mode - inverted */
-  --text-primary: #f8fafc;           /* Light text for dark mode */
-  --text-secondary: #e2e8f0;         /* Light gray for dark mode */
-  --text-muted: #cbd5e1;             /* Medium gray for dark mode */
-  --text-inverted: #1e293b;          /* Rich slate for dark mode elements */
+  --text-primary: #f8fafc; /* Light text for dark mode */
+  --text-secondary: #e2e8f0; /* Light gray for dark mode */
+  --text-muted: #cbd5e1; /* Medium gray for dark mode */
+  --text-inverted: #1e293b; /* Rich slate for dark mode elements */
 
   /* Dark mode glassmorphism with better visibility */
-  --glass-bg: rgba(35, 35, 35, 0.6);  /* More opaque for better contrast */
-  --glass-border: rgba(255, 255, 255, 0.2);  /* Improved border visibility */
+  --glass-bg: rgba(35, 35, 35, 0.6); /* More opaque for better contrast */
+  --glass-border: rgba(255, 255, 255, 0.2); /* Improved border visibility */
   --glass-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.5);
 
   /* Dark mode: Black to blue background gradient */
-  --gradient-hero: linear-gradient(135deg, #000000 0%, #1e293b 25%, #3730a3 50%, #1d4ed8 75%, #3b82f6 100%);
+  --gradient-hero: linear-gradient(
+    135deg,
+    #000000 0%,
+    #1e293b 25%,
+    #3730a3 50%,
+    #1d4ed8 75%,
+    #3b82f6 100%
+  );
 
   /* Dark mode: Blue to white gradients for small elements (inverted from background) */
-  --gradient-hero-inverted: linear-gradient(135deg, #3b82f6 0%, #60a5fa 25%, #93c5fd 50%, #bfdbfe 75%, #ffffff 100%);
+  --gradient-hero-inverted: linear-gradient(
+    135deg,
+    #3b82f6 0%,
+    #60a5fa 25%,
+    #93c5fd 50%,
+    #bfdbfe 75%,
+    #ffffff 100%
+  );
   --chart-1: oklch(0.488 0.243 264.376);
   --chart-2: oklch(0.696 0.17 162.48);
   --chart-3: oklch(0.769 0.188 70.08);
@@ -191,8 +251,12 @@ html, body {
 }
 
 body {
-  font-feature-settings: "rlig" 1, "calt" 1;
-  transition: background-color 0.3s ease, color 0.3s ease;
+  font-feature-settings:
+    'rlig' 1,
+    'calt' 1;
+  transition:
+    background-color 0.3s ease,
+    color 0.3s ease;
 }
 
 /* Auto-container for all main sections */
@@ -264,23 +328,37 @@ html {
   scroll-behavior: smooth;
 }
 
-/* Custom scrollbar */
+/* Default gradient scrollbar to match brand */
 ::-webkit-scrollbar {
-  width: 8px;
+  height: 10px;
+  width: 10px;
 }
-
 ::-webkit-scrollbar-track {
-  background: var(--muted);
+  background: transparent;
 }
-
 ::-webkit-scrollbar-thumb {
   background: var(--gradient-hero-inverted);
-  border-radius: 4px;
+  border-radius: 9999px;
+}
+::-webkit-scrollbar-thumb:hover {
+  filter: brightness(1.08);
 }
 
-::-webkit-scrollbar-thumb:hover {
+/* Gradient scrollbar class for internal scrollers when needed */
+.scrollbar-gradient::-webkit-scrollbar {
+  height: 10px;
+  width: 10px;
+}
+.scrollbar-gradient::-webkit-scrollbar-track {
+  background: transparent;
+}
+.scrollbar-gradient::-webkit-scrollbar-thumb {
   background: var(--gradient-hero-inverted);
-  filter: brightness(1.1);
+  border-radius: 9999px;
+}
+.scrollbar-gradient {
+  scrollbar-color: color-mix(in oklch, var(--primary) 55%, transparent) transparent;
+  scrollbar-width: thin;
 }
 
 /* Glassmorphism utility class */
@@ -329,7 +407,8 @@ html {
 
 /* Animation utilities */
 @keyframes float {
-  0%, 100% {
+  0%,
+  100% {
     transform: translateY(0px);
   }
   50% {
@@ -338,7 +417,8 @@ html {
 }
 
 @keyframes glow {
-  0%, 100% {
+  0%,
+  100% {
     opacity: 0.7;
   }
   50% {
@@ -442,11 +522,11 @@ html {
 
 /* Custom accent colors for interactive elements */
 .text-accent {
-  color: #3b82f6;  /* Blue for light mode */
+  color: #3b82f6; /* Blue for light mode */
 }
 
 .dark .text-accent {
-  color: #60a5fa;  /* Lighter blue for dark mode */
+  color: #60a5fa; /* Lighter blue for dark mode */
 }
 
 .border-accent {
@@ -475,7 +555,8 @@ html {
 
 /* Loading animation */
 @keyframes pulse {
-  0%, 100% {
+  0%,
+  100% {
     opacity: 1;
   }
   50% {
@@ -524,7 +605,6 @@ html {
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-ring: var(--sidebar-ring);
 }
-
 
 @layer base {
   * {
