@@ -1,19 +1,19 @@
-"use client"
+'use client'
 
-import { Icon } from "@/components/ui/Icon"
-import { AnimatePresence, motion } from "framer-motion"
-import { usePathname, useRouter } from "next/navigation"
-import { useEffect, useState } from "react"
-import { useTheme } from "./ThemeProvider"
+import { Icon } from '@/components/ui/Icon'
+import { AnimatePresence, motion } from 'framer-motion'
+import { usePathname, useRouter } from 'next/navigation'
+import { useEffect, useState } from 'react'
+import { useTheme } from './ThemeProvider'
 
 const navItems = [
-  { name: "Home", href: "/#hero" },
-  { name: "About", href: "/#about" },
-  { name: "Skills", href: "/#skills" },
-  { name: "Projects", href: "/#projects" },
-  { name: "Experience", href: "/#experience" },
-  { name: "Blog", href: "/#blog" },
-  { name: "Contact", href: "/#contact" },
+  { name: 'Home', href: '/#hero' },
+  { name: 'About', href: '/#about' },
+  { name: 'Skills', href: '/#skills' },
+  { name: 'Projects', href: '/#projects' },
+  { name: 'Experience', href: '/#experience' },
+  { name: 'Blog', href: '/#blog' },
+  { name: 'Contact', href: '/#contact' }
 ]
 
 export const Navigation = () => {
@@ -27,8 +27,8 @@ export const Navigation = () => {
     const handleScroll = () => {
       setScrolled(window.scrollY > 50)
     }
-    window.addEventListener("scroll", handleScroll)
-    return () => window.removeEventListener("scroll", handleScroll)
+    window.addEventListener('scroll', handleScroll)
+    return () => window.removeEventListener('scroll', handleScroll)
   }, [])
 
   const scrollToSection = (href: string) => {
@@ -67,6 +67,10 @@ export const Navigation = () => {
       return
     }
 
+    // On the root route, update the hash so components depending on it can react immediately
+    if (window.location.hash !== `#${hash}`) {
+      history.replaceState(null, '', `#${hash}`)
+    }
     waitForElementAndScroll(`#${hash}`)
   }
 
@@ -75,12 +79,12 @@ export const Navigation = () => {
     try {
       router.prefetch?.('/')
       router.prefetch?.('/blog')
-    } catch { }
+    } catch {}
   }, [router])
 
   const cycleTheme = () => {
-    const themes = ["light", "dark", "system"] as const
-    const currentIndex = themes.indexOf(theme as "light" | "dark" | "system")
+    const themes = ['light', 'dark', 'system'] as const
+    const currentIndex = themes.indexOf(theme as 'light' | 'dark' | 'system')
     const nextIndex = (currentIndex + 1) % themes.length
     setTheme(themes[nextIndex])
   }
@@ -97,9 +101,9 @@ export const Navigation = () => {
     }
 
     switch (theme) {
-      case "light":
+      case 'light':
         return <Icon name="sun" size="md" />
-      case "dark":
+      case 'dark':
         return <Icon name="moon" size="md" />
       default:
         return <Icon name="monitor" size="md" />
@@ -111,20 +115,18 @@ export const Navigation = () => {
       initial={{ y: -100 }}
       animate={{ y: 0 }}
       transition={{ duration: 0.6 }}
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 w-full ${scrolled
-        ? "bg-background/95 backdrop-blur-xl border-b border-border/70 supports-[backdrop-filter]:bg-background/85 shadow-lg shadow-background/20"
-        : "bg-background/60 backdrop-blur-md border-b border-border/30 shadow-sm shadow-background/10"
-        }`}
+      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 w-full ${
+        scrolled
+          ? 'bg-background/95 backdrop-blur-xl border-b border-border/70 supports-[backdrop-filter]:bg-background/85 shadow-lg shadow-background/20'
+          : 'bg-background/60 backdrop-blur-md border-b border-border/30 shadow-sm shadow-background/10'
+      }`}
     >
       <div className="max-w-7xl mx-auto px-5 sm:px-8 lg:px-12 xl:px-16 2xl:px-20 w-full">
         <div className="flex justify-between items-center h-20 lg:h-24 xl:h-28 w-full">
           {/* Logo */}
-          <motion.div
-            whileHover={{ scale: 1.02 }}
-            className="flex-shrink-0"
-          >
+          <motion.div whileHover={{ scale: 1.02 }} className="flex-shrink-0">
             <button
-              onClick={() => scrollToSection("#hero")}
+              onClick={() => scrollToSection('#hero')}
               className="group flex items-center space-x-2 hover:opacity-90 transition-all duration-300"
             >
               {/* Icon */}
@@ -136,7 +138,7 @@ export const Navigation = () => {
                 <div className="w-8 h-8 lg:w-10 lg:h-10 xl:w-12 xl:h-12 rounded-lg gradient-nav-inverted flex items-center justify-center shadow-lg group-hover:shadow-xl transition-shadow">
                   <motion.div
                     animate={{ opacity: [0.8, 1, 0.8] }}
-                    transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
+                    transition={{ duration: 3, repeat: Infinity, ease: 'easeInOut' }}
                     className="text-white text-sm lg:text-base xl:text-lg font-bold"
                   >
                     W
@@ -148,24 +150,20 @@ export const Navigation = () => {
 
               {/* Text */}
               <div className="flex flex-col items-start">
-                <motion.div
-                  className="flex items-center space-x-1"
-                >
+                <motion.div className="flex items-center space-x-1">
                   <span className="text-xl lg:text-2xl xl:text-3xl font-bold text-foreground group-hover:text-primary transition-colors">
                     Wade
                   </span>
                   <motion.span
                     animate={{ opacity: [0.85, 1, 0.85] }}
-                    transition={{ duration: 2.5, repeat: Infinity, ease: "easeInOut" }}
+                    transition={{ duration: 2.5, repeat: Infinity, ease: 'easeInOut' }}
                     className="text-xl lg:text-2xl xl:text-3xl font-bold gradient-text-inverted"
                   >
                     Pate
                   </motion.span>
                 </motion.div>
-                <motion.div
-                  className="text-xs lg:text-sm xl:text-base text-muted-foreground font-mono tracking-wider opacity-60 group-hover:opacity-80 transition-opacity"
-                >
-                  {"{ dev }"}
+                <motion.div className="text-xs lg:text-sm xl:text-base text-muted-foreground font-mono tracking-wider opacity-60 group-hover:opacity-80 transition-opacity">
+                  {'{ dev }'}
                 </motion.div>
               </div>
             </button>
@@ -231,7 +229,7 @@ export const Navigation = () => {
         {isOpen && (
           <motion.div
             initial={{ opacity: 0, height: 0 }}
-            animate={{ opacity: 1, height: "auto" }}
+            animate={{ opacity: 1, height: 'auto' }}
             exit={{ opacity: 0, height: 0 }}
             transition={{ duration: 0.2 }}
             className="md:hidden glass border-t border-border/50"
@@ -265,4 +263,4 @@ export const Navigation = () => {
       </AnimatePresence>
     </motion.nav>
   )
-} 
+}
