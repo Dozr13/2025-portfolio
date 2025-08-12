@@ -1,6 +1,6 @@
-import { Icon, IconName } from "@/components/ui/icon"
-import type { Skill } from "@/lib/types"
-import Link from "next/link"
+import { Icon, IconName } from '@/components/ui/Icon'
+import type { Skill } from '@/lib/types'
+import Link from 'next/link'
 
 interface SkillsCardProps {
   skill: Skill
@@ -19,7 +19,10 @@ export const SkillsCard = ({ skill, onDelete, deleting }: SkillsCardProps) => {
       DESIGN: 'bg-pink-100 text-pink-800 dark:bg-pink-900/20 dark:text-pink-400',
       SOFT_SKILLS: 'bg-indigo-100 text-indigo-800 dark:bg-indigo-900/20 dark:text-indigo-400'
     }
-    return colors[category as keyof typeof colors] || 'bg-gray-100 text-gray-800 dark:bg-gray-900/20 dark:text-gray-400'
+    return (
+      colors[category as keyof typeof colors] ||
+      'bg-gray-100 text-gray-800 dark:bg-gray-900/20 dark:text-gray-400'
+    )
   }
 
   const getLevelColor = (level: string) => {
@@ -29,7 +32,10 @@ export const SkillsCard = ({ skill, onDelete, deleting }: SkillsCardProps) => {
       ADVANCED: 'bg-blue-100 text-blue-800 dark:bg-blue-900/20 dark:text-blue-400',
       EXPERT: 'bg-green-100 text-green-800 dark:bg-green-900/20 dark:text-green-400'
     }
-    return colors[level as keyof typeof colors] || 'bg-gray-100 text-gray-800 dark:bg-gray-900/20 dark:text-gray-400'
+    return (
+      colors[level as keyof typeof colors] ||
+      'bg-gray-100 text-gray-800 dark:bg-gray-900/20 dark:text-gray-400'
+    )
   }
 
   return (
@@ -44,24 +50,24 @@ export const SkillsCard = ({ skill, onDelete, deleting }: SkillsCardProps) => {
           <div>
             <h3 className="font-semibold">{skill.name}</h3>
             <div className="flex gap-2 mt-1">
-              <span className={`px-2 py-1 rounded-full text-xs font-medium ${getCategoryColor(skill.category)}`}>
+              <span
+                className={`px-2 py-1 rounded-full text-xs font-medium ${getCategoryColor(skill.category)}`}
+              >
                 {skill.category.replace('_', ' ')}
               </span>
-              <span className={`px-2 py-1 rounded-full text-xs font-medium ${getLevelColor(skill.level)}`}>
+              <span
+                className={`px-2 py-1 rounded-full text-xs font-medium ${getLevelColor(skill.level)}`}
+              >
                 {skill.level}
               </span>
             </div>
           </div>
         </div>
-        {skill.featured && (
-          <Icon name="check-circle" className="h-4 w-4 text-yellow-500" />
-        )}
+        {skill.featured && <Icon name="check-circle" className="h-4 w-4 text-yellow-500" />}
       </div>
 
       {skill.description && (
-        <p className="text-sm text-muted-foreground mb-4 line-clamp-2">
-          {skill.description}
-        </p>
+        <p className="text-sm text-muted-foreground mb-4 line-clamp-2">{skill.description}</p>
       )}
 
       <div className="flex items-center justify-between">
@@ -81,7 +87,7 @@ export const SkillsCard = ({ skill, onDelete, deleting }: SkillsCardProps) => {
             className="text-red-500 hover:text-red-700 transition-colors disabled:opacity-50"
           >
             <Icon
-              name={deleting === skill.id ? "loader" : "trash-2"}
+              name={deleting === skill.id ? 'loader' : 'trash-2'}
               className={`h-4 w-4 ${deleting === skill.id ? 'animate-spin' : ''}`}
             />
           </button>

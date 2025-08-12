@@ -1,9 +1,8 @@
-import { listSkills } from "@/app/actions/admin/skills"
-import { AdminPageWrapper } from "@/components/admin/shared/AdminPageWrapper"
-import { SkillsStreaming } from "@/components/admin/skills/SkillsStreaming"
-import { requireAdmin } from "@/lib/auth"
+import { listSkills } from '@/app/actions/admin/skills'
+import { AdminPageWrapper } from '@/components/admin/shared/AdminPageWrapper'
+import { SkillsStreaming } from '@/components/admin/skills/SkillsStreaming'
+import { requireAdmin } from '@/lib/auth'
 
-// Force dynamic rendering since this page uses headers() for authentication
 export const dynamic = 'force-dynamic'
 
 export default async function SkillsAdminPage() {
@@ -16,7 +15,7 @@ export default async function SkillsAdminPage() {
     <AdminPageWrapper
       loading={false}
       loadingMessage=""
-      error={!skillsData ? "Failed to load skills" : null}
+      error={!skillsData ? 'Failed to load skills' : null}
       errorTitle="Skills Unavailable"
       errorMessage="Please try refreshing the page or check your connection"
       backHref="/admin/dashboard"

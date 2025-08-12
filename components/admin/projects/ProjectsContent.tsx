@@ -1,12 +1,12 @@
-"use client"
+'use client'
 
-import { AdminHeader } from "@/components/admin/shared/AdminHeader"
-import { Icon } from "@/components/ui/icon"
-import { useProjects } from "@/hooks/useProjects"
-import type { Project } from "@/lib/types"
-import Link from "next/link"
-import { useState } from "react"
-import { ProjectsCard } from "./ProjectsCard"
+import { AdminHeader } from '@/components/admin/shared/AdminHeader'
+import { Icon } from '@/components/ui/Icon'
+import { useProjects } from '@/hooks/useProjects'
+import type { Project } from '@/lib/types'
+import Link from 'next/link'
+import { useState } from 'react'
+import { ProjectsCard } from './ProjectsCard'
 
 interface ProjectsData {
   projects: Project[]
@@ -25,11 +25,11 @@ export const ProjectsContent = ({ initialData }: ProjectsContentProps) => {
     initialData
   })
 
-  const [searchInput, setSearchInput] = useState("")
+  const [searchInput, setSearchInput] = useState('')
   const [filters, setFilters] = useState({
     page: 1,
-    status: "",
-    category: ""
+    status: '',
+    category: ''
   })
 
   const projects = data?.projects || []
@@ -37,17 +37,17 @@ export const ProjectsContent = ({ initialData }: ProjectsContentProps) => {
 
   const handleSearch = (value: string) => {
     setSearchInput(value)
-    setFilters(prev => ({ ...prev, page: 1 }))
+    setFilters((prev) => ({ ...prev, page: 1 }))
     fetchProjects({ ...filters, page: 1, search: value })
   }
 
   const handleFilterChange = (filter: string, value: string) => {
-    setFilters(prev => ({ ...prev, [filter]: value, page: 1 }))
+    setFilters((prev) => ({ ...prev, [filter]: value, page: 1 }))
     fetchProjects({ ...filters, [filter]: value, page: 1, search: searchInput })
   }
 
   const handlePageChange = (page: number) => {
-    setFilters(prev => ({ ...prev, page }))
+    setFilters((prev) => ({ ...prev, page }))
     fetchProjects({ ...filters, page, search: searchInput })
   }
 
@@ -87,7 +87,7 @@ export const ProjectsContent = ({ initialData }: ProjectsContentProps) => {
       <AdminHeader
         title="Projects Management"
         backHref="/admin/dashboard"
-        actions={(
+        actions={
           <Link
             href="/admin/projects/new"
             className="px-4 py-2 bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 transition-colors flex items-center gap-2"
@@ -95,7 +95,7 @@ export const ProjectsContent = ({ initialData }: ProjectsContentProps) => {
             <Icon name="plus" size="sm" />
             New Project
           </Link>
-        )}
+        }
       />
 
       {/* Filters and Controls */}
@@ -146,9 +146,8 @@ export const ProjectsContent = ({ initialData }: ProjectsContentProps) => {
           <h3 className="text-lg font-medium text-foreground mb-2">No projects found</h3>
           <p className="text-muted-foreground mb-4">
             {searchInput || filters.status || filters.category
-              ? "Try adjusting your search or filters"
-              : "Get started by creating your first project"
-            }
+              ? 'Try adjusting your search or filters'
+              : 'Get started by creating your first project'}
           </p>
           {!searchInput && !filters.status && !filters.category && (
             <Link

@@ -1,13 +1,13 @@
-"use client"
+'use client'
 
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/Card'
 import { useAnalytics } from '@/hooks/useAnalytics'
 import { trackAdminAction } from '@/lib/integrations'
 import { StatsData } from '@/lib/types'
 import { formatNumber, formatPercentage } from '@/lib/utils'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@radix-ui/react-tabs'
 import { useEffect, useState } from 'react'
-import { Icon } from '../../ui/icon'
+import { Icon } from '../../ui/Icon'
 import { AnalyticsCard } from './AnalyticsCard'
 import { AnalyticsSkeleton } from './AnalyticsSkeleton'
 
@@ -39,7 +39,7 @@ export const AnalyticsContent = ({ initialData }: { initialData?: StatsData }) =
             <Icon name="alert-circle" className="h-8 w-8 text-red-500 mx-auto mb-4" />
             <h3 className="text-lg font-semibold mb-2">Analytics Unavailable</h3>
             <p className="text-muted-foreground">
-              {error || "Please try refreshing the page or check your connection"}
+              {error || 'Please try refreshing the page or check your connection'}
             </p>
           </div>
         </div>
@@ -54,13 +54,14 @@ export const AnalyticsContent = ({ initialData }: { initialData?: StatsData }) =
           <h1 className="text-3xl font-bold">Analytics Dashboard</h1>
           <p className="text-muted-foreground">
             Environment: <span className="font-medium">{stats.analytics.environment}</span> |
-            Analytics: <span className={`font-medium ${stats.analytics.enabled ? 'text-green-500' : 'text-yellow-500'}`}>
+            Analytics:{' '}
+            <span
+              className={`font-medium ${stats.analytics.enabled ? 'text-green-500' : 'text-yellow-500'}`}
+            >
               {stats.analytics.enabled ? 'Enabled' : 'Development Mode'}
             </span>
             {lastUpdated && (
-              <span className="ml-4 text-xs">
-                Last updated: {lastUpdated.toLocaleTimeString()}
-              </span>
+              <span className="ml-4 text-xs">Last updated: {lastUpdated.toLocaleTimeString()}</span>
             )}
           </p>
         </div>
@@ -68,10 +69,11 @@ export const AnalyticsContent = ({ initialData }: { initialData?: StatsData }) =
         <div className="flex items-center gap-3">
           <button
             onClick={() => setAutoRefresh(!autoRefresh)}
-            className={`px-3 py-2 text-sm rounded-md transition-colors ${autoRefresh
-              ? 'bg-green-100 text-green-700 dark:bg-green-900/20 dark:text-green-400'
-              : 'bg-gray-100 text-gray-700 dark:bg-gray-800 dark:text-gray-300'
-              }`}
+            className={`px-3 py-2 text-sm rounded-md transition-colors ${
+              autoRefresh
+                ? 'bg-green-100 text-green-700 dark:bg-green-900/20 dark:text-green-400'
+                : 'bg-gray-100 text-gray-700 dark:bg-gray-800 dark:text-gray-300'
+            }`}
           >
             <Icon name="refresh" className="h-4 w-4 mr-2" />
             {autoRefresh ? 'Auto-refresh ON' : 'Auto-refresh OFF'}
@@ -104,7 +106,8 @@ export const AnalyticsContent = ({ initialData }: { initialData?: StatsData }) =
             <div className="flex items-center gap-2">
               <div className="w-2 h-2 bg-yellow-500 rounded-full"></div>
               <p className="text-sm text-yellow-800 dark:text-yellow-200">
-                Analytics is disabled in development mode. Deploy to production to see real analytics data.
+                Analytics is disabled in development mode. Deploy to production to see real
+                analytics data.
               </p>
             </div>
           </CardContent>
@@ -147,7 +150,9 @@ export const AnalyticsContent = ({ initialData }: { initialData?: StatsData }) =
 
             <AnalyticsCard
               title="Events Tracked"
-              value={formatNumber(stats.analytics.events.reduce((sum, event) => sum + event.count, 0))}
+              value={formatNumber(
+                stats.analytics.events.reduce((sum, event) => sum + event.count, 0)
+              )}
               subtitle={`${stats.analytics.events.length} event types`}
               icon="📊"
             />
@@ -165,9 +170,7 @@ export const AnalyticsContent = ({ initialData }: { initialData?: StatsData }) =
                     <div className="text-xs text-muted-foreground mb-1">
                       {new Date(day.date).toLocaleDateString('en-US', { weekday: 'short' })}
                     </div>
-                    <div className="bg-primary/10 rounded px-2 py-1 font-medium">
-                      {day.views}
-                    </div>
+                    <div className="bg-primary/10 rounded px-2 py-1 font-medium">{day.views}</div>
                   </div>
                 ))}
               </div>
@@ -185,14 +188,19 @@ export const AnalyticsContent = ({ initialData }: { initialData?: StatsData }) =
             <CardContent>
               <div className="space-y-4">
                 {stats.analytics.topPages.map((page, index) => (
-                  <div key={index} className="flex items-center justify-between py-2 border-b last:border-b-0">
+                  <div
+                    key={index}
+                    className="flex items-center justify-between py-2 border-b last:border-b-0"
+                  >
                     <div>
                       <div className="font-medium">{page.path}</div>
                       <div className="text-sm text-muted-foreground">
                         {formatNumber(page.views)} views
                       </div>
                     </div>
-                    <div className={`text-sm font-medium ${page.change > 0 ? 'text-green-500' : 'text-red-500'}`}>
+                    <div
+                      className={`text-sm font-medium ${page.change > 0 ? 'text-green-500' : 'text-red-500'}`}
+                    >
                       {formatPercentage(page.change)}
                     </div>
                   </div>
@@ -253,30 +261,40 @@ export const AnalyticsContent = ({ initialData }: { initialData?: StatsData }) =
             <CardHeader>
               <CardTitle>Database Overview</CardTitle>
               <CardDescription>
-                Current database statistics | Environment: {stats.database?.environment} |
-                Database: {stats.database?.database}
+                Current database statistics | Environment: {stats.database?.environment} | Database:{' '}
+                {stats.database?.database}
               </CardDescription>
             </CardHeader>
             <CardContent>
               <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
                 <div className="text-center p-4 border rounded-lg">
-                  <div className="text-2xl font-bold text-blue-500">{stats.database?.skills || 0}</div>
+                  <div className="text-2xl font-bold text-blue-500">
+                    {stats.database?.skills || 0}
+                  </div>
                   <div className="text-sm text-muted-foreground">Skills</div>
                 </div>
                 <div className="text-center p-4 border rounded-lg">
-                  <div className="text-2xl font-bold text-green-500">{stats.database?.projects || 0}</div>
+                  <div className="text-2xl font-bold text-green-500">
+                    {stats.database?.projects || 0}
+                  </div>
                   <div className="text-sm text-muted-foreground">Projects</div>
                 </div>
                 <div className="text-center p-4 border rounded-lg">
-                  <div className="text-2xl font-bold text-purple-500">{stats.database?.experiences || 0}</div>
+                  <div className="text-2xl font-bold text-purple-500">
+                    {stats.database?.experiences || 0}
+                  </div>
                   <div className="text-sm text-muted-foreground">Experiences</div>
                 </div>
                 <div className="text-center p-4 border rounded-lg">
-                  <div className="text-2xl font-bold text-orange-500">{stats.database?.contacts || 0}</div>
+                  <div className="text-2xl font-bold text-orange-500">
+                    {stats.database?.contacts || 0}
+                  </div>
                   <div className="text-sm text-muted-foreground">Contacts</div>
                 </div>
                 <div className="text-center p-4 border rounded-lg">
-                  <div className="text-2xl font-bold text-pink-500">{stats.database?.testimonials || 0}</div>
+                  <div className="text-2xl font-bold text-pink-500">
+                    {stats.database?.testimonials || 0}
+                  </div>
                   <div className="text-sm text-muted-foreground">Testimonials</div>
                 </div>
               </div>

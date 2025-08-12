@@ -1,6 +1,6 @@
-import { Icon } from "@/components/ui/icon"
-import type { BlogPost } from "@/lib/types"
-import Link from "next/link"
+import { Icon } from '@/components/ui/Icon'
+import type { BlogPost } from '@/lib/types'
+import Link from 'next/link'
 
 interface BlogCardProps {
   post: BlogPost
@@ -18,13 +18,11 @@ export const BlogCard = ({ post, onDelete, deleting }: BlogCardProps) => {
           <div className="flex items-center gap-2 mb-2">
             <h3 className="font-semibold text-lg text-foreground">{post.title}</h3>
             {post.featured && (
-              <span className="px-2 py-1 text-xs bg-primary/10 text-primary rounded">
-                Featured
-              </span>
+              <span className="px-2 py-1 text-xs bg-primary/10 text-primary rounded">Featured</span>
             )}
           </div>
           <p className="text-sm text-muted-foreground line-clamp-2 mb-2">
-            {post.excerpt || "No excerpt available"}
+            {post.excerpt || 'No excerpt available'}
           </p>
           <div className="flex items-center gap-4 text-xs text-muted-foreground">
             <span>Status: {post.status}</span>
@@ -36,7 +34,9 @@ export const BlogCard = ({ post, onDelete, deleting }: BlogCardProps) => {
 
       <div className="flex items-center justify-between">
         <div className="text-xs text-muted-foreground">
-          {post.updatedAt ? `Updated: ${new Date(post.updatedAt).toLocaleDateString()}` : 'Updated: —'}
+          {post.updatedAt
+            ? `Updated: ${new Date(post.updatedAt).toLocaleDateString()}`
+            : 'Updated: —'}
         </div>
         <div className="flex items-center gap-2">
           <Link

@@ -1,9 +1,9 @@
-"use client"
+'use client'
 
-import { Icon } from "@/components/ui/icon"
-import { useDashboard, type DashboardData } from "@/hooks/useDashboard"
-import { motion } from "framer-motion"
-import Link from "next/link"
+import { Icon } from '@/components/ui/Icon'
+import { useDashboard, type DashboardData } from '@/hooks/useDashboard'
+import { motion } from 'framer-motion'
+import Link from 'next/link'
 
 interface DashboardContentProps {
   initialData?: DashboardData | null
@@ -42,12 +42,11 @@ export const DashboardContent = ({ initialData }: DashboardContentProps) => {
   }
 
   const stats = data?.stats
-  const visitors = typeof stats?.analytics?.pageViews?.total === 'number' ? stats.analytics.pageViews.total : 0
+  const visitors =
+    typeof stats?.analytics?.pageViews?.total === 'number' ? stats.analytics.pageViews.total : 0
   const pageViews = visitors
   const avgTimeOnSiteSeconds = 0
   const recentContacts = data?.recentContacts || []
-
-
 
   return (
     <div className="space-y-8">
@@ -64,9 +63,13 @@ export const DashboardContent = ({ initialData }: DashboardContentProps) => {
               <Icon name="mail" size="md" className="text-blue-500" />
             </div>
             <div>
-              <p className="text-2xl font-bold text-foreground">{typeof stats?.contacts?.total === 'number' ? stats.contacts.total : 0}</p>
+              <p className="text-2xl font-bold text-foreground">
+                {typeof stats?.contacts?.total === 'number' ? stats.contacts.total : 0}
+              </p>
               <p className="text-sm text-muted-foreground">Total Contacts</p>
-              <p className="text-xs text-green-500">+{typeof stats?.contacts?.new === 'number' ? stats.contacts.new : 0} new</p>
+              <p className="text-xs text-green-500">
+                +{typeof stats?.contacts?.new === 'number' ? stats.contacts.new : 0} new
+              </p>
             </div>
           </div>
         </div>
@@ -77,9 +80,13 @@ export const DashboardContent = ({ initialData }: DashboardContentProps) => {
               <Icon name="file-text" size="md" className="text-green-500" />
             </div>
             <div>
-              <p className="text-2xl font-bold text-foreground">{typeof stats?.blog?.published === 'number' ? stats.blog.published : 0}</p>
+              <p className="text-2xl font-bold text-foreground">
+                {typeof stats?.blog?.published === 'number' ? stats.blog.published : 0}
+              </p>
               <p className="text-sm text-muted-foreground">Published Posts</p>
-              <p className="text-xs text-muted-foreground">{typeof stats?.blog?.drafts === 'number' ? stats.blog.drafts : 0} drafts</p>
+              <p className="text-xs text-muted-foreground">
+                {typeof stats?.blog?.drafts === 'number' ? stats.blog.drafts : 0} drafts
+              </p>
             </div>
           </div>
         </div>
@@ -103,7 +110,9 @@ export const DashboardContent = ({ initialData }: DashboardContentProps) => {
               <Icon name="clock" size="md" className="text-orange-500" />
             </div>
             <div>
-              <p className="text-2xl font-bold text-foreground">{Math.round(avgTimeOnSiteSeconds / 60)}m</p>
+              <p className="text-2xl font-bold text-foreground">
+                {Math.round(avgTimeOnSiteSeconds / 60)}m
+              </p>
               <p className="text-sm text-muted-foreground">Avg. Time</p>
               <p className="text-xs text-muted-foreground">on site</p>
             </div>
@@ -198,7 +207,10 @@ export const DashboardContent = ({ initialData }: DashboardContentProps) => {
           </div>
           <div className="space-y-3">
             {recentContacts.map((contact) => (
-              <div key={contact.id} className="flex items-center justify-between py-2 border-b border-border/50 last:border-b-0">
+              <div
+                key={contact.id}
+                className="flex items-center justify-between py-2 border-b border-border/50 last:border-b-0"
+              >
                 <div>
                   <p className="font-medium text-foreground">{contact.name}</p>
                   <p className="text-sm text-muted-foreground">{contact.email}</p>
@@ -207,12 +219,18 @@ export const DashboardContent = ({ initialData }: DashboardContentProps) => {
                   )}
                 </div>
                 <div className="text-right">
-                  <span className={`px-2 py-1 text-xs rounded-full ${contact.status === "NEW" ? "bg-red-500/10 text-red-500" :
-                    contact.status === "IN_PROGRESS" ? "bg-yellow-500/10 text-yellow-500" :
-                      contact.status === "RESPONDED" ? "bg-green-500/10 text-green-500" :
-                        "bg-gray-500/10 text-gray-500"
-                    }`}>
-                    {contact.status.replace(/_/g, " ")}
+                  <span
+                    className={`px-2 py-1 text-xs rounded-full ${
+                      contact.status === 'NEW'
+                        ? 'bg-red-500/10 text-red-500'
+                        : contact.status === 'IN_PROGRESS'
+                          ? 'bg-yellow-500/10 text-yellow-500'
+                          : contact.status === 'RESPONDED'
+                            ? 'bg-green-500/10 text-green-500'
+                            : 'bg-gray-500/10 text-gray-500'
+                    }`}
+                  >
+                    {contact.status.replace(/_/g, ' ')}
                   </span>
                   <p className="text-xs text-muted-foreground mt-1">
                     {new Date(contact.createdAt).toLocaleDateString()}

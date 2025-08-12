@@ -1,12 +1,12 @@
-"use client"
+'use client'
 
-import { AdminHeader } from "@/components/admin/shared/AdminHeader"
-import { Icon } from "@/components/ui/icon"
-import { useBlog } from "@/hooks/useBlog"
-import type { BlogPost } from "@/lib/types"
-import Link from "next/link"
-import { useState } from "react"
-import { BlogCard } from "./BlogCard"
+import { AdminHeader } from '@/components/admin/shared/AdminHeader'
+import { Icon } from '@/components/ui'
+import { useBlog } from '@/hooks/useBlog'
+import type { BlogPost } from '@/lib/types'
+import Link from 'next/link'
+import { useState } from 'react'
+import { BlogCard } from './BlogCard'
 
 interface BlogData {
   posts: BlogPost[]
@@ -22,8 +22,8 @@ interface BlogContentProps {
 
 export const BlogContent = ({ initialData }: BlogContentProps) => {
   const { posts, pagination, loading, error, deleting, deletePost } = useBlog({ initialData })
-  const [searchInput, setSearchInput] = useState("")
-  const [statusFilter, setStatusFilter] = useState("")
+  const [searchInput, setSearchInput] = useState('')
+  const [statusFilter, setStatusFilter] = useState('')
 
   if (loading && !initialData) {
     return (
@@ -53,7 +53,7 @@ export const BlogContent = ({ initialData }: BlogContentProps) => {
       <AdminHeader
         title="Blog Management"
         backHref="/admin/dashboard"
-        actions={(
+        actions={
           <Link
             href="/admin/blog/new"
             className="px-4 py-2 bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 transition-colors flex items-center gap-2"
@@ -61,7 +61,7 @@ export const BlogContent = ({ initialData }: BlogContentProps) => {
             <Icon name="plus" size="sm" />
             New Post
           </Link>
-        )}
+        }
       />
 
       <div className="py-8">
@@ -108,12 +108,7 @@ export const BlogContent = ({ initialData }: BlogContentProps) => {
         ) : (
           <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
             {posts.map((post) => (
-              <BlogCard
-                key={post.id}
-                post={post}
-                onDelete={deletePost}
-                deleting={deleting}
-              />
+              <BlogCard key={post.id} post={post} onDelete={deletePost} deleting={deleting} />
             ))}
           </div>
         )}

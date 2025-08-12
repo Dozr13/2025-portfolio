@@ -1,6 +1,6 @@
-"use client"
+'use client'
 
-import { Icon } from "@/components/ui/icon"
+import { Icon } from '@/components/ui/Icon'
 
 interface AdminErrorProps {
   error?: string | null
@@ -8,11 +8,7 @@ interface AdminErrorProps {
   title?: string
 }
 
-export function AdminError({
-  error,
-  onRetry,
-  title = "Something went wrong"
-}: AdminErrorProps) {
+export const AdminError = ({ error, onRetry, title = 'Something went wrong' }: AdminErrorProps) => {
   if (!error) return null
 
   return (
@@ -38,7 +34,7 @@ interface AdminLoadingProps {
   message?: string
 }
 
-export function AdminLoading({ message = "Loading..." }: AdminLoadingProps) {
+export function AdminLoading({ message = 'Loading...' }: AdminLoadingProps) {
   return (
     <div className="min-h-screen bg-background flex items-center justify-center">
       <div className="text-center">

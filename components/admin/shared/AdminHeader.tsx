@@ -1,7 +1,7 @@
-"use client"
+'use client'
 
-import { Icon } from "@/components/ui/icon"
-import Link from "next/link"
+import { Icon } from '../../ui/Icon'
+import Link from 'next/link'
 
 interface AdminHeaderProps {
   title: string
@@ -26,18 +26,12 @@ export const AdminHeader = ({ title, subtitle, backHref, actions }: AdminHeaderP
             )}
             <div>
               <h1 className="text-2xl font-bold">{title}</h1>
-              {subtitle && (
-                <p className="text-muted-foreground">{subtitle}</p>
-              )}
+              {subtitle && <p className="text-muted-foreground">{subtitle}</p>}
             </div>
           </div>
-          {actions && (
-            <div className="flex items-center gap-2">{actions}</div>
-          )}
+          {actions && <div className="flex items-center gap-2">{actions}</div>}
         </div>
       </div>
     </header>
   )
 }
-
-

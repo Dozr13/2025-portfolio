@@ -1,13 +1,13 @@
-"use client"
+'use client'
 
-import { deleteSkill, getSkill, updateSkill } from "@/app/actions/admin/skills"
-import { AdminFormLayout } from "@/components/admin/forms/AdminFormLayout"
-import { SkillFormData, SkillFormFields } from "@/components/admin/forms/SkillFormFields"
-import { Button } from "@/components/ui/button"
+import { deleteSkill, getSkill, updateSkill } from '@/app/actions/admin/skills'
+import { AdminFormLayout } from '@/components/admin/forms/AdminFormLayout'
+import { SkillFormData, SkillFormFields } from '@/components/admin/forms/SkillFormFields'
+import { Button } from '@/components/ui/Button'
 import type { SkillCategory, SkillLevel } from '@/lib/domain/enums'
-import type { Skill } from "@/lib/types"
-import { useRouter } from "next/navigation"
-import { useEffect, useState } from "react"
+import type { Skill } from '@/lib/types'
+import { useRouter } from 'next/navigation'
+import { useEffect, useState } from 'react'
 
 interface EditSkillClientProps {
   initialData?: Skill | null
@@ -20,28 +20,28 @@ export const EditSkillClient = ({ initialData }: EditSkillClientProps) => {
   const [submitting, setSubmitting] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [formData, setFormData] = useState<SkillFormData>({
-    name: "",
-    category: "FRONTEND",
-    level: "INTERMEDIATE",
-    years: "",
-    description: "",
-    icon: "",
+    name: '',
+    category: 'FRONTEND',
+    level: 'INTERMEDIATE',
+    years: '',
+    description: '',
+    icon: '',
     featured: false,
-    order: ""
+    order: ''
   })
 
   // Initialize form data when skill data is available
   useEffect(() => {
     if (skillData) {
       setFormData({
-        name: skillData.name || "",
-        category: skillData.category || "FRONTEND",
-        level: skillData.level || "INTERMEDIATE",
-        years: skillData.years ? skillData.years.toString() : "",
-        description: skillData.description || "",
-        icon: skillData.icon || "no-icon",
+        name: skillData.name || '',
+        category: skillData.category || 'FRONTEND',
+        level: skillData.level || 'INTERMEDIATE',
+        years: skillData.years ? skillData.years.toString() : '',
+        description: skillData.description || '',
+        icon: skillData.icon || 'no-icon',
         featured: skillData.featured || false,
-        order: skillData.order ? skillData.order.toString() : ""
+        order: skillData.order ? skillData.order.toString() : ''
       })
     }
   }, [skillData])
@@ -56,8 +56,10 @@ export const EditSkillClient = ({ initialData }: EditSkillClientProps) => {
           // Normalize dates to strings to satisfy UI type expectations
           setSkillData({
             ...skill,
-            createdAt: typeof skill.createdAt === 'string' ? new Date(skill.createdAt) : skill.createdAt,
-            updatedAt: typeof skill.updatedAt === 'string' ? new Date(skill.updatedAt) : skill.updatedAt,
+            createdAt:
+              typeof skill.createdAt === 'string' ? new Date(skill.createdAt) : skill.createdAt,
+            updatedAt:
+              typeof skill.updatedAt === 'string' ? new Date(skill.updatedAt) : skill.updatedAt
           } as unknown as Skill)
         } catch (error) {
           console.error('[Skills Edit] Error fetching skill:', error)
@@ -73,7 +75,7 @@ export const EditSkillClient = ({ initialData }: EditSkillClientProps) => {
   }, [initialData, skillData?.id, router])
 
   const updateField = (field: keyof SkillFormData, value: string | boolean) => {
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
       [field]: value
     }))
@@ -84,12 +86,12 @@ export const EditSkillClient = ({ initialData }: EditSkillClientProps) => {
     setError(null)
 
     if (!formData.name.trim()) {
-      setError("Skill name is required")
+      setError('Skill name is required')
       return
     }
 
     if (!skillData?.id) {
-      setError("Skill ID not found")
+      setError('Skill ID not found')
       return
     }
 
@@ -101,15 +103,15 @@ export const EditSkillClient = ({ initialData }: EditSkillClientProps) => {
         level: formData.level as SkillLevel,
         years: formData.years ? parseInt(formData.years) : null,
         description: formData.description || null,
-        icon: formData.icon === "no-icon" ? null : formData.icon || null,
+        icon: formData.icon === 'no-icon' ? null : formData.icon || null,
         featured: formData.featured,
         order: formData.order ? parseInt(formData.order) : null
       })
 
-      router.push("/admin/skills")
+      router.push('/admin/skills')
     } catch (error) {
       console.error('[Skills Edit] Error updating skill:', error)
-      setError("Failed to update skill")
+      setError('Failed to update skill')
     } finally {
       setSubmitting(false)
     }
@@ -123,10 +125,10 @@ export const EditSkillClient = ({ initialData }: EditSkillClientProps) => {
     setSubmitting(true)
     try {
       await deleteSkill(skillData.id)
-      router.push("/admin/skills")
+      router.push('/admin/skills')
     } catch (error) {
       console.error('[Skills Edit] Error deleting skill:', error)
-      setError("Failed to delete skill")
+      setError('Failed to delete skill')
     } finally {
       setSubmitting(false)
     }
@@ -165,11 +167,7 @@ export const EditSkillClient = ({ initialData }: EditSkillClientProps) => {
         </Button>
       }
     >
-      <SkillFormFields
-        formData={formData}
-        onChange={updateField}
-        showPreview={true}
-      />
+      <SkillFormFields formData={formData} onChange={updateField} showPreview={true} />
       {error && (
         <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded">
           {error}

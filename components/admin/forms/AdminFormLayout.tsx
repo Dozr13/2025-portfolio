@@ -1,7 +1,7 @@
-"use client"
-import { Icon } from "@/components/ui/icon"
-import Link from "next/link"
-import { ReactNode } from "react"
+'use client'
+import { Icon } from '@/components/ui/Icon'
+import Link from 'next/link'
+import { ReactNode } from 'react'
 
 interface AdminFormLayoutProps {
   title: string
@@ -81,10 +81,7 @@ export const AdminFormLayout = ({
                 </>
               )}
             </button>
-            <Link
-              href={backHref}
-              className="text-muted-foreground hover:text-foreground px-4 py-2"
-            >
+            <Link href={backHref} className="text-muted-foreground hover:text-foreground px-4 py-2">
               Cancel
             </Link>
             {actionButtons}

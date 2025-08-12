@@ -1,11 +1,11 @@
-"use client"
+'use client'
 
-import { AdminHeader } from "@/components/admin/shared/AdminHeader"
-import { Icon } from "@/components/ui/icon"
-import { useSkills } from "@/hooks/useSkills"
-import type { Skill } from "@/lib/types"
-import Link from "next/link"
-import { SkillsCard } from "./SkillsCard"
+import { AdminHeader } from '@/components/admin/shared/AdminHeader'
+import { Icon } from '@/components/ui/Icon'
+import { useSkills } from '@/hooks/useSkills'
+import type { Skill } from '@/lib/types'
+import Link from 'next/link'
+import { SkillsCard } from './SkillsCard'
 
 interface SkillsContentProps {
   initialData?: Skill[] | null
@@ -49,7 +49,7 @@ export const SkillsContent = ({ initialData }: SkillsContentProps) => {
         title="Skills Management"
         subtitle="Manage your technical skills and expertise"
         backHref="/admin/dashboard"
-        actions={(
+        actions={
           <Link
             href="/admin/skills/new"
             className="bg-primary text-primary-foreground px-4 py-2 rounded-md hover:bg-primary/90 transition-colors"
@@ -57,7 +57,7 @@ export const SkillsContent = ({ initialData }: SkillsContentProps) => {
             <Icon name="plus" className="h-4 w-4 mr-2" />
             Add Skill
           </Link>
-        )}
+        }
       />
 
       <div className="py-8">
@@ -65,7 +65,9 @@ export const SkillsContent = ({ initialData }: SkillsContentProps) => {
           <div className="text-center py-12">
             <Icon name="code" className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
             <h3 className="text-lg font-semibold mb-2">No skills yet</h3>
-            <p className="text-muted-foreground mb-6">Get started by adding your first technical skill</p>
+            <p className="text-muted-foreground mb-6">
+              Get started by adding your first technical skill
+            </p>
             <Link
               href="/admin/skills/new"
               className="bg-primary text-primary-foreground px-6 py-3 rounded-md hover:bg-primary/90 transition-colors"
@@ -77,12 +79,7 @@ export const SkillsContent = ({ initialData }: SkillsContentProps) => {
         ) : (
           <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
             {skills.map((skill) => (
-              <SkillsCard
-                key={skill.id}
-                skill={skill}
-                onDelete={deleteSkill}
-                deleting={deleting}
-              />
+              <SkillsCard key={skill.id} skill={skill} onDelete={deleteSkill} deleting={deleting} />
             ))}
           </div>
         )}

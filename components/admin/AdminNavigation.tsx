@@ -1,9 +1,9 @@
-"use client"
+'use client'
 
-import { useAdminAuthContext } from "@/components/admin/AdminAuthProvider"
-import { Icon, IconName } from "@/components/ui/icon"
-import Link from "next/link"
-import { usePathname } from "next/navigation"
+import { useAdminAuthContext } from '@/components/admin/AdminAuthProvider'
+import { Icon, IconName } from '@/components/ui/Icon'
+import Link from 'next/link'
+import { usePathname } from 'next/navigation'
 
 export const AdminNavigation = () => {
   const { logout } = useAdminAuthContext()
@@ -16,7 +16,7 @@ export const AdminNavigation = () => {
     { href: '/admin/blog', label: 'Blog', icon: 'file-text' },
     { href: '/admin/skills', label: 'Skills', icon: 'code' },
     { href: '/admin/case-studies', label: 'Case Studies', icon: 'book-open' },
-    { href: '/admin/analytics', label: 'Analytics', icon: 'chart-bar' },
+    { href: '/admin/analytics', label: 'Analytics', icon: 'chart-bar' }
   ]
 
   return (
@@ -40,10 +40,11 @@ export const AdminNavigation = () => {
               <Link
                 key={item.href}
                 href={item.href}
-                className={`flex items-center gap-2 px-3 py-2 rounded-lg text-sm font-medium transition-colors ${pathname === item.href
-                  ? 'bg-primary text-primary-foreground'
-                  : 'text-muted-foreground hover:text-foreground hover:bg-muted'
-                  }`}
+                className={`flex items-center gap-2 px-3 py-2 rounded-lg text-sm font-medium transition-colors ${
+                  pathname === item.href
+                    ? 'bg-primary text-primary-foreground'
+                    : 'text-muted-foreground hover:text-foreground hover:bg-muted'
+                }`}
               >
                 <Icon name={item.icon as IconName} size="sm" />
                 {item.label}

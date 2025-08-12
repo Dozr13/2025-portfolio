@@ -1,39 +1,39 @@
-"use client"
+'use client'
 
-import { loginAdmin } from "@/app/actions/admin/auth"
-import { useAdminAuthContext } from "@/components/admin/AdminAuthProvider"
-import { Icon } from "@/components/ui/icon"
-import { refreshAuthState } from "@/hooks/useAdminAuth"
-import { motion } from "framer-motion"
-import { useRouter } from "next/navigation"
-import { useEffect, useState } from "react"
+import { loginAdmin } from '@/app/actions/admin/auth'
+import { useAdminAuthContext } from '@/components/admin/AdminAuthProvider'
+import { Icon } from '@/components/ui/Icon'
+import { refreshAuthState } from '@/hooks/useAdminAuth'
+import { motion } from 'framer-motion'
+import { useRouter } from 'next/navigation'
+import { useEffect, useState } from 'react'
 
 export default function AdminLogin() {
-  const [credentials, setCredentials] = useState({ username: "", password: "" })
+  const [credentials, setCredentials] = useState({ username: '', password: '' })
   const [loading, setLoading] = useState(false)
-  const [error, setError] = useState("")
+  const [error, setError] = useState('')
   const router = useRouter()
   const { isAuthenticated, isLoading } = useAdminAuthContext()
 
   // Redirect to dashboard if already authenticated
   useEffect(() => {
     if (!isLoading && isAuthenticated) {
-      router.push("/admin/dashboard")
+      router.push('/admin/dashboard')
     }
   }, [isAuthenticated, isLoading, router])
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault()
     setLoading(true)
-    setError("")
+    setError('')
 
     try {
       await loginAdmin(credentials)
       await refreshAuthState()
-      router.push("/admin/dashboard")
+      router.push('/admin/dashboard')
     } catch (error) {
-      console.error("Login error:", error)
-      setError(error instanceof Error ? error.message : "Login failed. Please try again.")
+      console.error('Login error:', error)
+      setError(error instanceof Error ? error.message : 'Login failed. Please try again.')
     } finally {
       setLoading(false)
     }
@@ -57,7 +57,9 @@ export default function AdminLogin() {
 
           <form onSubmit={handleLogin} className="space-y-6">
             <div>
-              <label htmlFor="username" className="block text-sm font-medium text-foreground mb-2">Username</label>
+              <label htmlFor="username" className="block text-sm font-medium text-foreground mb-2">
+                Username
+              </label>
               <input
                 id="username"
                 type="text"
@@ -69,7 +71,9 @@ export default function AdminLogin() {
             </div>
 
             <div>
-              <label htmlFor="password" className="block text-sm font-medium text-foreground mb-2">Password</label>
+              <label htmlFor="password" className="block text-sm font-medium text-foreground mb-2">
+                Password
+              </label>
               <input
                 id="password"
                 type="password"
@@ -103,7 +107,7 @@ export default function AdminLogin() {
                   Authenticating...
                 </div>
               ) : (
-                "Access Dashboard"
+                'Access Dashboard'
               )}
             </motion.button>
           </form>

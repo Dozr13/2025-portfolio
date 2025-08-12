@@ -1,7 +1,7 @@
-"use client"
+'use client'
 
-import { AdminLoadingState } from "@/components/admin/shared/AdminLoadingState"
-import { Suspense } from "react"
+import { Suspense } from 'react'
+import { AdminLoadingState } from './AdminLoadingState'
 
 interface AdminSuspenseProps {
   children: React.ReactNode
@@ -12,11 +12,9 @@ interface AdminSuspenseProps {
 export function AdminSuspense({
   children,
   fallback,
-  message = "Loading data..."
+  message = 'Loading data...'
 }: AdminSuspenseProps) {
   return (
-    <Suspense fallback={fallback || <AdminLoadingState message={message} />}>
-      {children}
-    </Suspense>
+    <Suspense fallback={fallback || <AdminLoadingState message={message} />}>{children}</Suspense>
   )
 }

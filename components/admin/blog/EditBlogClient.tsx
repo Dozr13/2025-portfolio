@@ -1,10 +1,14 @@
-"use client"
+'use client'
 
-import { deleteAdminBlogPost, getAdminBlogPost, updateAdminBlogPost } from "@/app/actions/admin/blog"
-import { AdminFormLayout } from "@/components/admin/forms/AdminFormLayout"
-import type { BlogPost } from "@/lib/types"
-import { useRouter } from "next/navigation"
-import { useEffect, useState } from "react"
+import {
+  deleteAdminBlogPost,
+  getAdminBlogPost,
+  updateAdminBlogPost
+} from '@/app/actions/admin/blog'
+import { AdminFormLayout } from '@/components/admin/forms/AdminFormLayout'
+import type { BlogPost } from '@/lib/types'
+import { useRouter } from 'next/navigation'
+import { useEffect, useState } from 'react'
 
 interface EditBlogClientProps {
   initialData?: BlogPost | null
@@ -30,32 +34,32 @@ export const EditBlogClient = ({ initialData }: EditBlogClientProps) => {
   const [saving, setSaving] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [formData, setFormData] = useState<BlogFormData>({
-    title: "",
-    slug: "",
-    excerpt: "",
-    content: "",
-    category: "",
-    tags: "",
-    status: "DRAFT",
+    title: '',
+    slug: '',
+    excerpt: '',
+    content: '',
+    category: '',
+    tags: '',
+    status: 'DRAFT',
     featured: false,
-    metaTitle: "",
-    metaDescription: ""
+    metaTitle: '',
+    metaDescription: ''
   })
 
   // Initialize form data when post data is available
   useEffect(() => {
     if (postData) {
       setFormData({
-        title: postData.title || "",
-        slug: postData.slug || "",
-        excerpt: postData.excerpt || "",
-        content: postData.content || "",
-        category: postData.category || "",
-        tags: postData.tags || "",
-        status: postData.status || "DRAFT",
+        title: postData.title || '',
+        slug: postData.slug || '',
+        excerpt: postData.excerpt || '',
+        content: postData.content || '',
+        category: postData.category || '',
+        tags: postData.tags || '',
+        status: postData.status || 'DRAFT',
         featured: postData.featured || false,
-        metaTitle: postData.metaTitle || "",
-        metaDescription: postData.metaDescription || ""
+        metaTitle: postData.metaTitle || '',
+        metaDescription: postData.metaDescription || ''
       })
     }
   }, [postData])
@@ -70,11 +74,11 @@ export const EditBlogClient = ({ initialData }: EditBlogClientProps) => {
           // Normalize to match UI BlogPost type expectations
           setPostData({
             ...post,
-            metaTitle: post.metaTitle ?? "",
-            metaDescription: post.metaDescription ?? "",
+            metaTitle: post.metaTitle ?? '',
+            metaDescription: post.metaDescription ?? '',
             publishedAt: post.publishedAt ? new Date(post.publishedAt) : null,
             createdAt: new Date(post.createdAt),
-            updatedAt: post.updatedAt ? new Date(post.updatedAt) : null,
+            updatedAt: post.updatedAt ? new Date(post.updatedAt) : null
           } as unknown as BlogPost)
         } catch (error) {
           console.error('[Blog Edit] Error fetching post:', error)
@@ -90,7 +94,10 @@ export const EditBlogClient = ({ initialData }: EditBlogClientProps) => {
   }, [initialData, postData?.id, router])
 
   const updateField = (field: keyof BlogFormData, value: string | boolean) => {
-    setFormData(prev => ({
+    if (field === 'featured') {
+      console.log('[Blog Edit] Featured checkbox changed:', value)
+    }
+    setFormData((prev) => ({
       ...prev,
       [field]: value
     }))
@@ -101,36 +108,44 @@ export const EditBlogClient = ({ initialData }: EditBlogClientProps) => {
     setError(null)
 
     if (!formData.title.trim()) {
-      setError("Blog post title is required")
+      setError('Blog post title is required')
       return
     }
 
     if (!postData?.id) {
-      setError("Blog post ID not found")
+      setError('Blog post ID not found')
       return
     }
 
     setSaving(true)
     try {
+      console.log('[Blog Edit] Submitting update payload:', {
+        id: postData.id,
+        title: formData.title,
+        slug: formData.slug,
+        status: formData.status,
+        featured: formData.featured
+      })
       await updateAdminBlogPost({
-        id: postData.id, ...{
+        id: postData.id,
+        ...{
           title: formData.title,
           slug: formData.slug,
           excerpt: formData.excerpt,
           content: formData.content,
           category: formData.category,
           tags: formData.tags,
-          status: formData.status as "DRAFT" | "PUBLISHED",
+          status: formData.status as 'DRAFT' | 'PUBLISHED',
           featured: formData.featured,
           metaTitle: formData.metaTitle,
           metaDescription: formData.metaDescription
         }
       })
 
-      router.push("/admin/blog")
+      router.push('/admin/blog')
     } catch (error) {
       console.error('[Blog Edit] Error updating post:', error)
-      setError("Failed to update blog post")
+      setError('Failed to update blog post')
     } finally {
       setSaving(false)
     }
@@ -144,10 +159,10 @@ export const EditBlogClient = ({ initialData }: EditBlogClientProps) => {
     setSaving(true)
     try {
       await deleteAdminBlogPost(postData.id)
-      router.push("/admin/blog")
+      router.push('/admin/blog')
     } catch (error) {
       console.error('[Blog Edit] Error deleting post:', error)
-      setError("Failed to delete blog post")
+      setError('Failed to delete blog post')
     } finally {
       setSaving(false)
     }
@@ -188,22 +203,123 @@ export const EditBlogClient = ({ initialData }: EditBlogClientProps) => {
     >
       <div className="space-y-6">
         <div>
-          <label className="block text-sm font-medium mb-2">Title</label>
+          <label className="block text-sm font-medium mb-2">Title *</label>
           <input
             type="text"
             value={formData.title}
             onChange={(e) => updateField('title', e.target.value)}
             className="w-full px-3 py-2 border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/50"
+            placeholder="Enter blog post title"
           />
         </div>
+
         <div>
-          <label className="block text-sm font-medium mb-2">Content</label>
+          <label className="block text-sm font-medium mb-2">Slug</label>
+          <input
+            type="text"
+            value={formData.slug}
+            onChange={(e) => updateField('slug', e.target.value)}
+            className="w-full px-3 py-2 border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/50"
+            placeholder="blog-post-url"
+          />
+        </div>
+
+        <div>
+          <label className="block text-sm font-medium mb-2">Excerpt</label>
+          <textarea
+            value={formData.excerpt}
+            onChange={(e) => updateField('excerpt', e.target.value)}
+            rows={3}
+            className="w-full px-3 py-2 border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/50"
+            placeholder="Brief description of the blog post"
+          />
+        </div>
+
+        <div>
+          <label className="block text-sm font-medium mb-2">Content *</label>
           <textarea
             value={formData.content}
             onChange={(e) => updateField('content', e.target.value)}
-            rows={10}
-            className="w-full px-3 py-2 border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/50"
+            rows={15}
+            className="w-full px-3 py-2 border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/50 font-mono text-sm"
+            placeholder="Write your blog post content in Markdown..."
           />
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div>
+            <label className="block text-sm font-medium mb-2">Category</label>
+            <input
+              type="text"
+              value={formData.category}
+              onChange={(e) => updateField('category', e.target.value)}
+              className="w-full px-3 py-2 border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/50"
+              placeholder="e.g., Technology, Tutorial"
+            />
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium mb-2">Tags</label>
+            <input
+              type="text"
+              value={formData.tags}
+              onChange={(e) => updateField('tags', e.target.value)}
+              className="w-full px-3 py-2 border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/50"
+              placeholder="react, typescript, web development"
+            />
+          </div>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div>
+            <label className="block text-sm font-medium mb-2">Status</label>
+            <select
+              value={formData.status}
+              onChange={(e) => updateField('status', e.target.value)}
+              className="w-full px-3 py-2 border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/50"
+            >
+              <option value="DRAFT">Draft</option>
+              <option value="PUBLISHED">Published</option>
+              <option value="ARCHIVED">Archived</option>
+            </select>
+          </div>
+
+          <div className="flex items-center gap-2 pt-6">
+            <input
+              type="checkbox"
+              id="featured"
+              checked={formData.featured}
+              onChange={(e) => updateField('featured', e.target.checked)}
+              className="rounded border-border"
+            />
+            <label htmlFor="featured" className="text-sm">
+              Featured post
+            </label>
+          </div>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div>
+            <label className="block text-sm font-medium mb-2">Meta Title</label>
+            <input
+              type="text"
+              value={formData.metaTitle}
+              onChange={(e) => updateField('metaTitle', e.target.value)}
+              className="w-full px-3 py-2 border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/50"
+              placeholder="SEO title"
+            />
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium mb-2">Meta Description</label>
+            <textarea
+              value={formData.metaDescription}
+              onChange={(e) => updateField('metaDescription', e.target.value)}
+              rows={3}
+              className="w-full px-3 py-2 border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/50"
+              placeholder="SEO description"
+            />
+          </div>
         </div>
       </div>
       {error && (

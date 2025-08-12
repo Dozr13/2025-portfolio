@@ -1,7 +1,7 @@
-"use client"
+'use client'
 
-import { Icon } from "@/components/ui/icon"
-import Link from "next/link"
+import Link from 'next/link'
+import { Icon } from '../../ui/Icon'
 
 interface AdminErrorStateProps {
   title: string
@@ -12,7 +12,7 @@ interface AdminErrorStateProps {
 
 export function AdminErrorState({
   title,
-  message = "Something went wrong",
+  message = 'Something went wrong',
   backHref,
   backLabel
 }: AdminErrorStateProps) {

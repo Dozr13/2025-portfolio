@@ -1,11 +1,11 @@
-"use client"
+'use client'
 
-import { AdminHeader } from "@/components/admin/shared/AdminHeader"
-import { Icon } from "@/components/ui/icon"
-import { useContacts } from "@/hooks/useContacts"
-import type { Contact } from "@/lib/types"
-import { useState } from "react"
-import { ContactsCard } from "./ContactsCard"
+import { AdminHeader } from '@/components/admin/shared/AdminHeader'
+import { Icon } from '@/components/ui/Icon'
+import { useContacts } from '@/hooks/useContacts'
+import type { Contact } from '@/lib/types'
+import { useState } from 'react'
+import { ContactsCard } from './ContactsCard'
 
 interface ContactsData {
   contacts: Contact[]
@@ -24,9 +24,9 @@ export function ContactsContent({ initialData }: ContactsContentProps) {
     initialData
   })
 
-  const [searchInput, setSearchInput] = useState("")
+  const [searchInput, setSearchInput] = useState('')
   const [filters, setFilters] = useState({
-    status: ""
+    status: ''
   })
 
   const contacts = data?.contacts || []
@@ -109,9 +109,8 @@ export function ContactsContent({ initialData }: ContactsContentProps) {
           <h3 className="text-lg font-medium text-foreground mb-2">No contacts found</h3>
           <p className="text-muted-foreground mb-4">
             {searchInput || filters.status
-              ? "Try adjusting your search or filters"
-              : "No contact messages yet"
-            }
+              ? 'Try adjusting your search or filters'
+              : 'No contact messages yet'}
           </p>
         </div>
       ) : (

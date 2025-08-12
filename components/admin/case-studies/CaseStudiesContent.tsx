@@ -1,12 +1,18 @@
-"use client"
+'use client'
 
-import { AdminHeader } from "@/components/admin/shared/AdminHeader"
-import { Icon } from "@/components/ui/icon"
-import { useCaseStudies } from "@/hooks/useCaseStudies"
-import type { CaseStudy } from "@/lib/types"
+import { AdminHeader } from '@/components/admin/shared/AdminHeader'
+import { Icon } from '@/components/ui/Icon'
+import { useCaseStudies } from '@/hooks/useCaseStudies'
+import type { CaseStudy } from '@/lib/types'
 
-export const CaseStudiesContent = ({ initialData }: { initialData?: { caseStudies: CaseStudy[]; pagination: { pages: number; total: number } } | null }) => {
-  const { data, loading, error, fetchCaseStudies, deleteCaseStudy } = useCaseStudies({ initialData })
+export const CaseStudiesContent = ({
+  initialData
+}: {
+  initialData?: { caseStudies: CaseStudy[]; pagination: { pages: number; total: number } } | null
+}) => {
+  const { data, loading, error, fetchCaseStudies, deleteCaseStudy } = useCaseStudies({
+    initialData
+  })
 
   if (loading && !initialData) {
     return (
@@ -45,7 +51,9 @@ export const CaseStudiesContent = ({ initialData }: { initialData?: { caseStudie
         <div className="text-center py-12">
           <Icon name="book-open" size="lg" className="mx-auto mb-4 text-muted-foreground" />
           <h3 className="text-lg font-medium text-foreground mb-2">No case studies found</h3>
-          <p className="text-muted-foreground mb-4">Create your first case study to showcase in-depth work.</p>
+          <p className="text-muted-foreground mb-4">
+            Create your first case study to showcase in-depth work.
+          </p>
         </div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -53,7 +61,11 @@ export const CaseStudiesContent = ({ initialData }: { initialData?: { caseStudie
             <div key={cs.id} className="bg-card border border-border rounded-lg p-6 space-y-2">
               <div className="flex items-center justify-between">
                 <h3 className="text-lg font-semibold text-foreground">{cs.title}</h3>
-                {cs.featured && <span className="px-2 py-0.5 text-xs bg-primary/10 text-primary rounded-full">Featured</span>}
+                {cs.featured && (
+                  <span className="px-2 py-0.5 text-xs bg-primary/10 text-primary rounded-full">
+                    Featured
+                  </span>
+                )}
               </div>
               <p className="text-muted-foreground text-sm">{cs.company}</p>
               <p className="text-muted-foreground line-clamp-3 text-sm">{cs.overview}</p>
@@ -65,7 +77,7 @@ export const CaseStudiesContent = ({ initialData }: { initialData?: { caseStudie
                   Edit
                 </button>
                 <button
-                  onClick={() => deleteCaseStudy()}
+                  onClick={() => deleteCaseStudy(cs.id, cs.title)}
                   className="px-3 py-1 text-sm bg-red-500/10 text-red-500 rounded hover:bg-red-500/20"
                 >
                   Delete
@@ -78,5 +90,3 @@ export const CaseStudiesContent = ({ initialData }: { initialData?: { caseStudie
     </div>
   )
 }
-
-

@@ -1,6 +1,6 @@
-import { Icon } from "@/components/ui/icon"
-import type { Project } from "@/lib/types"
-import Link from "next/link"
+import { Icon } from '@/components/ui/Icon'
+import type { Project } from '@/lib/types'
+import Link from 'next/link'
 
 interface ProjectsCardProps {
   project: Project
@@ -13,18 +13,18 @@ export const ProjectsCard = ({ project, onDelete, deleting }: ProjectsCardProps)
 
   const getStatusColor = (status: string) => {
     switch (status) {
-      case "COMPLETED":
-        return "bg-green-100 text-green-800 dark:bg-green-900/20 dark:text-green-400"
-      case "IN_PROGRESS":
-        return "bg-blue-100 text-blue-800 dark:bg-blue-900/20 dark:text-blue-400"
-      case "PLANNING":
-        return "bg-yellow-100 text-yellow-800 dark:bg-yellow-900/20 dark:text-yellow-400"
-      case "MAINTAINED":
-        return "bg-purple-100 text-purple-800 dark:bg-purple-900/20 dark:text-purple-400"
-      case "ARCHIVED":
-        return "bg-gray-100 text-gray-800 dark:bg-gray-900/20 dark:text-gray-400"
+      case 'COMPLETED':
+        return 'bg-green-100 text-green-800 dark:bg-green-900/20 dark:text-green-400'
+      case 'IN_PROGRESS':
+        return 'bg-blue-100 text-blue-800 dark:bg-blue-900/20 dark:text-blue-400'
+      case 'PLANNING':
+        return 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/20 dark:text-yellow-400'
+      case 'MAINTAINED':
+        return 'bg-purple-100 text-purple-800 dark:bg-purple-900/20 dark:text-purple-400'
+      case 'ARCHIVED':
+        return 'bg-gray-100 text-gray-800 dark:bg-gray-900/20 dark:text-gray-400'
       default:
-        return "bg-gray-100 text-gray-800 dark:bg-gray-900/20 dark:text-gray-400"
+        return 'bg-gray-100 text-gray-800 dark:bg-gray-900/20 dark:text-gray-400'
     }
   }
 
@@ -40,14 +40,12 @@ export const ProjectsCard = ({ project, onDelete, deleting }: ProjectsCardProps)
               </span>
             )}
           </div>
-          <p className="text-sm text-muted-foreground line-clamp-2 mb-3">
-            {project.description}
-          </p>
+          <p className="text-sm text-muted-foreground line-clamp-2 mb-3">{project.description}</p>
           <div className="flex items-center gap-4 text-sm text-muted-foreground">
-            <span>{project.category.replace(/_/g, " ")}</span>
+            <span>{project.category.replace(/_/g, ' ')}</span>
             <span>•</span>
             <span className={`px-2 py-1 rounded text-xs ${getStatusColor(project.status)}`}>
-              {project.status.replace(/_/g, " ")}
+              {project.status.replace(/_/g, ' ')}
             </span>
             {project._count && (
               <>
@@ -76,7 +74,9 @@ export const ProjectsCard = ({ project, onDelete, deleting }: ProjectsCardProps)
 
       <div className="flex items-center justify-between text-xs text-muted-foreground">
         <span>
-          {project.updatedAt ? `Updated ${new Date(project.updatedAt).toLocaleDateString()}` : 'Updated —'}
+          {project.updatedAt
+            ? `Updated ${new Date(project.updatedAt).toLocaleDateString()}`
+            : 'Updated —'}
         </span>
         <div className="flex items-center gap-4">
           {project.demoUrl && (
