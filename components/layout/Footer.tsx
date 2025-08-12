@@ -1,6 +1,6 @@
 "use client"
 
-import { Icon, type IconName } from "@/components/ui/icon"
+import { Icon, type IconName } from "@/components/ui/Icon"
 import { motion } from "framer-motion"
 
 const socialLinks: {

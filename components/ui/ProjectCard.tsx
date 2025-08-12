@@ -1,6 +1,6 @@
 "use client"
 
-import { Icon } from "@/components/ui/icon"
+import { Icon } from "@/components/ui/Icon"
 import { motion } from "framer-motion"
 
 interface ProjectCardProps {
@@ -18,7 +18,7 @@ interface ProjectCardProps {
   featured?: boolean
 }
 
-export function ProjectCard({
+export const ProjectCard = ({
   title,
   description,
   technologies,
@@ -31,7 +31,7 @@ export function ProjectCard({
   teamSize,
   duration,
   featured
-}: ProjectCardProps) {
+}: ProjectCardProps) => {
   return (
     <motion.div
       initial={{ opacity: 0, y: 50 }}
@@ -49,7 +49,7 @@ export function ProjectCard({
             ⭐ FEATURED
           </div>
         )}
-        
+
         {/* Category Badge */}
         <div className="absolute top-4 left-4 bg-background/90 backdrop-blur-sm border border-border rounded-full px-3 py-1 text-xs font-medium text-muted-foreground">
           {category}

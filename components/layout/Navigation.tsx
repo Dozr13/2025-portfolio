@@ -1,10 +1,10 @@
 "use client"
 
-import { Icon } from "@/components/ui/icon"
+import { Icon } from "@/components/ui/Icon"
 import { AnimatePresence, motion } from "framer-motion"
 import { usePathname, useRouter } from "next/navigation"
 import { useEffect, useState } from "react"
-import { useTheme } from "./theme-provider"
+import { useTheme } from "./ThemeProvider"
 
 const navItems = [
   { name: "Home", href: "/#hero" },
@@ -12,7 +12,7 @@ const navItems = [
   { name: "Skills", href: "/#skills" },
   { name: "Projects", href: "/#projects" },
   { name: "Experience", href: "/#experience" },
-  { name: "Blog", href: "/blog" },
+  { name: "Blog", href: "/#blog" },
   { name: "Contact", href: "/#contact" },
 ]
 
@@ -41,38 +41,33 @@ export const Navigation = () => {
     const [, hash] = href.split('#')
     const isRoot = pathname === '/'
 
-    const doScroll = () => {
-      const selector = `#${hash}`
-      const element = document.querySelector(selector)
-      if (element) {
+    const scrollWithOffset = (el: Element) => {
+      const headerOffset = window.innerWidth >= 1280 ? 120 : window.innerWidth >= 1024 ? 100 : 90
+      const elementPosition = el.getBoundingClientRect().top
+      const offsetPosition = elementPosition + window.pageYOffset - headerOffset
+      window.scrollTo({ top: offsetPosition, behavior: 'smooth' })
+    }
+
+    const waitForElementAndScroll = (selector: string, tries = 30) => {
+      const el = document.querySelector(selector)
+      if (el) {
         setIsOpen(false)
-        setTimeout(() => {
-          const headerOffset = window.innerWidth >= 1280 ? 120 : window.innerWidth >= 1024 ? 100 : 90
-          const elementPosition = element.getBoundingClientRect().top
-          const offsetPosition = elementPosition + window.pageYOffset - headerOffset
-          window.scrollTo({ top: offsetPosition, behavior: 'smooth' })
-        }, 100)
+        // slight delay to ensure layout is finalized
+        setTimeout(() => scrollWithOffset(el), 50)
+        return
       }
+      if (tries <= 0) return
+      setTimeout(() => waitForElementAndScroll(selector, tries - 1), 100)
     }
 
     if (!isRoot) {
       router.push(href)
-      // Let the new page load and then attempt to scroll
-      setTimeout(doScroll, 300)
+      // robustly wait for section to mount after route change/hydration
+      waitForElementAndScroll(`#${hash}`)
       return
     }
 
-    const element = document.querySelector(`#${hash}`)
-    if (element) {
-      setIsOpen(false)
-
-      setTimeout(() => {
-        const headerOffset = window.innerWidth >= 1280 ? 120 : window.innerWidth >= 1024 ? 100 : 90
-        const elementPosition = element.getBoundingClientRect().top
-        const offsetPosition = elementPosition + window.pageYOffset - headerOffset
-        window.scrollTo({ top: offsetPosition, behavior: 'smooth' })
-      }, 100)
-    }
+    waitForElementAndScroll(`#${hash}`)
   }
 
   // Prefetch key routes to avoid white flashes

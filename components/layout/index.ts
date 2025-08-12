@@ -1,3 +1,4 @@
-export { Footer } from "./footer"
-export { Navigation } from "./navigation"
-export { ThemeProvider } from './theme-provider'
+export { Footer } from "./Footer"
+export { Navigation } from "./Navigation"
+export { ThemeProvider } from './ThemeProvider'
+
