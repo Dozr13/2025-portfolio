@@ -4,6 +4,7 @@ import type { ViewMode } from '@/lib/types/ui/view'
 export type SkillsClientProps = Readonly<{
   skills: PublicSkill[]
   mode?: ViewMode
+  immediate?: boolean
 }>
 
 export type SkillsSuspenseProps = Readonly<{
@@ -22,4 +23,3 @@ export type SkillsPreviewProps = Readonly<{
   skills: PublicSkill[]
   className?: string
 }>
-
