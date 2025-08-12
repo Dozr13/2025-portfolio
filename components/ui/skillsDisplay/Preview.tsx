@@ -1,13 +1,13 @@
-"use client"
+'use client'
 
-import { Icon, IconName } from "@/components/ui/Icon"
-import { BREAKPOINTS, PREVIEW_COUNTS, SKILL_CATEGORY_NAMES } from "@/lib/constants"
-import type { PublicSkill } from "@/lib/types/public"
-import { SkillsPreviewProps } from "@/lib/types/sections"
+import { Icon, IconName } from '@/components/ui/Icon'
+import { BREAKPOINTS, PREVIEW_COUNTS, SKILL_CATEGORY_NAMES } from '@/lib/constants'
+import type { PublicSkill } from '@/lib/types/public'
+import { SkillsPreviewProps } from '@/lib/types/sections'
 import { featuredDot, levelDot } from '@/lib/ui'
-import { useEffect, useMemo, useState } from "react"
+import { useEffect, useMemo, useState } from 'react'
 
-export const SkillsPreview = ({ skills, className = "" }: SkillsPreviewProps) => {
+export const SkillsPreview = ({ skills, className = '' }: SkillsPreviewProps) => {
   const [count, setCount] = useState<number>(PREVIEW_COUNTS.sm)
   useEffect(() => {
     const compute = () => {
@@ -17,15 +17,18 @@ export const SkillsPreview = ({ skills, className = "" }: SkillsPreviewProps) =>
       else setCount(PREVIEW_COUNTS.base)
     }
     compute()
-    window.addEventListener("resize", compute)
-    return () => window.removeEventListener("resize", compute)
+    window.addEventListener('resize', compute)
+    return () => window.removeEventListener('resize', compute)
   }, [])
 
   const grouped = useMemo(() => {
-    const byCat = skills.reduce((acc, s) => {
-      ; (acc[s.category] ??= []).push(s)
-      return acc
-    }, {} as Record<string, PublicSkill[]>)
+    const byCat = skills.reduce(
+      (acc, s) => {
+        ;(acc[s.category] ??= []).push(s)
+        return acc
+      },
+      {} as Record<string, PublicSkill[]>
+    )
     const categories = Object.keys(byCat).sort((a, b) =>
       SKILL_CATEGORY_NAMES[a as keyof typeof SKILL_CATEGORY_NAMES].localeCompare(
         SKILL_CATEGORY_NAMES[b as keyof typeof SKILL_CATEGORY_NAMES]
@@ -67,9 +70,14 @@ export const SkillsPreview = ({ skills, className = "" }: SkillsPreviewProps) =>
   }, [grouped, count])
 
   return (
-    <div className={`grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 py-3 ${className}`}>
+    <div
+      className={`grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 py-3 ${className}`}
+    >
       {picked.map((skill) => (
-        <div key={skill.id} className="group bg-card border border-border rounded-lg p-4 hover:border-primary/50 hover:shadow-md transition-all">
+        <div
+          key={skill.id}
+          className="group bg-card border border-border rounded-lg p-4 hover:border-primary/50 hover:shadow-md transition-all"
+        >
           <div className="flex items-start gap-3">
             <div className="w-10 h-10 bg-primary/10 rounded-lg flex items-center justify-center group-hover:bg-primary/20 transition-colors">
               {skill.icon ? (
@@ -81,12 +89,16 @@ export const SkillsPreview = ({ skills, className = "" }: SkillsPreviewProps) =>
             <div className="flex-1 min-w-0">
               <div className="flex items-center gap-2 mb-1">
                 <h4 className="font-medium text-foreground truncate">{skill.name}</h4>
-                {skill.featured && <div className="w-2 h-2 bg-primary rounded-full" title="Featured skill" />}
+                {skill.featured && (
+                  <div className="w-2 h-2 bg-primary rounded-full" title="Featured skill" />
+                )}
               </div>
               <div className="flex items-center gap-2 mb-2">
                 <span className={levelDot({ level: skill.level })} />
                 {skill.featured && <span className={featuredDot} title="Featured skill" />}
-                <span className="text-xs text-muted-foreground capitalize">{skill.level.toLowerCase()}</span>
+                <span className="text-xs text-muted-foreground capitalize">
+                  {skill.level.toLowerCase()}
+                </span>
                 <span className="text-xs text-muted-foreground">• {skill.years ?? 0}y</span>
               </div>
             </div>
@@ -96,5 +108,3 @@ export const SkillsPreview = ({ skills, className = "" }: SkillsPreviewProps) =>
     </div>
   )
 }
-
-

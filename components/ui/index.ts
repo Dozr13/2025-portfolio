@@ -8,12 +8,7 @@ export {
   CardHeader,
   CardTitle
 } from './Card'
-export {
-  getAllIconNames,
-  getIconComponent,
-  getIconLabel,
-  Icon
-} from './Icon'
+export { getAllIconNames, getIconComponent, getIconLabel, Icon, type IconName } from './Icon'
 export { ProjectCard } from './ProjectCard'
 export {
   Select,
@@ -27,11 +22,5 @@ export {
   SelectTrigger,
   SelectValue
 } from './Select'
-export { SkillsDisplay } from './SkillsDisplay'
-export {
-  Tabs,
-  TabsContent,
-  TabsList,
-  TabsTrigger
-} from './Tabs'
-
+export { SkillsDisplay } from './skillsDisplay'
+export { Tabs, TabsContent, TabsList, TabsTrigger } from './Tabs'

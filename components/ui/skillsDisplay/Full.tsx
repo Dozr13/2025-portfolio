@@ -1,28 +1,33 @@
-"use client"
-import { Icon, IconName } from "@/components/ui/Icon"
-import { SKILL_CATEGORY_NAMES } from "@/lib/constants/skills"
-import type { PublicSkill } from "@/lib/types/public"
-import { SkillsFullProps } from "@/lib/types/sections"
-import { featuredDot, levelDot } from "@/lib/ui"
-import { useMemo, useState } from "react"
+'use client'
+import { Icon, IconName } from '@/components/ui/Icon'
+import { SKILL_CATEGORY_NAMES } from '@/lib/constants/skills'
+import type { PublicSkill } from '@/lib/types/public'
+import { SkillsFullProps } from '@/lib/types/sections'
+import { featuredDot, levelDot } from '@/lib/ui'
+import { useMemo, useState } from 'react'
 
 export const SkillsFull = ({
   skills,
-  className = "",
+  className = '',
   showCategories = true,
-  showAllTab = true,
+  showAllTab = true
 }: SkillsFullProps) => {
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null)
-  const [search, setSearch] = useState("")
-  const [levelFilter, setLevelFilter] = useState<"" | "BEGINNER" | "INTERMEDIATE" | "ADVANCED" | "EXPERT">("")
-  const [sortBy, setSortBy] = useState<"FEATURED" | "NAME">("FEATURED")
+  const [search, setSearch] = useState('')
+  const [levelFilter, setLevelFilter] = useState<
+    '' | 'BEGINNER' | 'INTERMEDIATE' | 'ADVANCED' | 'EXPERT'
+  >('')
+  const [sortBy, setSortBy] = useState<'FEATURED' | 'NAME'>('FEATURED')
   const [collapsed, setCollapsed] = useState<Record<string, boolean>>({})
 
   const skillsByCategory = useMemo(() => {
-    return skills.reduce((acc, s) => {
-      ; (acc[s.category] ??= []).push(s)
-      return acc
-    }, {} as Record<string, PublicSkill[]>)
+    return skills.reduce(
+      (acc, s) => {
+        ;(acc[s.category] ??= []).push(s)
+        return acc
+      },
+      {} as Record<string, PublicSkill[]>
+    )
   }, [skills])
 
   const categories = Object.keys(skillsByCategory)
@@ -47,7 +52,7 @@ export const SkillsFull = ({
         )
       }
       if (levelFilter) res = res.filter((s) => s.level === levelFilter)
-      if (sortBy === "FEATURED") {
+      if (sortBy === 'FEATURED') {
         res = [...res].sort((a, b) => {
           if (a.featured && !b.featured) return -1
           if (!a.featured && b.featured) return 1
@@ -71,10 +76,11 @@ export const SkillsFull = ({
           {showAllTab && (
             <button
               onClick={() => setSelectedCategory(null)}
-              className={`px-3 py-1 text-sm rounded-full transition-colors ${!selectedCategory
-                ? "bg-primary text-primary-foreground"
-                : "bg-muted text-muted-foreground hover:bg-muted/80"
-                }`}
+              className={`px-3 py-1 text-sm rounded-full transition-colors ${
+                !selectedCategory
+                  ? 'bg-primary text-primary-foreground'
+                  : 'bg-muted text-muted-foreground hover:bg-muted/80'
+              }`}
             >
               All Skills
             </button>
@@ -83,14 +89,14 @@ export const SkillsFull = ({
             <button
               key={category}
               onClick={() => setSelectedCategory(category)}
-              className={`px-3 py-1 text-sm rounded-full transition-colors ${selectedCategory === category
-                ? "bg-primary text-primary-foreground"
-                : "bg-muted text-muted-foreground hover:bg-muted/80"
-                }`}
+              className={`px-3 py-1 text-sm rounded-full transition-colors ${
+                selectedCategory === category
+                  ? 'bg-primary text-primary-foreground'
+                  : 'bg-muted text-muted-foreground hover:bg-muted/80'
+              }`}
             >
-              {SKILL_CATEGORY_NAMES[category as keyof typeof SKILL_CATEGORY_NAMES]} ({
-                skillsByCategory[category].length
-              })
+              {SKILL_CATEGORY_NAMES[category as keyof typeof SKILL_CATEGORY_NAMES]} (
+              {skillsByCategory[category].length})
             </button>
           ))}
         </div>
@@ -108,14 +114,15 @@ export const SkillsFull = ({
             />
           </div>
           <div className="flex items-center gap-2">
-            {(["BEGINNER", "INTERMEDIATE", "ADVANCED", "EXPERT"] as const).map((lvl) => (
+            {(['BEGINNER', 'INTERMEDIATE', 'ADVANCED', 'EXPERT'] as const).map((lvl) => (
               <button
                 key={lvl}
-                onClick={() => setLevelFilter(levelFilter === lvl ? "" : lvl)}
-                className={`px-2.5 py-1.5 text-xs rounded-full border ${levelFilter === lvl
-                  ? "bg-primary text-primary-foreground border-transparent"
-                  : "bg-muted text-muted-foreground border-border hover:bg-muted/80"
-                  }`}
+                onClick={() => setLevelFilter(levelFilter === lvl ? '' : lvl)}
+                className={`px-2.5 py-1.5 text-xs rounded-full border ${
+                  levelFilter === lvl
+                    ? 'bg-primary text-primary-foreground border-transparent'
+                    : 'bg-muted text-muted-foreground border-border hover:bg-muted/80'
+                }`}
                 aria-pressed={levelFilter === lvl}
               >
                 {lvl.charAt(0) + lvl.slice(1).toLowerCase()}
@@ -129,7 +136,7 @@ export const SkillsFull = ({
             <select
               id="sort"
               value={sortBy}
-              onChange={(e) => setSortBy(e.target.value as "FEATURED" | "NAME")}
+              onChange={(e) => setSortBy(e.target.value as 'FEATURED' | 'NAME')}
               className="h-9 px-2 rounded-md bg-muted text-foreground border border-border focus:outline-none"
             >
               <option value="FEATURED">Featured</option>
@@ -138,9 +145,9 @@ export const SkillsFull = ({
           </div>
           <button
             onClick={() => {
-              setSearch("")
-              setLevelFilter("")
-              setSortBy("FEATURED")
+              setSearch('')
+              setLevelFilter('')
+              setSortBy('FEATURED')
             }}
             className="ml-auto px-3 py-1.5 text-sm rounded-md border border-border bg-muted hover:bg-muted/80"
           >
@@ -165,7 +172,7 @@ export const SkillsFull = ({
                 onClick={() => setCollapsed((prev) => ({ ...prev, [cat]: !prev[cat] }))}
                 className="text-xs px-2 py-1 rounded-md border border-border bg-muted hover:bg-muted/80"
               >
-                {isCollapsed ? "Expand" : "Collapse"}
+                {isCollapsed ? 'Expand' : 'Collapse'}
               </button>
             </div>
             {!isCollapsed && (
@@ -193,11 +200,17 @@ export const SkillsFull = ({
                           <span className="text-xs text-muted-foreground capitalize">
                             {skill.level.toLowerCase()}
                           </span>
-                          <span className="text-xs text-muted-foreground">• {skill.years ?? 0}y</span>
+                          <span className="text-xs text-muted-foreground">
+                            • {skill.years ?? 0}y
+                          </span>
                         </div>
                         {showCategories && (
                           <span className="text-xs text-muted-foreground">
-                            {SKILL_CATEGORY_NAMES[skill.category as keyof typeof SKILL_CATEGORY_NAMES]}
+                            {
+                              SKILL_CATEGORY_NAMES[
+                                skill.category as keyof typeof SKILL_CATEGORY_NAMES
+                              ]
+                            }
                           </span>
                         )}
                       </div>

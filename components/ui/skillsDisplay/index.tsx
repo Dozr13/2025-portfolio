@@ -1,9 +1,9 @@
-"use client"
+'use client'
 
-import type { PublicSkill } from "@/lib/types/public"
-import type { ViewMode } from "@/lib/types/ui/view"
-import { SkillsFull } from "./Full"
-import { SkillsPreview } from "./Preview"
+import type { PublicSkill } from '@/lib/types/public'
+import type { ViewMode } from '@/lib/types/ui/view'
+import { SkillsFull } from './Full'
+import { SkillsPreview } from './Preview'
 
 export type SkillsDisplayProps = Readonly<{
   skills: PublicSkill[]
@@ -15,12 +15,12 @@ export type SkillsDisplayProps = Readonly<{
 
 export const SkillsDisplay = ({
   skills,
-  mode = "full",
+  mode = 'full',
   className,
   showCategories = true,
-  showAllTab = true,
+  showAllTab = true
 }: SkillsDisplayProps) => {
-  if (mode === "preview") return <SkillsPreview skills={skills} className={className} />
+  if (mode === 'preview') return <SkillsPreview skills={skills} className={className} />
 
   return (
     <SkillsFull
