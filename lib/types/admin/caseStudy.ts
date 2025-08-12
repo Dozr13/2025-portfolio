@@ -1,4 +1,3 @@
-// Case Study types
 export interface CaseStudy {
   id: string
   title: string

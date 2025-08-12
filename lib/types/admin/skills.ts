@@ -1,4 +1,3 @@
-// Skill types
 export interface Skill {
   id: string
   name: string

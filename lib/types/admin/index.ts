@@ -10,12 +10,11 @@ export type {
   UseAnalyticsOptions
 } from './analytics'
 export type { BlogPost, BlogPostFormData } from './blog'
-export type { CaseStudy } from './case-study'
+export type { CaseStudy } from './caseStudy'
 export type { Contact } from './contact'
 export type { Project, ProjectFormData } from './project'
 export type { Skill, SkillFormData } from './skills'
 
-// Admin page states
 export interface AdminPageState<T> {
   data: T[]
   loading: boolean
@@ -23,7 +22,6 @@ export interface AdminPageState<T> {
   deleting: string | null
 }
 
-// Admin form states
 export interface AdminFormState<T> {
   formData: T
   loading: boolean

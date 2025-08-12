@@ -1,4 +1,3 @@
-// Analytics types
 export interface AnalyticsTimeSeriesData {
   date: string
   views: number
