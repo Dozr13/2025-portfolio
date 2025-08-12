@@ -1,12 +1,12 @@
-"use server"
+'use server'
 
-import { prisma } from "@/lib/config"
-import { calculateDuration, safeJsonParse } from "@/lib/utils"
+import { prisma } from '@/lib/config'
+import { calculateDuration, safeJsonParse } from '@/lib/utils'
 
 export async function listPublicProjects() {
   const projects = await prisma.project.findMany({
-    where: { status: "COMPLETED", featured: true },
-    orderBy: [{ featured: "desc" }, { order: "asc" }, { endDate: "desc" }],
+    where: { status: 'COMPLETED', featured: true },
+    orderBy: [{ featured: 'desc' }, { order: 'asc' }, { endDate: 'desc' }],
     select: {
       id: true,
       title: true,
@@ -31,8 +31,11 @@ export async function listPublicProjects() {
       order: true,
       createdAt: true,
       updatedAt: true,
-      projectSkills: { select: { skill: { select: { name: true, icon: true } }, importance: true }, orderBy: { importance: "asc" } },
-    },
+      projectSkills: {
+        select: { skill: { select: { name: true, icon: true } }, importance: true },
+        orderBy: { importance: 'asc' }
+      }
+    }
   })
 
   return projects.map((project) => ({
@@ -44,9 +47,12 @@ export async function listPublicProjects() {
     technologies: project.projectSkills.map((ps) => ps.skill.name),
     startDate: project.startDate?.toISOString(),
     endDate: project.endDate?.toISOString(),
-    teamSize: project.teamSize ? `${project.teamSize} ${project.teamSize === 1 ? "person" : "people"}` : "Solo Project",
-    duration: project.startDate && project.endDate ? calculateDuration(project.startDate, project.endDate) : "Ongoing",
+    teamSize: project.teamSize
+      ? `${project.teamSize} ${project.teamSize === 1 ? 'person' : 'people'}`
+      : 'Solo Project',
+    duration:
+      project.startDate && project.endDate
+        ? calculateDuration(project.startDate, project.endDate)
+        : 'Ongoing'
   }))
 }
-
-

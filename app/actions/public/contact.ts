@@ -1,7 +1,7 @@
-"use server"
+'use server'
 
-import { prisma } from "@/lib/config"
-import { z } from "zod"
+import { prisma } from '@/lib/config'
+import { z } from 'zod'
 
 export async function createContact(input: unknown) {
   const schema = z.object({
@@ -14,15 +14,16 @@ export async function createContact(input: unknown) {
     website: z.string().optional(),
     budget: z.string().optional(),
     timeline: z.string().optional(),
-    source: z.string().optional(),
+    source: z.string().optional()
   })
-  const { name, email, subject, message, phone, company, website, budget, timeline, source } = schema.parse(input)
+  const { name, email, subject, message, phone, company, website, budget, timeline, source } =
+    schema.parse(input)
 
   const contact = await prisma.contact.create({
     data: {
       name: name.trim(),
       email: email.trim().toLowerCase(),
-      subject: subject?.trim() || "",
+      subject: subject?.trim() || '',
       message: message.trim(),
       phone: phone?.trim() || null,
       company: company?.trim() || null,
@@ -30,12 +31,10 @@ export async function createContact(input: unknown) {
       budget: budget?.trim() || null,
       timeline: timeline?.trim() || null,
       source: source?.trim() || null,
-      status: "NEW",
-      priority: "MEDIUM",
-    },
+      status: 'NEW',
+      priority: 'MEDIUM'
+    }
   })
 
-  return { success: true as const, message: "Contact saved successfully", contactId: contact.id }
+  return { success: true as const, message: 'Contact saved successfully', contactId: contact.id }
 }
-
-
