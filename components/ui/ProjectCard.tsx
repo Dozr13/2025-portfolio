@@ -1,7 +1,7 @@
-"use client"
+'use client'
 
-import { Icon } from "@/components/ui/Icon"
-import { motion } from "framer-motion"
+import { Icon } from '@/components/ui/Icon'
+import { motion } from 'framer-motion'
 
 interface ProjectCardProps {
   title: string
@@ -116,13 +116,17 @@ export const ProjectCard = ({
             <div className="grid grid-cols-2 gap-4 text-xs">
               {teamSize && (
                 <div>
-                  <span className="text-muted-foreground uppercase tracking-wider font-medium">Team</span>
+                  <span className="text-muted-foreground uppercase tracking-wider font-medium">
+                    Team
+                  </span>
                   <div className="text-foreground font-medium mt-1">{teamSize}</div>
                 </div>
               )}
               {duration && (
                 <div>
-                  <span className="text-muted-foreground uppercase tracking-wider font-medium">Duration</span>
+                  <span className="text-muted-foreground uppercase tracking-wider font-medium">
+                    Duration
+                  </span>
                   <div className="text-foreground font-medium mt-1">{duration}</div>
                 </div>
               )}
@@ -147,7 +151,7 @@ export const ProjectCard = ({
           ) : (
             <div className="flex items-center justify-center gap-2 px-4 py-2.5 h-10 bg-muted text-muted-foreground rounded-lg text-sm font-medium flex-1">
               <Icon name="code" size="sm" />
-              {status || "Coming Soon"}
+              {status || 'Coming Soon'}
             </div>
           )}
 
@@ -166,4 +170,4 @@ export const ProjectCard = ({
       </div>
     </motion.div>
   )
-} 
+}

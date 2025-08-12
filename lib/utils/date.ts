@@ -6,23 +6,23 @@
  * Format a period between two dates with proper handling of current/ongoing periods
  */
 export const formatPeriod = (startDate: Date, endDate: Date | null, current: boolean): string => {
-  const start = startDate.toLocaleDateString('en-US', { 
-    year: 'numeric', 
-    month: 'short' 
+  const start = startDate.toLocaleDateString('en-US', {
+    year: 'numeric',
+    month: 'short'
   })
-  
+
   if (current) {
     return `${start} - Present`
   }
-  
+
   if (endDate) {
-    const end = endDate.toLocaleDateString('en-US', { 
-      year: 'numeric', 
-      month: 'short' 
+    const end = endDate.toLocaleDateString('en-US', {
+      year: 'numeric',
+      month: 'short'
     })
     return `${start} - ${end}`
   }
-  
+
   return start
 }
 
@@ -33,7 +33,7 @@ export function calculateDuration(startDate: Date, endDate: Date): string {
   const diffTime = Math.abs(endDate.getTime() - startDate.getTime())
   const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24))
   const diffMonths = Math.round(diffDays / 30)
-  
+
   if (diffDays <= 7) {
     return `${diffDays} ${diffDays === 1 ? 'day' : 'days'}`
   } else if (diffMonths < 1) {
@@ -50,7 +50,10 @@ export function calculateDuration(startDate: Date, endDate: Date): string {
 /**
  * Format date for display in various formats
  */
-export function formatDate(date: Date, format: 'short' | 'long' | 'numeric' | 'iso' = 'short'): string {
+export function formatDate(
+  date: Date,
+  format: 'short' | 'long' | 'numeric' | 'iso' = 'short'
+): string {
   switch (format) {
     case 'short':
       return date.toLocaleDateString('en-US', {
@@ -87,7 +90,7 @@ export function isDateInRange(date: Date, startDate: Date, endDate: Date): boole
 export function getRelativeTime(date: Date): string {
   const now = new Date()
   const diffInSeconds = Math.floor((now.getTime() - date.getTime()) / 1000)
-  
+
   const intervals = [
     { label: 'year', seconds: 31536000 },
     { label: 'month', seconds: 2592000 },
@@ -97,13 +100,13 @@ export function getRelativeTime(date: Date): string {
     { label: 'minute', seconds: 60 },
     { label: 'second', seconds: 1 }
   ]
-  
+
   for (const interval of intervals) {
     const count = Math.floor(diffInSeconds / interval.seconds)
     if (count >= 1) {
       return `${count} ${interval.label}${count !== 1 ? 's' : ''} ago`
     }
   }
-  
+
   return 'just now'
 }

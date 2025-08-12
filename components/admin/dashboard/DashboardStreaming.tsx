@@ -1,9 +1,9 @@
-"use client"
+'use client'
 
-import { AdminSuspense } from "@/components/admin/shared/AdminSuspense"
-import type { DashboardData } from "@/hooks/useDashboard"
-import { DashboardContent } from "./DashboardContent"
-import { DashboardSkeleton } from "./DashboardSkeleton"
+import { AdminSuspense } from '@/components/admin/shared/AdminSuspense'
+import type { DashboardData } from '@/hooks/useDashboard'
+import { DashboardContent } from './DashboardContent'
+import { DashboardSkeleton } from './DashboardSkeleton'
 
 interface DashboardStreamingProps {
   initialData: DashboardData | null

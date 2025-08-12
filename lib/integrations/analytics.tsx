@@ -7,7 +7,10 @@ import { envConfig, getAnalyticsConfig } from '../config'
 export const analyticsConfig = getAnalyticsConfig()
 
 // Track admin actions
-export function trackAdminAction(action: string, details?: Record<string, string | number | boolean>) {
+export function trackAdminAction(
+  action: string,
+  details?: Record<string, string | number | boolean>
+) {
   if (!analyticsConfig.enabled || !analyticsConfig.trackingEnabled) {
     console.log(`[Analytics - ${envConfig.NODE_ENV}] Event: admin_action`, { action, ...details })
     return
@@ -33,4 +36,3 @@ export function AnalyticsProvider({ children }: { children: ReactNode }) {
     </>
   )
 }
-

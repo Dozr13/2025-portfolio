@@ -1,8 +1,8 @@
-"use client"
+'use client'
 
-import { listProjects } from "@/app/actions/admin/projects"
-import type { Project } from "@/lib/types"
-import { useCallback, useEffect, useState } from "react"
+import { listProjects } from '@/app/actions/admin/projects'
+import type { Project } from '@/lib/types'
+import { useCallback, useEffect, useState } from 'react'
 
 interface ProjectsData {
   projects: Project[]
@@ -48,7 +48,7 @@ export function useProjects(options: UseProjectsOptions = {}) {
         limit: parseInt(params.limit || '10'),
         status: params.status || null,
         category: params.category || null,
-        search: params.search || null,
+        search: params.search || null
       } as ProjectFilters)
       type ActionProject = {
         id: string
@@ -101,9 +101,9 @@ export function useProjects(options: UseProjectsOptions = {}) {
           order: p.order ?? null,
           createdAt: p.createdAt,
           updatedAt: p.updatedAt,
-          _count: p._count,
+          _count: p._count
         })),
-        pagination: result.pagination,
+        pagination: result.pagination
       }
       setData(normalized)
     } catch (err) {
@@ -114,23 +114,26 @@ export function useProjects(options: UseProjectsOptions = {}) {
     }
   }, [])
 
-  const deleteProject = useCallback(async (id: string) => {
-    if (!confirm("Are you sure you want to delete this project?")) return
+  const deleteProject = useCallback(
+    async (id: string) => {
+      if (!confirm('Are you sure you want to delete this project?')) return
 
-    setDeleting(id)
-    try {
-      await deleteProject(id)
-      // Refresh the data after deletion
-      if (data) {
-        await fetchProjects({ page: data.pagination.pages > 1 ? data.pagination.pages : 1 })
+      setDeleting(id)
+      try {
+        await deleteProject(id)
+        // Refresh the data after deletion
+        if (data) {
+          await fetchProjects({ page: data.pagination.pages > 1 ? data.pagination.pages : 1 })
+        }
+      } catch (err) {
+        console.error('[useProjects] Error deleting project:', err)
+        setError('Failed to delete project')
+      } finally {
+        setDeleting(null)
       }
-    } catch (err) {
-      console.error('[useProjects] Error deleting project:', err)
-      setError('Failed to delete project')
-    } finally {
-      setDeleting(null)
-    }
-  }, [data, fetchProjects])
+    },
+    [data, fetchProjects]
+  )
 
   // Initial fetch if no initial data
   useEffect(() => {

@@ -1,9 +1,9 @@
-"use client"
+'use client'
 
-import { AdminSuspense } from "@/components/admin/shared/AdminSuspense"
-import type { BlogPost } from "@/lib/types"
-import { BlogContent } from "./BlogContent"
-import { BlogSkeleton } from "./BlogSkeleton"
+import { AdminSuspense } from '@/components/admin/shared/AdminSuspense'
+import type { BlogPost } from '@/lib/types'
+import { BlogContent } from './BlogContent'
+import { BlogSkeleton } from './BlogSkeleton'
 
 interface BlogData {
   posts: BlogPost[]

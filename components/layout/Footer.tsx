@@ -1,23 +1,23 @@
-"use client"
+'use client'
 
-import { Icon, type IconName } from "@/components/ui/Icon"
-import { motion } from "framer-motion"
+import { Icon, type IconName } from '@/components/ui/Icon'
+import { motion } from 'framer-motion'
 
 const socialLinks: {
   icon: IconName
   href: string
   label: string
 }[] = [
-    { icon: "github", href: "https://github.com/Dozr13", label: "GitHub" },
-    { icon: "linkedin", href: "https://www.linkedin.com/in/wadejp8/", label: "LinkedIn" },
-    { icon: "mail", href: "mailto:wadejp8@gmail.com", label: "Email" },
-  ]
+  { icon: 'github', href: 'https://github.com/Dozr13', label: 'GitHub' },
+  { icon: 'linkedin', href: 'https://www.linkedin.com/in/wadejp8/', label: 'LinkedIn' },
+  { icon: 'mail', href: 'mailto:wadejp8@gmail.com', label: 'Email' }
+]
 
 export const Footer = () => {
   const scrollToTop = () => {
     window.scrollTo({
       top: 0,
-      behavior: "smooth"
+      behavior: 'smooth'
     })
   }
 
@@ -56,16 +56,11 @@ export const Footer = () => {
           {/* Copyright */}
           <div className="flex items-center text-sm text-muted-foreground">
             <span>© 2025 Built with</span>
-            <Icon
-              name="heart"
-              size="sm"
-              className="mx-1 text-red-500"
-              decorative
-            />
+            <Icon name="heart" size="sm" className="mx-1 text-red-500" decorative />
             <span>by Wade Pate. All rights reserved.</span>
           </div>
         </div>
       </div>
     </footer>
   )
-} 
+}

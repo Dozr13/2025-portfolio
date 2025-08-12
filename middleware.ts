@@ -5,7 +5,7 @@ import { NextResponse } from 'next/server'
 
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl
-  
+
   // Apply auth to admin routes except public admin pages
   const isAdminRoute = pathname.startsWith('/admin')
   const isPublicAdmin = pathname === '/admin' || pathname === '/admin/login'
@@ -20,7 +20,7 @@ export async function middleware(request: NextRequest) {
     try {
       // Verify the token
       await jwtVerify(token, JWT_SECRET)
-      
+
       // Token is valid, allow the request to proceed
       return NextResponse.next()
     } catch {

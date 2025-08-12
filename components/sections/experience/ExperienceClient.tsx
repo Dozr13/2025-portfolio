@@ -1,13 +1,16 @@
-"use client"
+'use client'
 
-import { PublicExperience } from "@/lib/types/public"
-import { motion } from "framer-motion"
-import { ExperienceTimeline } from "./ExperienceTimeline"
+import { PublicExperience } from '@/lib/types/public'
+import { motion } from 'framer-motion'
+import { ExperienceTimeline } from './ExperienceTimeline'
 
 export const ExperienceClient = ({
   experiences,
   immediate = false
-}: { experiences: PublicExperience[]; immediate?: boolean }) => {
+}: {
+  experiences: PublicExperience[]
+  immediate?: boolean
+}) => {
   const hasItems = experiences && experiences.length > 0
   return (
     <section id="experience" className="py-20 bg-background">

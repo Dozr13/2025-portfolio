@@ -1,8 +1,8 @@
-"use client"
+'use client'
 
-import { ReactNode } from "react"
-import { AdminErrorState } from "./AdminErrorState"
-import { AdminLoadingState } from "./AdminLoadingState"
+import { ReactNode } from 'react'
+import { AdminErrorState } from './AdminErrorState'
+import { AdminLoadingState } from './AdminLoadingState'
 
 interface AdminPageWrapperProps {
   loading: boolean
@@ -18,11 +18,11 @@ interface AdminPageWrapperProps {
 export function AdminPageWrapper({
   loading,
   error,
-  errorTitle = "Error",
-  errorMessage = "Something went wrong",
+  errorTitle = 'Error',
+  errorMessage = 'Something went wrong',
   backHref,
-  backLabel = "Go Back",
-  loadingMessage = "Loading...",
+  backLabel = 'Go Back',
+  loadingMessage = 'Loading...',
   children
 }: AdminPageWrapperProps) {
   if (loading) {

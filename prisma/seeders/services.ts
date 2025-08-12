@@ -9,7 +9,8 @@ export const services: Array<
   {
     name: 'Full-Stack Web Development',
     slug: 'full-stack-web-development',
-    description: 'Complete web application development from concept to deployment, including frontend, backend, and database design.',
+    description:
+      'Complete web application development from concept to deployment, including frontend, backend, and database design.',
     features: JSON.stringify([
       'Custom web application development',
       'Responsive design for all devices',
@@ -30,7 +31,8 @@ export const services: Array<
   {
     name: 'E-Commerce Solutions',
     slug: 'ecommerce-solutions',
-    description: 'Custom e-commerce platforms with payment processing, inventory management, and analytics.',
+    description:
+      'Custom e-commerce platforms with payment processing, inventory management, and analytics.',
     features: JSON.stringify([
       'Custom e-commerce platform development',
       'Payment gateway integration',
@@ -51,7 +53,8 @@ export const services: Array<
   {
     name: 'API Development & Integration',
     slug: 'api-development-integration',
-    description: 'RESTful APIs, GraphQL endpoints, and third-party service integrations for scalable applications.',
+    description:
+      'RESTful APIs, GraphQL endpoints, and third-party service integrations for scalable applications.',
     features: JSON.stringify([
       'RESTful API development',
       'GraphQL endpoint creation',
@@ -72,7 +75,8 @@ export const services: Array<
   {
     name: 'Technical Consulting',
     slug: 'technical-consulting',
-    description: 'Architecture review, performance optimization, and technology strategy consulting.',
+    description:
+      'Architecture review, performance optimization, and technology strategy consulting.',
     features: JSON.stringify([
       'Technical architecture review',
       'Performance optimization audit',
@@ -93,8 +97,8 @@ export const services: Array<
 ]
 
 export async function seedServices() {
-  console.log("Seeding services...")
-  
+  console.log('Seeding services...')
+
   for (const service of services) {
     await prisma.service.upsert({
       where: { slug: service.slug },
@@ -103,5 +107,5 @@ export async function seedServices() {
     })
   }
 
-  console.log("Services seeded successfully")
+  console.log('Services seeded successfully')
 }

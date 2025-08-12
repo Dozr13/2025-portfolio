@@ -1,5 +1,5 @@
-import { clsx, type ClassValue } from "clsx"
-import { twMerge } from "tailwind-merge"
+import { clsx, type ClassValue } from 'clsx'
+import { twMerge } from 'tailwind-merge'
 
 // ============================================================================
 // UI UTILITIES
@@ -24,7 +24,7 @@ export function createVariantClasses(
     .map(([key, value]) => variants[key]?.[value])
     .filter(Boolean)
     .join(' ')
-  
+
   return cn(base, variantClasses)
 }
 
@@ -54,7 +54,7 @@ export function throttle<T extends (...args: unknown[]) => void>(
     if (!inThrottle) {
       func(...args)
       inThrottle = true
-      setTimeout(() => inThrottle = false, limit)
+      setTimeout(() => (inThrottle = false), limit)
     }
   }
 }

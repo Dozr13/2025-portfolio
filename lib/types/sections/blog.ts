@@ -1,4 +1,4 @@
-import { PublicBlogPost } from "../public"
+import { PublicBlogPost } from '../public'
 
 export type BlogClientProps = Readonly<{
   posts: PublicBlogPost[]

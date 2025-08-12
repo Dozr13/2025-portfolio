@@ -3,9 +3,10 @@ import { prisma } from '@/lib/prisma'
 
 const blogPosts = [
   {
-    title: "Building Scalable React Applications with Modern Architecture",
-    slug: "scalable-react-applications-modern-architecture",
-    excerpt: "Deep dive into component composition, state management patterns, and performance optimization techniques that scale with your team and codebase.",
+    title: 'Building Scalable React Applications with Modern Architecture',
+    slug: 'scalable-react-applications-modern-architecture',
+    excerpt:
+      'Deep dive into component composition, state management patterns, and performance optimization techniques that scale with your team and codebase.',
     content: `# Building Scalable React Applications with Modern Architecture
 
 React applications can quickly become unwieldy as they grow. In this comprehensive guide, we'll explore proven patterns and techniques for building applications that scale with your team and requirements.
@@ -115,18 +116,19 @@ test('displays user information correctly', () => {
 ## Conclusion
 
 Building scalable React applications requires thoughtful architecture decisions from the start. By implementing these patterns and practices, you'll create applications that are maintainable, performant, and ready to grow with your business needs.`,
-    category: "Frontend",
-    tags: "React,TypeScript,Performance,Architecture",
+    category: 'Frontend',
+    tags: 'React,TypeScript,Performance,Architecture',
     readingTime: 8,
     status: PostStatus.PUBLISHED,
-    publishedAt: new Date("2024-12-15"),
+    publishedAt: new Date('2024-12-15'),
     views: 2847,
-    author: "Wade Pate"
+    author: 'Wade Pate'
   },
   {
-    title: "Microservices with Next.js: Event-Driven Architecture",
-    slug: "microservices-nextjs-event-driven-architecture",
-    excerpt: "How to design and implement event-driven microservices using Next.js API routes, message queues, and distributed patterns for enterprise applications.",
+    title: 'Microservices with Next.js: Event-Driven Architecture',
+    slug: 'microservices-nextjs-event-driven-architecture',
+    excerpt:
+      'How to design and implement event-driven microservices using Next.js API routes, message queues, and distributed patterns for enterprise applications.',
     content: `# Microservices with Next.js: Event-Driven Architecture
 
 Next.js isn't just for frontend applications. With its powerful API routes and serverless capabilities, it's an excellent choice for building microservices architectures.
@@ -280,18 +282,19 @@ services:
 \`\`\`
 
 Building microservices with Next.js provides the perfect balance of developer experience and production readiness for modern applications.`,
-    category: "Backend",
-    tags: "Next.js,Microservices,Node.js,Architecture",
+    category: 'Backend',
+    tags: 'Next.js,Microservices,Node.js,Architecture',
     readingTime: 12,
     status: PostStatus.PUBLISHED,
-    publishedAt: new Date("2024-12-08"),
+    publishedAt: new Date('2024-12-08'),
     views: 1923,
-    author: "Wade Pate"
+    author: 'Wade Pate'
   },
   {
-    title: "Database Optimization: From Queries to Schema Design",
-    slug: "database-optimization-queries-schema-design",
-    excerpt: "Advanced techniques for optimizing PostgreSQL performance, including indexing strategies, query optimization, and schema design patterns.",
+    title: 'Database Optimization: From Queries to Schema Design',
+    slug: 'database-optimization-queries-schema-design',
+    excerpt:
+      'Advanced techniques for optimizing PostgreSQL performance, including indexing strategies, query optimization, and schema design patterns.',
     content: `# Database Optimization: From Queries to Schema Design
 
 Database performance is critical for application success. This guide covers comprehensive optimization strategies for PostgreSQL.
@@ -469,19 +472,19 @@ ORDER BY pg_total_relation_size(schemaname||'.'||tablename) DESC;
 \`\`\`
 
 Proper database optimization requires ongoing attention to query patterns, index usage, and performance metrics. These techniques will help you build applications that scale efficiently.`,
-    category: "Database",
-    tags: "PostgreSQL,Performance,Optimization,Database",
+    category: 'Database',
+    tags: 'PostgreSQL,Performance,Optimization,Database',
     readingTime: 7,
     status: PostStatus.PUBLISHED,
-    publishedAt: new Date("2024-11-12"),
+    publishedAt: new Date('2024-11-12'),
     views: 1247,
-    author: "Wade Pate"
+    author: 'Wade Pate'
   }
 ]
 
 async function seedBlogPosts() {
-  console.log("Seeding blog posts...")
-  
+  console.log('Seeding blog posts...')
+
   for (const post of blogPosts) {
     await prisma.blogPost.upsert({
       where: { slug: post.slug },
@@ -491,7 +494,7 @@ async function seedBlogPosts() {
     console.log(`Blog post ${post.title} seeded successfully`)
   }
 
-  console.log("Blog posts seeded successfully")
+  console.log('Blog posts seeded successfully')
 }
 
 async function main() {

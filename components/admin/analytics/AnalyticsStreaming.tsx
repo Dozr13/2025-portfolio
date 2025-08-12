@@ -1,4 +1,4 @@
-"use client"
+'use client'
 
 import { AdminSuspense } from '@/components/admin/shared/AdminSuspense'
 import { StatsData } from '@/lib/types/admin/analytics'

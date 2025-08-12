@@ -1,8 +1,8 @@
-"use client"
+'use client'
 
-import type { PublicExperience } from "@/lib/types/public"
-import { formatPeriod } from "@/lib/utils"
-import { motion } from "framer-motion"
+import type { PublicExperience } from '@/lib/types/public'
+import { formatPeriod } from '@/lib/utils'
+import { motion } from 'framer-motion'
 
 export type ExperienceItemProps = Readonly<{
   exp: PublicExperience
@@ -25,7 +25,7 @@ export const ExperienceItem = ({ exp, index, immediate = false }: ExperienceItem
         <div className="w-3 h-3 rounded-full bg-primary ring-4 ring-primary/20" />
       </div>
 
-      <div className={`md:flex ${sideIsLeft ? "md:justify-start" : "md:justify-end"}`}>
+      <div className={`md:flex ${sideIsLeft ? 'md:justify-start' : 'md:justify-end'}`}>
         <motion.article
           initial={immediate ? { opacity: 1, y: 0 } : { opacity: 0, y: 24 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -39,7 +39,7 @@ export const ExperienceItem = ({ exp, index, immediate = false }: ExperienceItem
           </div>
           <div className="text-muted-foreground mb-4">
             {exp.company}
-            {exp.location ? ` • ${exp.location}` : ""}
+            {exp.location ? ` • ${exp.location}` : ''}
           </div>
           {exp.description && (
             <p className="text-foreground/90 mb-4 leading-relaxed">{exp.description}</p>
@@ -61,5 +61,3 @@ export const ExperienceItem = ({ exp, index, immediate = false }: ExperienceItem
     </div>
   )
 }
-
-

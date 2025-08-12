@@ -7,15 +7,15 @@ import { prisma } from '../../lib/prisma'
 
 async function main() {
   console.log('Starting cleanup of sample data...\n')
-  
+
   try {
     // Delete sample projects (these look like seed data, not real projects)
     const sampleProjectSlugs = [
       'ecommerce-platform',
-      'task-management-dashboard', 
+      'task-management-dashboard',
       'ai-analytics-api'
     ]
-    
+
     console.log('Removing sample projects...')
     for (const slug of sampleProjectSlugs) {
       const deleted = await prisma.project.deleteMany({
@@ -25,15 +25,15 @@ async function main() {
         console.log(`Deleted project: ${slug}`)
       }
     }
-    
+
     // Delete sample testimonials
     console.log('\nRemoving sample testimonials...')
     const sampleTestimonialEmails = [
       'sarah@techstartup.com',
-      'michael@innovatecorp.com', 
+      'michael@innovatecorp.com',
       'emily@greentech.com'
     ]
-    
+
     for (const email of sampleTestimonialEmails) {
       const deleted = await prisma.testimonial.deleteMany({
         where: { email }
@@ -42,14 +42,11 @@ async function main() {
         console.log(`Deleted testimonial from: ${email}`)
       }
     }
-    
+
     // Delete sample contacts
     console.log('\nRemoving sample contacts...')
-    const sampleContactEmails = [
-      'john.smith@example.com',
-      'lisa@ecommercestore.com'
-    ]
-    
+    const sampleContactEmails = ['john.smith@example.com', 'lisa@ecommercestore.com']
+
     for (const email of sampleContactEmails) {
       const deleted = await prisma.contact.deleteMany({
         where: { email }
@@ -58,10 +55,9 @@ async function main() {
         console.log(`Deleted contact from: ${email}`)
       }
     }
-    
+
     console.log('\nSample data cleanup completed!')
     console.log('Your database now only contains real data.')
-    
   } catch (error) {
     console.error('Cleanup failed:', error)
     throw error

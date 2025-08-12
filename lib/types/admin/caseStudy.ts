@@ -44,4 +44,3 @@ export interface CaseStudyFormData {
   liveUrl?: string
   featured: boolean
 }
-

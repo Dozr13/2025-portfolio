@@ -9,7 +9,7 @@ export interface Contact {
   website: string | null
   budget: string | null
   timeline: string | null
-  source: string | null 
+  source: string | null
   status: string
   priority: string
   notes: string | null

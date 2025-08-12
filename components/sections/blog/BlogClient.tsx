@@ -1,9 +1,9 @@
-"use client"
+'use client'
 
-import { Icon } from "@/components/ui/Icon"
-import { BlogClientProps } from "@/lib/types/sections"
-import { motion } from "framer-motion"
-import Link from "next/link"
+import { Icon } from '@/components/ui/Icon'
+import { BlogClientProps } from '@/lib/types/sections'
+import { motion } from 'framer-motion'
+import Link from 'next/link'
 
 export const BlogClient = ({ posts, immediate = false }: BlogClientProps) => {
   const featuredPosts = posts.slice(0, 3)
@@ -59,9 +59,7 @@ export const BlogClient = ({ posts, immediate = false }: BlogClientProps) => {
 
               {/* Card Content */}
               <div className="p-6">
-                <p className="text-muted-foreground mb-4 line-clamp-3">
-                  {post.excerpt}
-                </p>
+                <p className="text-muted-foreground mb-4 line-clamp-3">{post.excerpt}</p>
 
                 {/* Meta Information */}
                 <div className="flex items-center justify-between text-sm text-muted-foreground mb-4">

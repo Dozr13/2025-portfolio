@@ -1,7 +1,7 @@
-"use client"
+'use client'
 
-import { AdminFormSection } from "./AdminFormSection"
-import { FormCheckbox, FormField, FormInput, FormSelect, FormTextarea } from "./FormField"
+import { AdminFormSection } from './AdminFormSection'
+import { FormCheckbox, FormField, FormInput, FormSelect, FormTextarea } from './FormField'
 
 interface ProjectFormData {
   title: string
@@ -25,31 +25,39 @@ interface ProjectFormFieldsProps {
 }
 
 export const projectCategories = [
-  { value: "WEB_APP", label: "Web Application" },
-  { value: "MOBILE_APP", label: "Mobile Application" },
-  { value: "DESKTOP_APP", label: "Desktop Application" },
-  { value: "API", label: "API/Backend" },
-  { value: "LIBRARY", label: "Library/Package" },
-  { value: "TOOL", label: "Tool/Utility" },
-  { value: "OTHER", label: "Other" }
+  { value: 'WEB_APP', label: 'Web Application' },
+  { value: 'MOBILE_APP', label: 'Mobile Application' },
+  { value: 'DESKTOP_APP', label: 'Desktop Application' },
+  { value: 'API', label: 'API/Backend' },
+  { value: 'LIBRARY', label: 'Library/Package' },
+  { value: 'TOOL', label: 'Tool/Utility' },
+  { value: 'OTHER', label: 'Other' }
 ]
 
 export const projectStatuses = [
-  { value: "COMPLETED", label: "Completed" },
-  { value: "IN_PROGRESS", label: "In Progress" },
-  { value: "PLANNED", label: "Planned" },
-  { value: "ON_HOLD", label: "On Hold" }
+  { value: 'COMPLETED', label: 'Completed' },
+  { value: 'IN_PROGRESS', label: 'In Progress' },
+  { value: 'PLANNED', label: 'Planned' },
+  { value: 'ON_HOLD', label: 'On Hold' }
 ]
 
 export const ProjectFormFields = ({ formData, onChange }: ProjectFormFieldsProps) => {
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
+  ) => {
     const { name, value, type } = e.target
-    onChange(name as keyof ProjectFormData, type === "checkbox" ? (e.target as HTMLInputElement).checked : value)
+    onChange(
+      name as keyof ProjectFormData,
+      type === 'checkbox' ? (e.target as HTMLInputElement).checked : value
+    )
   }
 
   const handleTitleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const title = e.target.value
-    const slug = title.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "")
+    const slug = title
+      .toLowerCase()
+      .replace(/[^a-z0-9]+/g, '-')
+      .replace(/^-|-$/g, '')
     onChange('title', title)
     onChange('slug', slug)
   }

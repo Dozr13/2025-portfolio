@@ -18,7 +18,7 @@ const globalAuthState = {
 }
 
 const notifyListeners = () => {
-  globalAuthState.listeners.forEach(listener => listener())
+  globalAuthState.listeners.forEach((listener) => listener())
 }
 
 // Global function to refresh auth state
@@ -66,19 +66,18 @@ export function useAdminAuth() {
   useEffect(() => {
     const checkAuth = async () => {
       // Prevent multiple simultaneous auth checks
-      if (globalAuthState.isChecking) {        
+      if (globalAuthState.isChecking) {
         return
       }
 
       globalAuthState.isChecking = true
-            
+
       // Add small delay to ensure localStorage is available
-      await new Promise(resolve => setTimeout(resolve, 100))
-      
+      await new Promise((resolve) => setTimeout(resolve, 100))
+
       try {
         // Check if we're in the browser
         if (typeof window === 'undefined') {
-          
           return
         }
 
@@ -104,7 +103,6 @@ export function useAdminAuth() {
     // Listen for storage changes (login in another tab)
     const handleStorageChange = (e: StorageEvent) => {
       if (e.key === 'adminToken' || e.key === 'adminUser') {
-        
         refreshAuthState()
       }
     }
@@ -116,7 +114,7 @@ export function useAdminAuth() {
 
     // Add storage event listener
     window.addEventListener('storage', handleStorageChange)
-    
+
     return () => {
       window.removeEventListener('storage', handleStorageChange)
     }
@@ -128,12 +126,12 @@ export function useAdminAuth() {
       globalAuthState.isAuthenticated = false
       globalAuthState.isLoading = false
       notifyListeners()
-      router.push("/admin/login")
+      router.push('/admin/login')
     })
   }
 
-  const redirectToLogin = useCallback(() => {    
-    router.push("/admin/login")
+  const redirectToLogin = useCallback(() => {
+    router.push('/admin/login')
   }, [router])
 
   return {

@@ -14,22 +14,34 @@ export const markdownToHtml = (markdown: string): string => {
 
     // Check for headers
     if (text.startsWith('# ')) {
-      result.push(`<h1 class="text-4xl lg:text-5xl font-bold mb-8 text-foreground leading-tight">${text.slice(2)}</h1>`)
+      result.push(
+        `<h1 class="text-4xl lg:text-5xl font-bold mb-8 text-foreground leading-tight">${text.slice(2)}</h1>`
+      )
     } else if (text.startsWith('## ')) {
-      result.push(`<h2 class="text-2xl lg:text-3xl font-semibold mb-6 mt-12 text-foreground leading-tight border-b border-border/30 pb-2">${text.slice(3)}</h2>`)
+      result.push(
+        `<h2 class="text-2xl lg:text-3xl font-semibold mb-6 mt-12 text-foreground leading-tight border-b border-border/30 pb-2">${text.slice(3)}</h2>`
+      )
     } else if (text.startsWith('### ')) {
-      result.push(`<h3 class="text-xl lg:text-2xl font-semibold mb-4 mt-8 text-foreground leading-tight">${text.slice(4)}</h3>`)
+      result.push(
+        `<h3 class="text-xl lg:text-2xl font-semibold mb-4 mt-8 text-foreground leading-tight">${text.slice(4)}</h3>`
+      )
     } else {
       // Check for lists
       if (text.match(/^\d+\.\s/)) {
         // Ordered list
-        result.push(`<ol class="mb-6 ml-6 space-y-2 text-lg lg:text-xl text-foreground/90"><li class="leading-relaxed">${text.replace(/^\d+\.\s/, '')}</li></ol>`)
+        result.push(
+          `<ol class="mb-6 ml-6 space-y-2 text-lg lg:text-xl text-foreground/90"><li class="leading-relaxed">${text.replace(/^\d+\.\s/, '')}</li></ol>`
+        )
       } else if (text.match(/^[-*]\s/)) {
         // Unordered list
-        result.push(`<ul class="mb-6 ml-6 space-y-2 text-lg lg:text-xl text-foreground/90"><li class="leading-relaxed">${text.replace(/^[-*]\s/, '')}</li></ul>`)
+        result.push(
+          `<ul class="mb-6 ml-6 space-y-2 text-lg lg:text-xl text-foreground/90"><li class="leading-relaxed">${text.replace(/^[-*]\s/, '')}</li></ul>`
+        )
       } else {
         // Regular paragraph
-        result.push(`<p class="mb-6 leading-relaxed text-foreground/90 text-lg lg:text-xl">${text}</p>`)
+        result.push(
+          `<p class="mb-6 leading-relaxed text-foreground/90 text-lg lg:text-xl">${text}</p>`
+        )
       }
     }
   }
@@ -43,7 +55,9 @@ export const markdownToHtml = (markdown: string): string => {
         // End of code block
         inCodeBlock = false
         const codeContent = codeBlockContent.join('\n')
-        result.push(`<pre class="bg-muted/50 p-6 rounded-xl overflow-x-auto my-6 border border-border/50 shadow-lg backdrop-blur-sm"><code class="text-sm text-foreground/90 font-mono leading-relaxed">${codeContent}</code></pre>`)
+        result.push(
+          `<pre class="bg-muted/50 p-6 rounded-xl overflow-x-auto my-6 border border-border/50 shadow-lg backdrop-blur-sm"><code class="text-sm text-foreground/90 font-mono leading-relaxed">${codeContent}</code></pre>`
+        )
         codeBlockContent = []
       } else {
         // Start of code block
@@ -71,15 +85,21 @@ export const markdownToHtml = (markdown: string): string => {
     if (line.startsWith('# ')) {
       processParagraph(currentParagraph)
       currentParagraph = []
-      result.push(`<h1 class="text-4xl lg:text-5xl font-bold mb-8 text-foreground leading-tight">${line.slice(2)}</h1>`)
+      result.push(
+        `<h1 class="text-4xl lg:text-5xl font-bold mb-8 text-foreground leading-tight">${line.slice(2)}</h1>`
+      )
     } else if (line.startsWith('## ')) {
       processParagraph(currentParagraph)
       currentParagraph = []
-      result.push(`<h2 class="text-2xl lg:text-3xl font-semibold mb-6 mt-12 text-foreground leading-tight border-b border-border/30 pb-2">${line.slice(3)}</h2>`)
+      result.push(
+        `<h2 class="text-2xl lg:text-3xl font-semibold mb-6 mt-12 text-foreground leading-tight border-b border-border/30 pb-2">${line.slice(3)}</h2>`
+      )
     } else if (line.startsWith('### ')) {
       processParagraph(currentParagraph)
       currentParagraph = []
-      result.push(`<h3 class="text-xl lg:text-2xl font-semibold mb-4 mt-8 text-foreground leading-tight">${line.slice(4)}</h3>`)
+      result.push(
+        `<h3 class="text-xl lg:text-2xl font-semibold mb-4 mt-8 text-foreground leading-tight">${line.slice(4)}</h3>`
+      )
     } else {
       // Regular text line
       currentParagraph.push(line)

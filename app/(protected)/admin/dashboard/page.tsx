@@ -17,16 +17,14 @@ export default async function AdminDashboardPage() {
     stats && contacts
       ? {
           stats,
-          recentContacts: (contacts.contacts || [])
-            .slice(0, 5)
-            .map((c) => ({
-              id: c.id,
-              name: c.name,
-              email: c.email,
-              subject: c.subject ?? '',
-              status: c.status,
-              createdAt: c.createdAt
-            }))
+          recentContacts: (contacts.contacts || []).slice(0, 5).map((c) => ({
+            id: c.id,
+            name: c.name,
+            email: c.email,
+            subject: c.subject ?? '',
+            status: c.status,
+            createdAt: c.createdAt
+          }))
         }
       : null
 

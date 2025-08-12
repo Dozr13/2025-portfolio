@@ -1,9 +1,9 @@
-"use client"
+'use client'
 
-import { createAdminBlogPost } from "@/app/actions/admin/blog"
-import { AdminFormLayout } from "@/components/admin/forms/AdminFormLayout"
-import { useRouter } from "next/navigation"
-import { useState } from "react"
+import { createAdminBlogPost } from '@/app/actions/admin/blog'
+import { AdminFormLayout } from '@/components/admin/forms/AdminFormLayout'
+import { useRouter } from 'next/navigation'
+import { useState } from 'react'
 
 interface BlogFormData {
   title: string
@@ -23,28 +23,28 @@ export const NewBlogClient = () => {
   const [saving, setSaving] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [formData, setFormData] = useState<BlogFormData>({
-    title: "",
-    slug: "",
-    excerpt: "",
-    content: "",
-    category: "",
-    tags: "",
-    status: "DRAFT",
+    title: '',
+    slug: '',
+    excerpt: '',
+    content: '',
+    category: '',
+    tags: '',
+    status: 'DRAFT',
     featured: false,
-    metaTitle: "",
-    metaDescription: ""
+    metaTitle: '',
+    metaDescription: ''
   })
 
   // Auto-generate slug from title
   const generateSlug = (title: string) => {
     return title
       .toLowerCase()
-      .replace(/[^a-z0-9]+/g, "-")
-      .replace(/(^-|-$)/g, "")
+      .replace(/[^a-z0-9]+/g, '-')
+      .replace(/(^-|-$)/g, '')
   }
 
   const updateField = (field: keyof BlogFormData, value: string | boolean) => {
-    setFormData(prev => {
+    setFormData((prev) => {
       const newData = {
         ...prev,
         [field]: value
@@ -65,7 +65,7 @@ export const NewBlogClient = () => {
     setError(null)
 
     if (!formData.title.trim()) {
-      setError("Blog post title is required")
+      setError('Blog post title is required')
       return
     }
 
@@ -78,17 +78,17 @@ export const NewBlogClient = () => {
         content: formData.content,
         category: formData.category,
         tags: formData.tags,
-        status: formData.status as "DRAFT" | "PUBLISHED",
+        status: formData.status as 'DRAFT' | 'PUBLISHED',
         featured: formData.featured,
         metaTitle: formData.metaTitle,
         metaDescription: formData.metaDescription,
         readingTime: Math.ceil(formData.content.split(' ').length / 200) // Estimate reading time
       })
 
-      router.push("/admin/blog")
+      router.push('/admin/blog')
     } catch (error) {
       console.error('[Blog New] Error creating post:', error)
-      setError("Failed to create blog post")
+      setError('Failed to create blog post')
     } finally {
       setSaving(false)
     }
@@ -196,7 +196,9 @@ export const NewBlogClient = () => {
               onChange={(e) => updateField('featured', e.target.checked)}
               className="rounded border-border"
             />
-            <label htmlFor="featured" className="text-sm">Featured post</label>
+            <label htmlFor="featured" className="text-sm">
+              Featured post
+            </label>
           </div>
         </div>
 

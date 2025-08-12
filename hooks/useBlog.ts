@@ -1,8 +1,8 @@
-"use client"
+'use client'
 
-import { deleteAdminBlogPost, listAdminBlogPosts } from "@/app/actions/admin/blog"
-import type { BlogPost } from "@/lib/types"
-import { useCallback, useEffect, useState } from "react"
+import { deleteAdminBlogPost, listAdminBlogPosts } from '@/app/actions/admin/blog'
+import type { BlogPost } from '@/lib/types'
+import { useCallback, useEffect, useState } from 'react'
 
 interface BlogData {
   posts: BlogPost[]
@@ -42,7 +42,12 @@ export function useBlog(options: UseBlogOptions = {}) {
       if (filters.search) params.search = filters.search
       if (filters.status) params.status = filters.status
 
-      const response = await listAdminBlogPosts({ page: parseInt(params.page), limit: parseInt(params.limit), status: params.status || null, search: params.search || null } as BlogFilters)
+      const response = await listAdminBlogPosts({
+        page: parseInt(params.page),
+        limit: parseInt(params.limit),
+        status: params.status || null,
+        search: params.search || null
+      } as BlogFilters)
       setData(response as BlogData)
     } catch (error) {
       console.error('[Blog Hook] Error fetching blog data:', error)
@@ -52,24 +57,27 @@ export function useBlog(options: UseBlogOptions = {}) {
     }
   }, [])
 
-  const deletePost = useCallback(async (id: string, title: string) => {
-    if (!confirm(`Are you sure you want to delete "${title}"?`)) return
+  const deletePost = useCallback(
+    async (id: string, title: string) => {
+      if (!confirm(`Are you sure you want to delete "${title}"?`)) return
 
-    setDeleting(id)
-    try {
-      await deleteAdminBlogPost(id)
-      
-      // Refresh the data after deletion
-      if (data) {
-        await fetchBlogData({ page: 1 })
+      setDeleting(id)
+      try {
+        await deleteAdminBlogPost(id)
+
+        // Refresh the data after deletion
+        if (data) {
+          await fetchBlogData({ page: 1 })
+        }
+      } catch (error) {
+        console.error('[Blog Hook] Error deleting post:', error)
+        setError('Failed to delete post')
+      } finally {
+        setDeleting(null)
       }
-    } catch (error) {
-      console.error('[Blog Hook] Error deleting post:', error)
-      setError('Failed to delete post')
-    } finally {
-      setDeleting(null)
-    }
-  }, [data, fetchBlogData])
+    },
+    [data, fetchBlogData]
+  )
 
   const refresh = useCallback(() => {
     fetchBlogData({ page: 1 })

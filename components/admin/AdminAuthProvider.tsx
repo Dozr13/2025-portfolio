@@ -1,4 +1,4 @@
-"use client"
+'use client'
 
 import { useAdminAuth } from '@/hooks/useAdminAuth'
 import { createContext, ReactNode, useContext } from 'react'
@@ -25,11 +25,7 @@ interface AdminAuthProviderProps {
 export const AdminAuthProvider = ({ children }: AdminAuthProviderProps) => {
   const authData = useAdminAuth()
 
-  return (
-    <AdminAuthContext.Provider value={authData}>
-      {children}
-    </AdminAuthContext.Provider>
-  )
+  return <AdminAuthContext.Provider value={authData}>{children}</AdminAuthContext.Provider>
 }
 
 export const useAdminAuthContext = () => {

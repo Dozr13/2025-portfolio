@@ -1,11 +1,11 @@
-"use client"
+'use client'
 
-import { Icon } from "@/components/ui/Icon"
-import { BlogListingClientProps } from "@/lib/types/sections"
-import { motion } from "framer-motion"
-import Link from "next/link"
-import { useRouter, useSearchParams } from "next/navigation"
-import { useState } from "react"
+import { Icon } from '@/components/ui/Icon'
+import { BlogListingClientProps } from '@/lib/types/sections'
+import { motion } from 'framer-motion'
+import Link from 'next/link'
+import { useRouter, useSearchParams } from 'next/navigation'
+import { useState } from 'react'
 
 export const BlogListingClient = ({
   posts,
@@ -111,9 +111,7 @@ export const BlogListingClient = ({
 
                   {/* Card Content */}
                   <div className="p-6">
-                    <p className="text-muted-foreground mb-4 line-clamp-3">
-                      {post.excerpt}
-                    </p>
+                    <p className="text-muted-foreground mb-4 line-clamp-3">{post.excerpt}</p>
 
                     {/* Meta Information */}
                     <div className="flex items-center justify-between text-sm text-muted-foreground mb-4">
@@ -166,10 +164,11 @@ export const BlogListingClient = ({
                   <button
                     key={page}
                     onClick={() => handlePageChange(page)}
-                    className={`px-3 py-2 text-sm font-medium rounded-lg transition-colors ${page === currentPage
-                      ? 'bg-primary text-primary-foreground'
-                      : 'text-muted-foreground hover:text-foreground hover:bg-muted'
-                      }`}
+                    className={`px-3 py-2 text-sm font-medium rounded-lg transition-colors ${
+                      page === currentPage
+                        ? 'bg-primary text-primary-foreground'
+                        : 'text-muted-foreground hover:text-foreground hover:bg-muted'
+                    }`}
                   >
                     {page}
                   </button>
@@ -195,7 +194,9 @@ export const BlogListingClient = ({
             <Icon name="search" size="lg" className="mx-auto mb-4 text-muted-foreground" />
             <h3 className="text-xl font-semibold mb-2">No posts found</h3>
             <p className="text-muted-foreground mb-6">
-              {search ? `No posts match your search for "${search}"` : 'No blog posts available yet.'}
+              {search
+                ? `No posts match your search for "${search}"`
+                : 'No blog posts available yet.'}
             </p>
             {search && (
               <button

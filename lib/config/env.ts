@@ -18,31 +18,30 @@ if (typeof window === 'undefined' && !envLoaded) {
 export const envConfig = {
   // Node environment
   NODE_ENV: process.env.NODE_ENV as 'development' | 'production' | 'test',
-  
+
   // Database
   DATABASE_URL: process.env.DATABASE_URL!,
-  
+
   // Admin Authentication
   ADMIN_USERNAME: process.env.ADMIN_USERNAME!,
   ADMIN_PASSWORD: process.env.ADMIN_PASSWORD!,
   JWT_SECRET: process.env.JWT_SECRET!,
-  
+
   // App Configuration
   NEXT_PUBLIC_APP_URL: process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000',
-  
+
   // Feature Flags
   ENABLE_ANALYTICS: process.env.NODE_ENV === 'production',
   ENABLE_SAMPLE_DATA: process.env.NODE_ENV !== 'production',
-  
+
   // Contact Form
   SMTP_HOST: process.env.SMTP_HOST,
   SMTP_PORT: process.env.SMTP_PORT ? parseInt(process.env.SMTP_PORT) : 587,
   SMTP_USER: process.env.SMTP_USER,
   SMTP_PASSWORD: process.env.SMTP_PASSWORD,
-  
+
   // Rate Limiting
-  RATE_LIMIT_MAX: process.env.NODE_ENV === 'production' ? 100 : 1000,
-  
+  RATE_LIMIT_MAX: process.env.NODE_ENV === 'production' ? 100 : 1000
 } as const
 
 // Utility function to get the appropriate base URL for API calls
@@ -51,18 +50,18 @@ export function getApiBaseUrl(): string {
   if (envConfig.NODE_ENV === 'development') {
     return envConfig.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'
   }
-  
+
   // In production, we need to use the actual domain
   // For Vercel, we can use the VERCEL_URL environment variable
   if (process.env.VERCEL_URL) {
     return `https://${process.env.VERCEL_URL}`
   }
-  
+
   // Fallback to NEXT_PUBLIC_APP_URL if available
   if (envConfig.NEXT_PUBLIC_APP_URL && envConfig.NEXT_PUBLIC_APP_URL !== 'http://localhost:3000') {
     return envConfig.NEXT_PUBLIC_APP_URL
   }
-  
+
   // Last resort - this should not happen in production
   console.warn('No valid base URL found for production environment')
   return 'http://localhost:3000'
@@ -72,17 +71,17 @@ export function getApiBaseUrl(): string {
 export function validateEnvConfig() {
   const requiredEnvVars = [
     'DATABASE_URL',
-    'ADMIN_USERNAME', 
+    'ADMIN_USERNAME',
     'ADMIN_PASSWORD',
     'JWT_SECRET'
   ] as const
 
-  const missing = requiredEnvVars.filter(key => !envConfig[key])
-  
+  const missing = requiredEnvVars.filter((key) => !envConfig[key])
+
   if (missing.length > 0) {
     throw new Error(
       `Missing required environment variables: ${missing.join(', ')}\n` +
-      'Please check your .env files and ensure all required variables are set.'
+        'Please check your .env files and ensure all required variables are set.'
     )
   }
 }
@@ -93,7 +92,7 @@ export function getDatabaseConfig() {
     // Use test database URL if available, otherwise append _test suffix
     return process.env.DATABASE_URL_TEST || `${envConfig.DATABASE_URL}_test`
   }
-  
+
   return envConfig.DATABASE_URL
 }
 

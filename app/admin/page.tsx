@@ -1,7 +1,6 @@
-
 import { isValidToken } from '@/lib/utils/auth'
-import { headers } from "next/headers"
-import { redirect } from "next/navigation"
+import { headers } from 'next/headers'
+import { redirect } from 'next/navigation'
 
 // Force dynamic rendering since this page uses headers() for authentication
 export const dynamic = 'force-dynamic'

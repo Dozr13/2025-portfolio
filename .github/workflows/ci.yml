@@ -2,73 +2,73 @@ name: CI/CD Pipeline
 
 on:
   push:
-    branches: [ main, dev ]
+    branches: [main, dev]
   pull_request:
-    branches: [ main ]
+    branches: [main]
 
 jobs:
   test:
     runs-on: ubuntu-latest
-    
+
     steps:
-    - uses: actions/checkout@v4
-    
-    - name: Enable Corepack
-      run: corepack enable
-    
-    - name: Setup Node.js
-      uses: actions/setup-node@v4
-      with:
-        node-version: '22'
-    
-    - name: Install dependencies
-      run: yarn install --immutable
-    
-    - name: Generate Prisma client
-      run: yarn db:generate
-      env:
-        DATABASE_URL: ${{ secrets.DATABASE_URL }}
-    
-    - name: Run linting
-      run: yarn lint
-    
-    - name: Type check
-      run: yarn tsc --noEmit
-    
-    - name: Build application
-      run: yarn build
-      env:
-        NEXT_PUBLIC_EMAILJS_SERVICE_ID: ${{ secrets.NEXT_PUBLIC_EMAILJS_SERVICE_ID }}
-        NEXT_PUBLIC_EMAILJS_TEMPLATE_ID: ${{ secrets.NEXT_PUBLIC_EMAILJS_TEMPLATE_ID }}
-        NEXT_PUBLIC_EMAILJS_PUBLIC_KEY: ${{ secrets.NEXT_PUBLIC_EMAILJS_PUBLIC_KEY }}
-        # Database (new - required for Prisma)
-        DATABASE_URL: ${{ secrets.DATABASE_URL }}
-        # Admin credentials (new - required for auth)
-        ADMIN_USERNAME: ${{ secrets.ADMIN_USERNAME }}
-        ADMIN_PASSWORD: ${{ secrets.ADMIN_PASSWORD }}
-        JWT_SECRET: ${{ secrets.JWT_SECRET }}
-        NEXTAUTH_SECRET: ${{ secrets.NEXTAUTH_SECRET }}
-    
-    - name: Run tests (when you add them)
-      run: echo "Add your test command here when ready"
-      # run: yarn test
+      - uses: actions/checkout@v4
+
+      - name: Enable Corepack
+        run: corepack enable
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Install dependencies
+        run: yarn install --immutable
+
+      - name: Generate Prisma client
+        run: yarn db:generate
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+
+      - name: Run linting
+        run: yarn lint
+
+      - name: Type check
+        run: yarn tsc --noEmit
+
+      - name: Build application
+        run: yarn build
+        env:
+          NEXT_PUBLIC_EMAILJS_SERVICE_ID: ${{ secrets.NEXT_PUBLIC_EMAILJS_SERVICE_ID }}
+          NEXT_PUBLIC_EMAILJS_TEMPLATE_ID: ${{ secrets.NEXT_PUBLIC_EMAILJS_TEMPLATE_ID }}
+          NEXT_PUBLIC_EMAILJS_PUBLIC_KEY: ${{ secrets.NEXT_PUBLIC_EMAILJS_PUBLIC_KEY }}
+          # Database (new - required for Prisma)
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+          # Admin credentials (new - required for auth)
+          ADMIN_USERNAME: ${{ secrets.ADMIN_USERNAME }}
+          ADMIN_PASSWORD: ${{ secrets.ADMIN_PASSWORD }}
+          JWT_SECRET: ${{ secrets.JWT_SECRET }}
+          NEXTAUTH_SECRET: ${{ secrets.NEXTAUTH_SECRET }}
+
+      - name: Run tests (when you add them)
+        run: echo "Add your test command here when ready"
+        # run: yarn test
 
   docker-build:
     runs-on: ubuntu-latest
     needs: test
     if: github.ref == 'refs/heads/main'
-    
+
     steps:
-    - uses: actions/checkout@v4
-    
-    - name: Build Docker image
-      run: docker build -t portfolio:${{ github.sha }} .
-    
-    - name: Test Docker image build
-      run: |
-        echo "Docker image built successfully: portfolio:${{ github.sha }}"
-        echo "Skipping runtime test due to database connection requirements in CI environment"
-        echo "Docker image will be tested in actual deployment environment"
+      - uses: actions/checkout@v4
+
+      - name: Build Docker image
+        run: docker build -t portfolio:${{ github.sha }} .
+
+      - name: Test Docker image build
+        run: |
+          echo "Docker image built successfully: portfolio:${{ github.sha }}"
+          echo "Skipping runtime test due to database connection requirements in CI environment"
+          echo "Docker image will be tested in actual deployment environment"
 
   # Vercel handles deployment automatically
   # This job just validates the build
@@ -76,8 +76,8 @@ jobs:
     runs-on: ubuntu-latest
     needs: test
     if: github.ref == 'refs/heads/main'
-    
+
     steps:
-    - uses: actions/checkout@v4
-    - name: Deploy notification
-      run: echo "Ready for Vercel auto-deployment"
+      - uses: actions/checkout@v4
+      - name: Deploy notification
+        run: echo "Ready for Vercel auto-deployment"

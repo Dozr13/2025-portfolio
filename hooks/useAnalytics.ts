@@ -1,11 +1,15 @@
-"use client"
-import { getAdminStats } from "@/app/actions/admin/stats"
-import { useAuth } from "@/hooks/useAuth"
-import type { StatsData, UseAnalyticsOptions } from "@/lib/types/admin/analytics"
-import { useCallback, useEffect, useState } from "react"
- 
+'use client'
+import { getAdminStats } from '@/app/actions/admin/stats'
+import { useAuth } from '@/hooks/useAuth'
+import type { StatsData, UseAnalyticsOptions } from '@/lib/types/admin/analytics'
+import { useCallback, useEffect, useState } from 'react'
+
 export function useAnalytics(options: UseAnalyticsOptions = {}) {
-  const { autoRefresh = false, refreshInterval = 30000, /* timeRange = '7d',*/ initialData } = options
+  const {
+    autoRefresh = false,
+    refreshInterval = 30000,
+    /* timeRange = '7d',*/ initialData
+  } = options
   const [stats, setStats] = useState<StatsData | null>(initialData || null)
   const [loading, setLoading] = useState(!initialData)
   const [error, setError] = useState<string | null>(null)
@@ -27,7 +31,7 @@ export function useAnalytics(options: UseAnalyticsOptions = {}) {
       setError(null)
     } catch (error) {
       console.error('Error fetching analytics:', error)
-      setError("Failed to load analytics")
+      setError('Failed to load analytics')
     } finally {
       setLoading(false)
     }

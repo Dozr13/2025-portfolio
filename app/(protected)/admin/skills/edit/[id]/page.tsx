@@ -1,7 +1,7 @@
-import { getSkill } from "@/app/actions/admin/skills"
-import { AdminPageWrapper } from "@/components/admin/shared/AdminPageWrapper"
-import { EditSkillClient } from "@/components/admin/skills/EditSkillClient"
-import { requireAdmin } from "@/lib/auth"
+import { getSkill } from '@/app/actions/admin/skills'
+import { AdminPageWrapper } from '@/components/admin/shared/AdminPageWrapper'
+import { EditSkillClient } from '@/components/admin/skills/EditSkillClient'
+import { requireAdmin } from '@/lib/auth'
 
 export default async function EditSkillPage({ params }: { params: Promise<{ id: string }> }) {
   await requireAdmin()
@@ -14,7 +14,7 @@ export default async function EditSkillPage({ params }: { params: Promise<{ id: 
     <AdminPageWrapper
       loading={false}
       loadingMessage=""
-      error={!initialSkill ? "Skill not found" : null}
+      error={!initialSkill ? 'Skill not found' : null}
       errorTitle="Skill not found"
       errorMessage="The skill you're looking for doesn't exist"
       backHref="/admin/skills"

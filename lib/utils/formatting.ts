@@ -20,13 +20,13 @@ export const formatPercentage = (num: number): string => {
  * Format currency values
  */
 export function formatCurrency(
-  amount: number, 
-  currency: string = 'USD', 
+  amount: number,
+  currency: string = 'USD',
   locale: string = 'en-US'
 ): string {
   return new Intl.NumberFormat(locale, {
     style: 'currency',
-    currency: currency,
+    currency: currency
   }).format(amount)
 }
 
@@ -37,7 +37,7 @@ export function formatFileSize(bytes: number): string {
   const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB']
   if (bytes === 0) return '0 Bytes'
   const i = Math.floor(Math.log(bytes) / Math.log(1024))
-  return Math.round(bytes / Math.pow(1024, i) * 100) / 100 + ' ' + sizes[i]
+  return Math.round((bytes / Math.pow(1024, i)) * 100) / 100 + ' ' + sizes[i]
 }
 
 /**

@@ -1,3 +1,2 @@
-export { contactInfo } from './contact'
+export { CONTACT_INFO, RATE_LIMIT_DURATION, RATE_LIMIT_KEY } from './contact'
 export { BREAKPOINTS, PREVIEW_COUNTS, SKILL_CATEGORY_NAMES, SKILL_CATEGORY_ORDER } from './skills'
-

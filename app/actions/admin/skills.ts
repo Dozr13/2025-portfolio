@@ -1,14 +1,14 @@
-"use server"
+'use server'
 
-import { prisma } from "@/lib/config"
-import type { SkillCategory, SkillLevel } from "@/lib/domain/enums"
-import { z } from "zod"
-import { ensureAdmin } from "./auth"
+import { prisma } from '@/lib/config'
+import type { SkillCategory, SkillLevel } from '@/lib/domain/enums'
+import { z } from 'zod'
+import { ensureAdmin } from './auth'
 
 export async function listSkills() {
   await ensureAdmin()
   const skills = await prisma.skill.findMany({
-    orderBy: [{ featured: "desc" }, { order: "asc" }, { name: "asc" }],
+    orderBy: [{ featured: 'desc' }, { order: 'asc' }, { name: 'asc' }]
   })
   return { skills }
 }
@@ -21,14 +21,23 @@ const createSkillSchema = z.object({
   description: z.string().nullable().optional(),
   icon: z.string().nullable().optional(),
   featured: z.boolean().optional(),
-  order: z.number().nullable().optional(),
+  order: z.number().nullable().optional()
 })
 
 export async function createSkill(input: unknown) {
   await ensureAdmin()
-  const parsed = createSkillSchema.parse(input) as unknown as { name: string; category: SkillCategory; level: SkillLevel; years?: number | null; description?: string | null; icon?: string | null; featured?: boolean; order?: number | null }
+  const parsed = createSkillSchema.parse(input) as unknown as {
+    name: string
+    category: SkillCategory
+    level: SkillLevel
+    years?: number | null
+    description?: string | null
+    icon?: string | null
+    featured?: boolean
+    order?: number | null
+  }
   const existing = await prisma.skill.findUnique({ where: { name: parsed.name } })
-  if (existing) throw new Error("A skill with this name already exists")
+  if (existing) throw new Error('A skill with this name already exists')
   const skill = await prisma.skill.create({
     data: {
       name: parsed.name,
@@ -38,8 +47,8 @@ export async function createSkill(input: unknown) {
       description: parsed.description ?? null,
       icon: parsed.icon ?? null,
       featured: Boolean(parsed.featured),
-      order: parsed.order ?? null,
-    },
+      order: parsed.order ?? null
+    }
   })
   return { skill }
 }
@@ -47,7 +56,7 @@ export async function createSkill(input: unknown) {
 export async function getSkill(id: string) {
   await ensureAdmin()
   const skill = await prisma.skill.findUnique({ where: { id } })
-  if (!skill) throw new Error("Skill not found")
+  if (!skill) throw new Error('Skill not found')
   return { skill }
 }
 
@@ -55,14 +64,27 @@ const updateSkillSchema = createSkillSchema.partial().extend({ id: z.string().mi
 
 export async function updateSkill(id: string, input: unknown) {
   await ensureAdmin()
-  const parsed = updateSkillSchema.parse({ id, ...(input as object) }) as unknown as { id: string } & { name?: string; category?: SkillCategory; level?: SkillLevel; years?: number | null; description?: string | null; icon?: string | null; featured?: boolean; order?: number | null }
+  const parsed = updateSkillSchema.parse({ id, ...(input as object) }) as unknown as {
+    id: string
+  } & {
+    name?: string
+    category?: SkillCategory
+    level?: SkillLevel
+    years?: number | null
+    description?: string | null
+    icon?: string | null
+    featured?: boolean
+    order?: number | null
+  }
 
   const existing = await prisma.skill.findUnique({ where: { id: parsed.id } })
-  if (!existing) throw new Error("Skill not found")
+  if (!existing) throw new Error('Skill not found')
 
   if (parsed.name) {
-    const nameConflict = await prisma.skill.findFirst({ where: { name: parsed.name, id: { not: parsed.id } } })
-    if (nameConflict) throw new Error("A skill with this name already exists")
+    const nameConflict = await prisma.skill.findFirst({
+      where: { name: parsed.name, id: { not: parsed.id } }
+    })
+    if (nameConflict) throw new Error('A skill with this name already exists')
   }
 
   const skill = await prisma.skill.update({
@@ -75,8 +97,8 @@ export async function updateSkill(id: string, input: unknown) {
       description: parsed.description ?? existing.description,
       icon: parsed.icon ?? existing.icon,
       featured: parsed.featured ?? existing.featured,
-      order: parsed.order ?? existing.order,
-    },
+      order: parsed.order ?? existing.order
+    }
   })
   return { skill }
 }
@@ -84,9 +106,7 @@ export async function updateSkill(id: string, input: unknown) {
 export async function deleteSkill(id: string) {
   await ensureAdmin()
   const existing = await prisma.skill.findUnique({ where: { id } })
-  if (!existing) throw new Error("Skill not found")
+  if (!existing) throw new Error('Skill not found')
   await prisma.skill.delete({ where: { id } })
-  return { message: "Skill deleted successfully" }
+  return { message: 'Skill deleted successfully' }
 }
-
-

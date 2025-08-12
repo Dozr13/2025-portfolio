@@ -1,9 +1,9 @@
-"use client"
+'use client'
 
-import { AdminSuspense } from "@/components/admin/shared/AdminSuspense"
-import type { Skill } from "@/lib/types"
-import { SkillsContent } from "./SkillsContent"
-import { SkillsSkeleton } from "./SkillsSkeleton"
+import { AdminSuspense } from '@/components/admin/shared/AdminSuspense'
+import type { Skill } from '@/lib/types'
+import { SkillsContent } from './SkillsContent'
+import { SkillsSkeleton } from './SkillsSkeleton'
 
 interface SkillsStreamingProps {
   initialData?: Skill[] | null

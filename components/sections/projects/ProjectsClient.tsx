@@ -1,11 +1,15 @@
-"use client"
+'use client'
 
-import { ProjectCard } from "@/components/ui/ProjectCard"
-import { ProjectsClientProps } from "@/lib/types/sections"
-import { motion } from "framer-motion"
+import { ProjectCard } from '@/components/ui/ProjectCard'
+import { ProjectsClientProps } from '@/lib/types/sections'
+import { motion } from 'framer-motion'
 
-export const ProjectsClient = ({ projects, mode = "full", immediate = false }: ProjectsClientProps) => {
-  const visible = mode === "preview" ? projects.slice(0, 3) : projects
+export const ProjectsClient = ({
+  projects,
+  mode = 'full',
+  immediate = false
+}: ProjectsClientProps) => {
+  const visible = mode === 'preview' ? projects.slice(0, 3) : projects
   return (
     <section id="projects" className="py-20 bg-muted/50">
       <div>
@@ -39,7 +43,7 @@ export const ProjectsClient = ({ projects, mode = "full", immediate = false }: P
             />
           ))}
         </div>
-        {mode === "preview" && (
+        {mode === 'preview' && (
           <div className="text-center mt-10">
             <a
               href="/projects"

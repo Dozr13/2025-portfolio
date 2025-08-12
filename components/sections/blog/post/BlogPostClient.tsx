@@ -1,15 +1,21 @@
-"use client"
-import { Icon } from "@/components/ui/Icon"
-import { useReadingProgress } from "@/hooks/useReadingProgress"
-import type { PublicBlogPostDetail } from "@/lib/types/public"
+'use client'
+import { Icon } from '@/components/ui/Icon'
+import { useReadingProgress } from '@/hooks/useReadingProgress'
+import type { PublicBlogPostDetail } from '@/lib/types/public'
 import { markdownToHtml } from '@/lib/utils'
-import { motion } from "framer-motion"
-import { useEffect, useMemo, useState } from "react"
+import { motion } from 'framer-motion'
+import { useEffect, useMemo, useState } from 'react'
 import { ReadingProgressBar } from './ReadingProgressBar'
 
 export function BlogPostClient({ post }: { post: PublicBlogPostDetail }) {
   const tags = useMemo(
-    () => (post.tags ? post.tags.split(",").map(t => t.trim()).filter(Boolean) : []),
+    () =>
+      post.tags
+        ? post.tags
+            .split(',')
+            .map((t) => t.trim())
+            .filter(Boolean)
+        : [],
     [post.tags]
   )
 
@@ -22,14 +28,14 @@ export function BlogPostClient({ post }: { post: PublicBlogPostDetail }) {
     try {
       const key = `viewed_${post.slug}`
       if (typeof window !== 'undefined' && !sessionStorage.getItem(key)) {
-        ; (async () => {
+        ;(async () => {
           const { incrementBlogView } = await import('@/app/actions/public/blog')
           await incrementBlogView(post.slug)
           sessionStorage.setItem(key, '1')
           setLocalViews((v) => v + 1)
-        })().catch(() => { })
+        })().catch(() => {})
       }
-    } catch { }
+    } catch {}
 
     return
   }, [post.slug])

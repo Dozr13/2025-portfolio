@@ -5,6 +5,7 @@ A modern, full-stack portfolio website built with Next.js 15, TypeScript, and Po
 ## Quick Start
 
 ### Prerequisites
+
 - Node.js 20+ with Yarn 4.9.2 (via Corepack)
 - Docker (for containerized development)
 - PostgreSQL database (we recommend [Neon](https://neon.tech))
@@ -12,6 +13,7 @@ A modern, full-stack portfolio website built with Next.js 15, TypeScript, and Po
 ### Development Setup
 
 1. **Clone and install dependencies:**
+
    ```bash
    git clone https://github.com/Dozr13/2025-portfolio
    cd 2025-portfolio
@@ -19,15 +21,17 @@ A modern, full-stack portfolio website built with Next.js 15, TypeScript, and Po
    ```
 
 2. **Set up environment:**
+
    ```bash
    # Copy environment template
    cp .env.example .env.local
-   
+
    # Add your database URL (example with Neon):
    DATABASE_URL="postgresql://user:password@host/database?sslmode=require"
    ```
 
 3. **Initialize database:**
+
    ```bash
    yarn db:push    # Create tables
    yarn db:seed    # Add sample data
@@ -99,10 +103,12 @@ yarn docker:down
 ## 🔐 Admin Panel
 
 Access the admin panel at `/admin` with default credentials:
+
 - Username: `admin`
 - Password: `admin123`
 
 **Features:**
+
 - Blog post management (create, edit, delete)
 - Project portfolio management
 - Contact form management
@@ -111,6 +117,7 @@ Access the admin panel at `/admin` with default credentials:
 ## 🗄 Database
 
 The portfolio uses PostgreSQL with the following main models:
+
 - **BlogPost** - Blog content management
 - **Project** - Portfolio projects
 - **Experience** - Work experience
@@ -120,6 +127,7 @@ The portfolio uses PostgreSQL with the following main models:
 ## 📝 Content Management
 
 ### Blog Posts
+
 - Full CRUD operations via admin panel
 - Markdown content support
 - SEO meta tags
@@ -127,12 +135,14 @@ The portfolio uses PostgreSQL with the following main models:
 - Reading time calculation
 
 ### Projects
+
 - Portfolio project showcase
 - GitHub and live demo links
 - Technology stack tags
 - Metrics and achievements
 
 ### Case Studies
+
 - Detailed project breakdowns
 - Problem/solution narratives
 - Performance metrics
@@ -141,11 +151,13 @@ The portfolio uses PostgreSQL with the following main models:
 ## Deployment
 
 ### Vercel (Recommended)
+
 1. Connect your GitHub repository
 2. Add your `DATABASE_URL` environment variable
 3. Deploy automatically on push
 
 ### Docker
+
 ```bash
 docker-compose up --build -d
 ```
@@ -160,6 +172,7 @@ docker-compose up --build -d
 ## 🤝 Contributing
 
 This is a personal portfolio, but feel free to:
+
 - Report bugs via GitHub issues
 - Suggest improvements
 - Use as inspiration for your own portfolio

@@ -11,7 +11,10 @@ export const ExperienceSkeleton = () => {
         {/* skeleton timeline rows */}
         <div className="space-y-6">
           {Array.from({ length: 4 }).map((_, i) => (
-            <div key={i} className="bg-card border border-border rounded-2xl p-6 animate-pulse h-32" />
+            <div
+              key={i}
+              className="bg-card border border-border rounded-2xl p-6 animate-pulse h-32"
+            />
           ))}
         </div>
       </div>

@@ -18,7 +18,7 @@ export function useAdminData<T>({
 
   // Invalidate data - triggers a refresh
   const invalidateData = useCallback(() => {
-    setRefreshTrigger(prev => prev + 1)
+    setRefreshTrigger((prev) => prev + 1)
   }, [])
 
   // Data fetching effect - no auth checks needed since layout handles it
@@ -29,7 +29,7 @@ export function useAdminData<T>({
       try {
         setLoading(true)
         setError(null)
-        
+
         const result = await fetchFn()
         setData(result)
       } catch (err) {

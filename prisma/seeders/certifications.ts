@@ -8,14 +8,15 @@ export const certifications = [
     expiryDate: new Date('2026-03-15'),
     credentialId: 'AWS-CERT-WADE-2023',
     credentialUrl: 'https://aws.amazon.com/verification',
-    description: 'AWS certification validating expertise in cloud architecture, services, and best practices for building scalable applications.',
+    description:
+      'AWS certification validating expertise in cloud architecture, services, and best practices for building scalable applications.',
     featured: true,
     order: 1
   }
 ]
 
 export async function seedCertifications() {
-  console.log("Seeding certifications...")
+  console.log('Seeding certifications...')
 
   for (const cert of certifications) {
     await prisma.certification.upsert({
@@ -30,5 +31,5 @@ export async function seedCertifications() {
     })
   }
 
-  console.log("Certifications seeded successfully")
+  console.log('Certifications seeded successfully')
 }

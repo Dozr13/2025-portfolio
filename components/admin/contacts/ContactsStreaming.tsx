@@ -1,9 +1,9 @@
-"use client"
+'use client'
 
-import { AdminSuspense } from "@/components/admin/shared/AdminSuspense"
-import type { Contact } from "@/lib/types"
-import { ContactsContent } from "./ContactsContent"
-import { ContactsSkeleton } from "./ContactsSkeleton"
+import { AdminSuspense } from '@/components/admin/shared/AdminSuspense'
+import type { Contact } from '@/lib/types'
+import { ContactsContent } from './ContactsContent'
+import { ContactsSkeleton } from './ContactsSkeleton'
 
 interface ContactsData {
   contacts: Contact[]

@@ -1,9 +1,9 @@
-"use client"
+'use client'
 
 // Client-side session validation via protected endpoint
-import { getAdminAuth } from "@/app/actions/admin/auth"
-import { useRouter } from "next/navigation"
-import { useCallback } from "react"
+import { getAdminAuth } from '@/app/actions/admin/auth'
+import { useRouter } from 'next/navigation'
+import { useCallback } from 'react'
 
 interface UseAuthOptions {
   onAuthError?: (message: string) => void
@@ -12,7 +12,7 @@ interface UseAuthOptions {
 
 export function useAuth(options: UseAuthOptions = {}) {
   const router = useRouter()
-  const { onAuthError, redirectTo = "/admin/login" } = options
+  const { onAuthError, redirectTo = '/admin/login' } = options
 
   const validateSession = useCallback(async (): Promise<boolean> => {
     try {
@@ -30,15 +30,18 @@ export function useAuth(options: UseAuthOptions = {}) {
     }
   }, [onAuthError, redirectTo, router])
 
-  const handleAuthError = useCallback((status: number, message: string) => {
-    if (status === 401) {
-      const authMessage = "Authentication required"
-      onAuthError?.(authMessage)
-      router.push(redirectTo)
-    } else {
-      onAuthError?.(message)
-    }
-  }, [onAuthError, redirectTo, router])
+  const handleAuthError = useCallback(
+    (status: number, message: string) => {
+      if (status === 401) {
+        const authMessage = 'Authentication required'
+        onAuthError?.(authMessage)
+        router.push(redirectTo)
+      } else {
+        onAuthError?.(message)
+      }
+    },
+    [onAuthError, redirectTo, router]
+  )
 
   return {
     validateSession,

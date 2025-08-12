@@ -28,9 +28,9 @@ export function validateEmail(email: string): string | null {
  * Validate string length
  */
 export function validateLength(
-  value: string, 
-  min: number, 
-  max: number, 
+  value: string,
+  min: number,
+  max: number,
   fieldName: string
 ): string | null {
   if (value.length < min) {
@@ -97,19 +97,19 @@ export function validateForm<T extends Record<string, unknown>>(
   rules: Record<keyof T, ((value: T[keyof T]) => string | null)[]>
 ): Record<keyof T, string | null> {
   const errors = {} as Record<keyof T, string | null>
-  
+
   for (const [field, validators] of Object.entries(rules)) {
     const value = data[field as keyof T]
     let error: string | null = null
-    
+
     for (const validator of validators) {
       error = validator(value)
       if (error) break // Stop at first error
     }
-    
+
     errors[field as keyof T] = error
   }
-  
+
   return errors
 }
 
@@ -117,5 +117,5 @@ export function validateForm<T extends Record<string, unknown>>(
  * Check if form has any errors
  */
 export function hasValidationErrors(errors: Record<string, string | null>): boolean {
-  return Object.values(errors).some(error => error !== null)
+  return Object.values(errors).some((error) => error !== null)
 }

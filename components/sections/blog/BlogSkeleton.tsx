@@ -10,7 +10,10 @@ export const BlogSkeleton = () => {
         </div>
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 mb-16">
           {Array.from({ length: 3 }).map((_, index) => (
-            <div key={index} className="bg-background rounded-2xl border border-border overflow-hidden">
+            <div
+              key={index}
+              className="bg-background rounded-2xl border border-border overflow-hidden"
+            >
               <div className="animate-pulse">
                 <div className="h-48 bg-muted"></div>
                 <div className="p-6">

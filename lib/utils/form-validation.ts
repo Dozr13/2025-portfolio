@@ -83,19 +83,12 @@ export const projectValidation = {
     validationRules.minLength(3, 'Project title'),
     validationRules.maxLength(100, 'Project title')
   ]),
-  slug: createValidator([
-    validationRules.required('Slug'),
-    validationRules.slug('Slug')
-  ]),
+  slug: createValidator([validationRules.required('Slug'), validationRules.slug('Slug')]),
   description: createValidator([
     validationRules.required('Description'),
     validationRules.minLength(10, 'Description'),
     validationRules.maxLength(500, 'Description')
   ]),
-  demoUrl: createValidator([
-    validationRules.url('Demo URL')
-  ]),
-  githubUrl: createValidator([
-    validationRules.url('GitHub URL')
-  ])
+  demoUrl: createValidator([validationRules.url('Demo URL')]),
+  githubUrl: createValidator([validationRules.url('GitHub URL')])
 }

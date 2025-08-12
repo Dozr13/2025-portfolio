@@ -1,9 +1,9 @@
-"use client"
+'use client'
 
-import { listContacts, updateContact } from "@/app/actions/admin/contacts"
+import { listContacts, updateContact } from '@/app/actions/admin/contacts'
 import type { ContactStatus } from '@/lib/domain/enums'
-import type { Contact } from "@/lib/types"
-import { useCallback, useEffect, useState } from "react"
+import type { Contact } from '@/lib/types'
+import { useCallback, useEffect, useState } from 'react'
 
 interface ContactsData {
   contacts: Contact[]
@@ -42,7 +42,7 @@ export function useContacts(options: UseContactsOptions = {}) {
         page: 1,
         limit: 20,
         status: params.status || null,
-        search: params.search || null,
+        search: params.search || null
       })
       type ActionContact = {
         id: string
@@ -68,7 +68,7 @@ export function useContacts(options: UseContactsOptions = {}) {
           id: c.id,
           name: c.name,
           email: c.email,
-          subject: c.subject ?? "",
+          subject: c.subject ?? '',
           message: c.message,
           phone: c.phone,
           company: c.company,
@@ -81,9 +81,9 @@ export function useContacts(options: UseContactsOptions = {}) {
           notes: c.notes,
           createdAt: c.createdAt,
           updatedAt: c.updatedAt,
-          respondedAt: c.respondedAt,
+          respondedAt: c.respondedAt
         })),
-        pagination: result.pagination,
+        pagination: result.pagination
       }
       setData(normalized)
     } catch (err) {
@@ -94,19 +94,22 @@ export function useContacts(options: UseContactsOptions = {}) {
     }
   }, [])
 
-  const updateContactStatus = useCallback(async (contactId: string, status: string, notes?: string) => {
-    setUpdating(contactId)
-    try {
-      await updateContact({ id: contactId, status: status as ContactStatus, notes })
-      // Refresh the data after update
-      await fetchContacts()
-    } catch (err) {
-      console.error('[useContacts] Error updating contact:', err)
-      setError('Failed to update contact')
-    } finally {
-      setUpdating(null)
-    }
-  }, [fetchContacts])
+  const updateContactStatus = useCallback(
+    async (contactId: string, status: string, notes?: string) => {
+      setUpdating(contactId)
+      try {
+        await updateContact({ id: contactId, status: status as ContactStatus, notes })
+        // Refresh the data after update
+        await fetchContacts()
+      } catch (err) {
+        console.error('[useContacts] Error updating contact:', err)
+        setError('Failed to update contact')
+      } finally {
+        setUpdating(null)
+      }
+    },
+    [fetchContacts]
+  )
 
   // Initial fetch if no initial data
   useEffect(() => {

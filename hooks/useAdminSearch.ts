@@ -20,12 +20,12 @@ export const useAdminSearch = <T, F extends Record<string, string | number | boo
   enableCache = true
 }: UseAdminSearchOptions<T, F>) => {
   const [filters, setFilters] = useState<F>(initialFilters)
-  const [searchInput, setSearchInput] = useState("")
-  
+  const [searchInput, setSearchInput] = useState('')
+
   // Debounce search input
   useEffect(() => {
     const timer = setTimeout(() => {
-      setFilters(prev => ({ ...prev, search: searchInput || undefined } as F))
+      setFilters((prev) => ({ ...prev, search: searchInput || undefined }) as F)
     }, debounceMs)
 
     return () => clearTimeout(timer)
@@ -41,9 +41,9 @@ export const useAdminSearch = <T, F extends Record<string, string | number | boo
   }, [enableCache, entity, memoizedFilters])
 
   // Set up caching if enabled
-  const cache = useAdminCache<T>(cacheKey || '', { 
-    ttl, 
-    enabled: enableCache && !!cacheKey 
+  const cache = useAdminCache<T>(cacheKey || '', {
+    ttl,
+    enabled: enableCache && !!cacheKey
   })
 
   // Enhanced fetch function with caching
@@ -58,12 +58,12 @@ export const useAdminSearch = <T, F extends Record<string, string | number | boo
 
     // Fetch fresh data
     const result = await fetchFn(memoizedFilters)
-    
+
     // Cache the result if caching is enabled
     if (enableCache && cacheKey) {
       cache.set(result)
     }
-    
+
     return result
   }, [fetchFn, memoizedFilters, enableCache, cacheKey, cache])
 
@@ -83,13 +83,13 @@ export const useAdminSearch = <T, F extends Record<string, string | number | boo
 
   // Update filter helper
   const updateFilter = useCallback(<K extends keyof F>(key: K, value: F[K]) => {
-    setFilters(prev => ({ ...prev, [key]: value }))
+    setFilters((prev) => ({ ...prev, [key]: value }))
   }, [])
 
   // Clear all filters
   const clearFilters = useCallback(() => {
     setFilters(initialFilters)
-    setSearchInput("")
+    setSearchInput('')
   }, [initialFilters])
 
   return {

@@ -1,4 +1,4 @@
-import { prisma } from '@/lib/prisma';
+import { prisma } from '@/lib/prisma'
 
 export const education = [
   {
@@ -15,15 +15,15 @@ export const education = [
       'Completed intensive 16-week full-stack web development program',
       'Built multiple full-stack applications using React, Node.js, and PostgreSQL',
       'Learned modern development practices including Git, testing, and deployment',
-      'Collaborated on team projects using Agile methodologies',
+      'Collaborated on team projects using Agile methodologies'
     ]),
     featured: true,
-    order: 1,
-  },
-];
+    order: 1
+  }
+]
 
 export async function seedEducation() {
-  console.log('Seeding education...');
+  console.log('Seeding education...')
 
   for (const edu of education) {
     await prisma.education.upsert({
@@ -31,13 +31,13 @@ export async function seedEducation() {
         institution_degree_field: {
           institution: edu.institution,
           degree: edu.degree,
-          field: edu.field,
-        },
+          field: edu.field
+        }
       },
       update: edu,
-      create: edu,
-    });
+      create: edu
+    })
   }
 
-  console.log('Education seeded successfully');
+  console.log('Education seeded successfully')
 }

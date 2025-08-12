@@ -1,7 +1,7 @@
-"use client"
+'use client'
 
-import type { PublicExperience } from "@/lib/types/public"
-import { ExperienceItem } from "./ExperienceItem"
+import type { PublicExperience } from '@/lib/types/public'
+import { ExperienceItem } from './ExperienceItem'
 
 export type ExperienceTimelineProps = Readonly<{
   experiences: PublicExperience[]
@@ -21,5 +21,3 @@ export const ExperienceTimeline = ({ experiences, immediate = false }: Experienc
     </div>
   )
 }
-
-

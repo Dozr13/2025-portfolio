@@ -1,10 +1,10 @@
-"use client"
+'use client'
 
-import { createProject } from "@/app/actions/admin/projects"
-import { AdminFormLayout } from "@/components/admin/forms/AdminFormLayout"
-import type { ProjectCategory, ProjectStatus } from "@/lib/domain/enums"
-import { useRouter } from "next/navigation"
-import { useState } from "react"
+import { createProject } from '@/app/actions/admin/projects'
+import { AdminFormLayout } from '@/components/admin/forms/AdminFormLayout'
+import type { ProjectCategory, ProjectStatus } from '@/lib/domain/enums'
+import { useRouter } from 'next/navigation'
+import { useState } from 'react'
 
 interface ProjectFormData {
   title: string
@@ -27,31 +27,31 @@ export const NewProjectClient = () => {
   const [saving, setSaving] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [formData, setFormData] = useState<ProjectFormData>({
-    title: "",
-    slug: "",
-    description: "",
-    longDescription: "",
-    category: "WEB_APP",
-    status: "COMPLETED",
+    title: '',
+    slug: '',
+    description: '',
+    longDescription: '',
+    category: 'WEB_APP',
+    status: 'COMPLETED',
     featured: false,
-    demoUrl: "",
-    githubUrl: "",
-    client: "",
-    teamSize: "",
-    role: "",
-    order: ""
+    demoUrl: '',
+    githubUrl: '',
+    client: '',
+    teamSize: '',
+    role: '',
+    order: ''
   })
 
   // Auto-generate slug from title
   const generateSlug = (title: string) => {
     return title
       .toLowerCase()
-      .replace(/[^a-z0-9]+/g, "-")
-      .replace(/(^-|-$)/g, "")
+      .replace(/[^a-z0-9]+/g, '-')
+      .replace(/(^-|-$)/g, '')
   }
 
   const updateField = (field: keyof ProjectFormData, value: string | boolean) => {
-    setFormData(prev => {
+    setFormData((prev) => {
       const newData = {
         ...prev,
         [field]: value
@@ -71,7 +71,7 @@ export const NewProjectClient = () => {
     setError(null)
 
     if (!formData.title.trim()) {
-      setError("Project title is required")
+      setError('Project title is required')
       return
     }
 
@@ -85,10 +85,10 @@ export const NewProjectClient = () => {
         order: formData.order ? parseInt(formData.order) : null
       })
 
-      router.push("/admin/projects")
+      router.push('/admin/projects')
     } catch (error) {
       console.error('[Project New] Error creating project:', error)
-      setError("Failed to create project")
+      setError('Failed to create project')
     } finally {
       setSaving(false)
     }
@@ -283,7 +283,9 @@ export const NewProjectClient = () => {
               onChange={(e) => updateField('featured', e.target.checked)}
               className="rounded border-border"
             />
-            <label htmlFor="featured" className="text-sm">Featured project</label>
+            <label htmlFor="featured" className="text-sm">
+              Featured project
+            </label>
           </div>
         </div>
       </div>

@@ -1,6 +1,6 @@
-"use client"
+'use client'
 
-import { ReactNode } from "react"
+import { ReactNode } from 'react'
 
 interface FormFieldProps {
   label: string
@@ -10,16 +10,20 @@ interface FormFieldProps {
   help?: string
 }
 
-export const FormField = ({ label, required = false, children, className = "", help }: FormFieldProps) => {
+export const FormField = ({
+  label,
+  required = false,
+  children,
+  className = '',
+  help
+}: FormFieldProps) => {
   return (
     <div className={className}>
       <label className="block text-sm font-medium mb-2">
-        {label} {required && "*"}
+        {label} {required && '*'}
       </label>
       {children}
-      {help && (
-        <p className="text-xs text-muted-foreground mt-1">{help}</p>
-      )}
+      {help && <p className="text-xs text-muted-foreground mt-1">{help}</p>}
     </div>
   )
 }
@@ -37,7 +41,7 @@ interface FormInputProps {
 }
 
 export function FormInput({
-  type = "text",
+  type = 'text',
   name,
   value,
   onChange,
@@ -45,7 +49,7 @@ export function FormInput({
   required = false,
   min,
   max,
-  className = ""
+  className = ''
 }: FormInputProps) {
   return (
     <input
@@ -79,7 +83,7 @@ export function FormTextarea({
   placeholder,
   rows = 3,
   required = false,
-  className = ""
+  className = ''
 }: FormTextareaProps) {
   return (
     <textarea
@@ -109,7 +113,7 @@ export function FormSelect({
   onChange,
   options,
   required = false,
-  className = ""
+  className = ''
 }: FormSelectProps) {
   return (
     <select
@@ -119,7 +123,7 @@ export function FormSelect({
       required={required}
       className={`w-full px-3 py-2 bg-background border border-border rounded-md focus:outline-none focus:ring-2 focus:ring-primary/50 ${className}`}
     >
-      {options.map(option => (
+      {options.map((option) => (
         <option key={option.value} value={option.value}>
           {option.label}
         </option>
@@ -151,9 +155,7 @@ export function FormCheckbox({ id, name, checked, onChange, label, help }: FormC
         />
         <span className="text-sm font-medium">{label}</span>
       </label>
-      {help && (
-        <p className="text-xs text-muted-foreground mt-1 ml-6">{help}</p>
-      )}
+      {help && <p className="text-xs text-muted-foreground mt-1 ml-6">{help}</p>}
     </div>
   )
 }

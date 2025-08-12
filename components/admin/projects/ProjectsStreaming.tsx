@@ -1,9 +1,9 @@
-"use client"
+'use client'
 
-import { AdminSuspense } from "@/components/admin/shared/AdminSuspense"
-import type { Project } from "@/lib/types"
-import { ProjectsContent } from "./ProjectsContent"
-import { ProjectsSkeleton } from "./ProjectsSkeleton"
+import { AdminSuspense } from '@/components/admin/shared/AdminSuspense'
+import type { Project } from '@/lib/types'
+import { ProjectsContent } from './ProjectsContent'
+import { ProjectsSkeleton } from './ProjectsSkeleton'
 
 interface ProjectsData {
   projects: Project[]

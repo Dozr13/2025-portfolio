@@ -1,11 +1,11 @@
-"use client"
+'use client'
 
-import { deleteProject, updateProject } from "@/app/actions/admin/projects"
-import { AdminFormLayout } from "@/components/admin/forms/AdminFormLayout"
-import type { ProjectCategory, ProjectStatus } from "@/lib/domain/enums"
-import type { Project } from "@/lib/types"
-import { useRouter } from "next/navigation"
-import { useEffect, useState } from "react"
+import { deleteProject, updateProject } from '@/app/actions/admin/projects'
+import { AdminFormLayout } from '@/components/admin/forms/AdminFormLayout'
+import type { ProjectCategory, ProjectStatus } from '@/lib/domain/enums'
+import type { Project } from '@/lib/types'
+import { useRouter } from 'next/navigation'
+import { useEffect, useState } from 'react'
 
 interface EditProjectClientProps {
   initialData?: Project | null
@@ -32,19 +32,19 @@ export const EditProjectClient = ({ initialData }: EditProjectClientProps) => {
   const [saving, setSaving] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [formData, setFormData] = useState<ProjectFormData>({
-    title: "",
-    slug: "",
-    description: "",
-    longDescription: "",
-    category: "WEB_APP",
-    status: "COMPLETED",
+    title: '',
+    slug: '',
+    description: '',
+    longDescription: '',
+    category: 'WEB_APP',
+    status: 'COMPLETED',
     featured: false,
-    demoUrl: "",
-    githubUrl: "",
-    client: "",
-    teamSize: "",
-    role: "",
-    order: ""
+    demoUrl: '',
+    githubUrl: '',
+    client: '',
+    teamSize: '',
+    role: '',
+    order: ''
   })
 
   console.log('[EditProjectClient] Current form data:', formData)
@@ -54,19 +54,19 @@ export const EditProjectClient = ({ initialData }: EditProjectClientProps) => {
     console.log('[EditProjectClient] Initial data received:', initialData)
     if (initialData) {
       setFormData({
-        title: initialData.title || "",
-        slug: initialData.slug || "",
-        description: initialData.description || "",
-        longDescription: initialData.longDescription || "",
-        category: initialData.category || "WEB_APP",
-        status: initialData.status || "COMPLETED",
+        title: initialData.title || '',
+        slug: initialData.slug || '',
+        description: initialData.description || '',
+        longDescription: initialData.longDescription || '',
+        category: initialData.category || 'WEB_APP',
+        status: initialData.status || 'COMPLETED',
         featured: initialData.featured || false,
-        demoUrl: initialData.demoUrl || "",
-        githubUrl: initialData.githubUrl || "",
-        client: initialData.client || "",
-        teamSize: initialData.teamSize?.toString() || "",
-        role: initialData.role || "",
-        order: initialData.order?.toString() || ""
+        demoUrl: initialData.demoUrl || '',
+        githubUrl: initialData.githubUrl || '',
+        client: initialData.client || '',
+        teamSize: initialData.teamSize?.toString() || '',
+        role: initialData.role || '',
+        order: initialData.order?.toString() || ''
       })
     }
   }, [initialData])
@@ -75,12 +75,12 @@ export const EditProjectClient = ({ initialData }: EditProjectClientProps) => {
   const generateSlug = (title: string) => {
     return title
       .toLowerCase()
-      .replace(/[^a-z0-9]+/g, "-")
-      .replace(/(^-|-$)/g, "")
+      .replace(/[^a-z0-9]+/g, '-')
+      .replace(/(^-|-$)/g, '')
   }
 
   const updateField = (field: keyof ProjectFormData, value: string | boolean) => {
-    setFormData(prev => {
+    setFormData((prev) => {
       const newData = {
         ...prev,
         [field]: value
@@ -100,19 +100,20 @@ export const EditProjectClient = ({ initialData }: EditProjectClientProps) => {
     setError(null)
 
     if (!formData.title.trim()) {
-      setError("Project title is required")
+      setError('Project title is required')
       return
     }
 
     if (!initialData?.id) {
-      setError("Project ID is missing")
+      setError('Project ID is missing')
       return
     }
 
     setSaving(true)
     try {
       await updateProject({
-        id: initialData.id, ...{
+        id: initialData.id,
+        ...{
           ...formData,
           category: formData.category as ProjectCategory,
           status: formData.status as ProjectStatus,
@@ -121,10 +122,10 @@ export const EditProjectClient = ({ initialData }: EditProjectClientProps) => {
         }
       })
 
-      router.push("/admin/projects")
+      router.push('/admin/projects')
     } catch (error) {
       console.error('[Project Edit] Error updating project:', error)
-      setError("Failed to update project")
+      setError('Failed to update project')
     } finally {
       setSaving(false)
     }
@@ -133,17 +134,17 @@ export const EditProjectClient = ({ initialData }: EditProjectClientProps) => {
   const handleDelete = async () => {
     if (!initialData?.id) return
 
-    if (!confirm("Are you sure you want to delete this project? This action cannot be undone.")) {
+    if (!confirm('Are you sure you want to delete this project? This action cannot be undone.')) {
       return
     }
 
     setSaving(true)
     try {
       await deleteProject(initialData.id)
-      router.push("/admin/projects")
+      router.push('/admin/projects')
     } catch (error) {
       console.error('[Project Edit] Error deleting project:', error)
-      setError("Failed to delete project")
+      setError('Failed to delete project')
     } finally {
       setSaving(false)
     }
@@ -155,7 +156,7 @@ export const EditProjectClient = ({ initialData }: EditProjectClientProps) => {
         <div className="text-center">
           <p className="text-muted-foreground mb-4">Project not found</p>
           <button
-            onClick={() => router.push("/admin/projects")}
+            onClick={() => router.push('/admin/projects')}
             className="px-4 py-2 bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 transition-colors"
           >
             Back to Projects
@@ -364,7 +365,9 @@ export const EditProjectClient = ({ initialData }: EditProjectClientProps) => {
               onChange={(e) => updateField('featured', e.target.checked)}
               className="rounded border-border"
             />
-            <label htmlFor="featured" className="text-sm">Featured project</label>
+            <label htmlFor="featured" className="text-sm">
+              Featured project
+            </label>
           </div>
         </div>
       </div>

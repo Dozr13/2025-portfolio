@@ -1,4 +1,1 @@
-export {
-  AnalyticsProvider, 
-  trackAdminAction
-} from './analytics'
+export { AnalyticsProvider, trackAdminAction } from './analytics'

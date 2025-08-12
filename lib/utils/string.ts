@@ -13,9 +13,7 @@ export const capitalize = (str: string): string => {
  * Convert string to title case
  */
 export const toTitleCase = (str: string): string => {
-  return str.replace(/\w\S*/g, (txt) => 
-    txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase()
-  )
+  return str.replace(/\w\S*/g, (txt) => txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase())
 }
 
 /**
@@ -74,7 +72,7 @@ export function normalizeText(str: string): string {
 export function getInitials(name: string, maxLength: number = 2): string {
   return name
     .split(' ')
-    .map(word => word.charAt(0).toUpperCase())
+    .map((word) => word.charAt(0).toUpperCase())
     .slice(0, maxLength)
     .join('')
 }

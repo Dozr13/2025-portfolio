@@ -1,6 +1,6 @@
-"use client"
+'use client'
 
-import { useCallback, useState } from "react"
+import { useCallback, useState } from 'react'
 
 interface UseAdminFormOptions<T> {
   initialData: T
@@ -8,50 +8,55 @@ interface UseAdminFormOptions<T> {
   validateData?: (data: T) => string | null
 }
 
-export function useAdminForm<T>({
-  initialData,
-  onSubmit,
-  validateData
-}: UseAdminFormOptions<T>) {
+export function useAdminForm<T>({ initialData, onSubmit, validateData }: UseAdminFormOptions<T>) {
   const [formData, setFormData] = useState<T>(initialData)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
   const updateField = useCallback((field: keyof T, value: unknown) => {
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
       [field]: value
     }))
   }, [])
 
-  const handleChange = useCallback((e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
-    const { name, value, type } = e.target
-    updateField(name as keyof T, type === "checkbox" ? (e.target as HTMLInputElement).checked : value)
-  }, [updateField])
+  const handleChange = useCallback(
+    (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
+      const { name, value, type } = e.target
+      updateField(
+        name as keyof T,
+        type === 'checkbox' ? (e.target as HTMLInputElement).checked : value
+      )
+    },
+    [updateField]
+  )
 
-  const handleSubmit = useCallback(async (e: React.FormEvent) => {
-    e.preventDefault()
-    setError(null)
+  const handleSubmit = useCallback(
+    async (e: React.FormEvent) => {
+      e.preventDefault()
+      setError(null)
 
-    // Validate if validation function provided
-    if (validateData) {
-      const validationError = validateData(formData)
-      if (validationError) {
-        setError(validationError)
-        return
+      // Validate if validation function provided
+      if (validateData) {
+        const validationError = validateData(formData)
+        if (validationError) {
+          setError(validationError)
+          return
+        }
       }
-    }
 
-    setLoading(true)
-    try {
-      await onSubmit(formData)
-    } catch (error) {
-      console.error("Form submission error:", error)
-      setError(error instanceof Error ? error.message : "Failed to submit form")
-    } finally {
-      setLoading(false)
-    }
-  }, [formData, onSubmit, validateData])
+      setLoading(true)
+      try {
+        await onSubmit(formData)
+      } catch (error) {
+        console.error('Form submission error:', error)
+        setError(error instanceof Error ? error.message : 'Failed to submit form')
+      } finally {
+        setLoading(false)
+      }
+    },
+    [formData, onSubmit, validateData]
+  )
 
   const resetForm = useCallback(() => {
     setFormData(initialData)

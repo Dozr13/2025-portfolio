@@ -5,14 +5,16 @@ const globalForPrisma = globalThis as unknown as {
   prisma: PrismaClient | undefined
 }
 
-export const prisma = globalForPrisma.prisma ?? new PrismaClient({
-  datasources: {
-    db: {
-      url: getDatabaseConfig()
-    }
-  },
-  log: envConfig.NODE_ENV === 'development' ? ['query', 'error', 'warn'] : ['error'],
-})
+export const prisma =
+  globalForPrisma.prisma ??
+  new PrismaClient({
+    datasources: {
+      db: {
+        url: getDatabaseConfig()
+      }
+    },
+    log: envConfig.NODE_ENV === 'development' ? ['query', 'error', 'warn'] : ['error']
+  })
 
 if (envConfig.NODE_ENV !== 'production') globalForPrisma.prisma = prisma
 
@@ -30,19 +32,14 @@ export async function checkDatabaseConnection() {
 // Database info for admin dashboard
 export async function getDatabaseInfo() {
   try {
-    const [
-      skillsCount,
-      projectsCount,
-      experiencesCount,
-      contactsCount,
-      testimonialsCount
-    ] = await Promise.all([
-      prisma.skill.count(),
-      prisma.project.count(),
-      prisma.experience.count(),
-      prisma.contact.count(),
-      prisma.testimonial.count()
-    ])
+    const [skillsCount, projectsCount, experiencesCount, contactsCount, testimonialsCount] =
+      await Promise.all([
+        prisma.skill.count(),
+        prisma.project.count(),
+        prisma.experience.count(),
+        prisma.contact.count(),
+        prisma.testimonial.count()
+      ])
 
     return {
       skills: skillsCount,

@@ -1,9 +1,9 @@
-"use client"
+'use client'
 
-import { listContacts } from "@/app/actions/admin/contacts"
-import { getAdminStats } from "@/app/actions/admin/stats"
-import type { AnalyticsData } from "@/lib/types"
-import { useCallback, useEffect, useState } from "react"
+import { listContacts } from '@/app/actions/admin/contacts'
+import { getAdminStats } from '@/app/actions/admin/stats'
+import type { AnalyticsData } from '@/lib/types'
+import { useCallback, useEffect, useState } from 'react'
 
 export interface DashboardStats {
   contacts: {
@@ -52,14 +52,28 @@ export function useDashboard(options: UseDashboardOptions = {}) {
         listContacts({ page: 1, limit: 20, status: null, search: null })
       ])
 
-      const contacts = (contactsData && 'contacts' in (contactsData as object)) ? (contactsData as { contacts: Array<{ id: string; name: string; email: string; subject: string | null; status: string; createdAt: string | Date }> }).contacts : []
+      const contacts =
+        contactsData && 'contacts' in (contactsData as object)
+          ? (
+              contactsData as {
+                contacts: Array<{
+                  id: string
+                  name: string
+                  email: string
+                  subject: string | null
+                  status: string
+                  createdAt: string | Date
+                }>
+              }
+            ).contacts
+          : []
       const recentContacts: RecentContact[] = contacts.map((c) => ({
         id: c.id,
         name: c.name,
         email: c.email,
-        subject: c.subject ?? "",
+        subject: c.subject ?? '',
         status: c.status,
-        createdAt: typeof c.createdAt === 'string' ? new Date(c.createdAt) : new Date(c.createdAt),
+        createdAt: typeof c.createdAt === 'string' ? new Date(c.createdAt) : new Date(c.createdAt)
       }))
       const dashboardData: DashboardData = {
         stats: statsData as unknown as DashboardStats,

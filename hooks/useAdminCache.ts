@@ -39,40 +39,40 @@ const createAdminCache = (config: CacheConfig = { defaultTTL: 5 * 60 * 1000, max
 
   const set = <T>(key: string, data: T): void => {
     evictOldest()
-    
+
     const entry: CacheEntry<T> = {
       data,
       timestamp: Date.now(),
       key
     }
-    
+
     cache.set(key, entry as CacheEntry<unknown>)
-    
+
     // Notify subscribers
     const keySubscribers = subscribers.get(key)
-    keySubscribers?.forEach(callback => callback())
+    keySubscribers?.forEach((callback) => callback())
   }
 
   const invalidate = (key: string): void => {
     cache.delete(key)
-    
+
     // Notify subscribers
     const keySubscribers = subscribers.get(key)
-    keySubscribers?.forEach(callback => callback())
+    keySubscribers?.forEach((callback) => callback())
   }
 
   const invalidatePattern = (pattern: RegExp): void => {
-    const keysToInvalidate = Array.from(cache.keys()).filter(key => pattern.test(key))
-    keysToInvalidate.forEach(key => invalidate(key))
+    const keysToInvalidate = Array.from(cache.keys()).filter((key) => pattern.test(key))
+    keysToInvalidate.forEach((key) => invalidate(key))
   }
 
   const subscribe = (key: string, callback: () => void): (() => void) => {
     if (!subscribers.has(key)) {
       subscribers.set(key, new Set())
     }
-    
+
     subscribers.get(key)!.add(callback)
-    
+
     // Return unsubscribe function
     return () => {
       const keySubscribers = subscribers.get(key)
@@ -119,10 +119,7 @@ interface UseAdminCacheOptions {
   enabled?: boolean
 }
 
-export const useAdminCache = <T>(
-  key: string, 
-  options: UseAdminCacheOptions = {}
-) => {
+export const useAdminCache = <T>(key: string, options: UseAdminCacheOptions = {}) => {
   const { ttl, enabled = true } = options
   const [, forceUpdate] = useState({})
   const forceUpdateRef = useRef(() => forceUpdate({}))
@@ -140,11 +137,14 @@ export const useAdminCache = <T>(
     return adminCache.get<T>(key, ttl)
   }, [key, ttl, enabled])
 
-  const set = useCallback((data: T) => {
-    if (enabled) {
-      adminCache.set(key, data)
-    }
-  }, [key, enabled])
+  const set = useCallback(
+    (data: T) => {
+      if (enabled) {
+        adminCache.set(key, data)
+      }
+    },
+    [key, enabled]
+  )
 
   const invalidate = useCallback(() => {
     adminCache.invalidate(key)
@@ -164,9 +164,9 @@ export const useAdminCache = <T>(
 }
 
 // Helper function to generate cache keys
-  export const createCacheKey = (
-  entity: string, 
-  operation: string, 
+export const createCacheKey = (
+  entity: string,
+  operation: string,
   params?: Record<string, unknown>
 ): string => {
   const paramString = params ? JSON.stringify(params) : ''
@@ -177,12 +177,12 @@ export const useAdminCache = <T>(
 export const cachePatterns = {
   // Invalidate all data for an entity
   entity: (entity: string) => new RegExp(`^${entity}:`),
-  
+
   // Invalidate all list operations for an entity
   lists: (entity: string) => new RegExp(`^${entity}:list:`),
-  
+
   // Invalidate specific item and its related lists
-  item: (entity: string, id: string) => new RegExp(`^${entity}:(get:.*"id":"${id}"|list:)`),
+  item: (entity: string, id: string) => new RegExp(`^${entity}:(get:.*"id":"${id}"|list:)`)
 } as const
 
 export { adminCache }

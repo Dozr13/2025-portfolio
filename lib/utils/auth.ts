@@ -7,9 +7,10 @@ import { JWT_SECRET } from './jwt'
  */
 export const verifyAdminToken = async (request: Request): Promise<boolean> => {
   try {
-    const authHeader = request.headers.get("authorization")
-    const token = authHeader?.replace("Bearer ", "") || 
-                  request.headers.get("cookie")?.split("adminToken=")[1]?.split(";")[0]
+    const authHeader = request.headers.get('authorization')
+    const token =
+      authHeader?.replace('Bearer ', '') ||
+      request.headers.get('cookie')?.split('adminToken=')[1]?.split(';')[0]
 
     if (!token) return false
 
@@ -24,10 +25,12 @@ export const verifyAdminToken = async (request: Request): Promise<boolean> => {
  * Extract token from request (Authorization header or cookie)
  */
 export const extractToken = (request: Request): string | null => {
-  const authHeader = request.headers.get("authorization")
-  return authHeader?.replace("Bearer ", "") || 
-         request.headers.get("cookie")?.split("adminToken=")[1]?.split(";")[0] ||
-         null
+  const authHeader = request.headers.get('authorization')
+  return (
+    authHeader?.replace('Bearer ', '') ||
+    request.headers.get('cookie')?.split('adminToken=')[1]?.split(';')[0] ||
+    null
+  )
 }
 
 /**
