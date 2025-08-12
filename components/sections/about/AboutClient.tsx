@@ -1,7 +1,7 @@
-"use client"
+'use client'
 
-import { Icon, type IconName } from "@/components/ui/Icon"
-import { motion } from "framer-motion"
+import { Icon, type IconName } from '@/components/ui'
+import { motion } from 'framer-motion'
 import Image from 'next/image'
 
 const highlights: {
@@ -9,29 +9,29 @@ const highlights: {
   title: string
   description: string
 }[] = [
-    {
-      icon: "code",
-      title: "Clean Code",
-      description: "Writing maintainable, scalable, and efficient code"
-    },
-    {
-      icon: "palette",
-      title: "Modern Design",
-      description: "Creating beautiful, user-centered digital experiences"
-    },
-    {
-      icon: "rocket",
-      title: "Performance",
-      description: "Optimizing for speed and exceptional user experience"
-    },
-    {
-      icon: "users",
-      title: "Collaboration",
-      description: "Working effectively with cross-functional teams"
-    }
-  ]
+  {
+    icon: 'code',
+    title: 'Clean Code',
+    description: 'Writing maintainable, scalable, and efficient code'
+  },
+  {
+    icon: 'palette',
+    title: 'Modern Design',
+    description: 'Creating beautiful, user-centered digital experiences'
+  },
+  {
+    icon: 'rocket',
+    title: 'Performance',
+    description: 'Optimizing for speed and exceptional user experience'
+  },
+  {
+    icon: 'users',
+    title: 'Collaboration',
+    description: 'Working effectively with cross-functional teams'
+  }
+]
 
-export const About = ({ immediate = false }: { immediate?: boolean }) => {
+export const AboutClient = ({ immediate = false }: { immediate?: boolean }) => {
   return (
     <section id="about" className="py-20 bg-muted/50">
       <div>
@@ -86,19 +86,17 @@ export const About = ({ immediate = false }: { immediate?: boolean }) => {
             className="space-y-8"
           >
             <div className="space-y-6">
-              <h3 className="text-2xl font-bold text-foreground">
-                Building Digital Experiences
-              </h3>
+              <h3 className="text-2xl font-bold text-foreground">Building Digital Experiences</h3>
               <p className="text-muted-foreground leading-relaxed">
                 With over 6 years of experience in software engineering, I specialize in building
                 modern, scalable applications using React, TypeScript, Python, and cloud
-                technologies. Currently serving as a Senior Software Engineer, I focus on
-                innovative infrastructure construction and engineering leadership.
+                technologies. Currently serving as a Senior Software Engineer, I focus on innovative
+                infrastructure construction and engineering leadership.
               </p>
               <p className="text-muted-foreground leading-relaxed">
-                I&apos;m passionate about clean, maintainable code and modern development practices. As an AWS
-                Certified Cloud Practitioner, I bring expertise in cloud infrastructure and enjoy
-                mentoring teams while driving technical innovation.
+                I&apos;m passionate about clean, maintainable code and modern development practices.
+                As an AWS Certified Cloud Practitioner, I bring expertise in cloud infrastructure
+                and enjoy mentoring teams while driving technical innovation.
               </p>
             </div>
 
@@ -122,9 +120,7 @@ export const About = ({ immediate = false }: { immediate?: boolean }) => {
                       />
                     </div>
                     <div className="flex-1 min-w-0">
-                      <h4 className="font-semibold text-foreground mb-1">
-                        {highlight.title}
-                      </h4>
+                      <h4 className="font-semibold text-foreground mb-1">{highlight.title}</h4>
                       <p className="text-sm text-muted-foreground leading-relaxed">
                         {highlight.description}
                       </p>
@@ -138,4 +134,4 @@ export const About = ({ immediate = false }: { immediate?: boolean }) => {
       </div>
     </section>
   )
-} 
+}

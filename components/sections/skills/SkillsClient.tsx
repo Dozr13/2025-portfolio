@@ -1,16 +1,16 @@
-"use client"
+'use client'
 
-import { SkillsDisplay } from "@/components/ui/SkillsDisplay"
-import { SkillsClientProps } from "@/lib/types/sections"
-import { motion } from "framer-motion"
-import Link from "next/link"
+import { SkillsDisplay } from '@/components/ui/skillsDisplay'
+import { SkillsClientProps } from '@/lib/types/sections'
+import { motion } from 'framer-motion'
+import Link from 'next/link'
 
-export const SkillsClient = ({ skills, mode = "full" }: SkillsClientProps) => {
+export const SkillsClient = ({ skills, mode = 'full', immediate = false }: SkillsClientProps) => {
   return (
     <section id="skills" className="py-20 bg-background">
       <div className="container mx-auto px-4">
         <motion.div
-          initial={{ opacity: 0, y: 50 }}
+          initial={immediate ? { opacity: 1, y: 0 } : { opacity: 0, y: 50 }}
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8 }}
           viewport={{ once: true }}
@@ -20,7 +20,8 @@ export const SkillsClient = ({ skills, mode = "full" }: SkillsClientProps) => {
             Skills & Technologies
           </h2>
           <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
-            Comprehensive technology stack with {skills.length}+ technologies across the full development lifecycle
+            Comprehensive technology stack with {skills.length}+ technologies across the full
+            development lifecycle
           </p>
         </motion.div>
 
@@ -28,11 +29,11 @@ export const SkillsClient = ({ skills, mode = "full" }: SkillsClientProps) => {
           skills={skills}
           showCategories={true}
           mode={mode}
-          showAllTab={mode !== "preview"}
+          showAllTab={mode !== 'preview'}
           className="max-w-7xl mx-auto"
         />
 
-        {mode === "preview" && (
+        {mode === 'preview' && (
           <div className="text-center mt-8">
             <Link
               href="/skills"

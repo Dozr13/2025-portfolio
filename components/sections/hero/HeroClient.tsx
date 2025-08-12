@@ -1,15 +1,15 @@
-"use client"
+'use client'
 
-import { Icon, type IconName } from "@/components/ui/Icon"
-import { motion } from "framer-motion"
-import { useEffect, useState } from "react"
+import { Icon, type IconName } from '@/components/ui/Icon'
+import { motion } from 'framer-motion'
+import { useEffect, useState } from 'react'
 
 const roles = [
-  "Senior Software Engineer",
-  "Full Stack Developer",
-  "AWS Certified Practitioner",
-  "React & TypeScript Expert",
-  "Infrastructure Leader"
+  'Senior Software Engineer',
+  'Full Stack Developer',
+  'AWS Certified Practitioner',
+  'React & TypeScript Expert',
+  'Infrastructure Leader'
 ]
 
 const stats: {
@@ -17,15 +17,15 @@ const stats: {
   value: string
   icon: IconName
 }[] = [
-    { label: "Years Experience", value: "6+", icon: "briefcase" },
-    { label: "Projects Delivered", value: "50+", icon: "code" },
-    { label: "Tech Stack", value: "15+", icon: "monitor" },
-    { label: "AWS Certified", value: "✓", icon: "rocket" },
-  ]
+  { label: 'Years Experience', value: '6+', icon: 'briefcase' },
+  { label: 'Projects Delivered', value: '50+', icon: 'code' },
+  { label: 'Tech Stack', value: '15+', icon: 'monitor' },
+  { label: 'AWS Certified', value: '✓', icon: 'rocket' }
+]
 
-export const Hero = () => {
+export const HeroClient = ({ immediate = false }: { immediate?: boolean }) => {
   const [currentRole, setCurrentRole] = useState(0)
-  const [displayText, setDisplayText] = useState("")
+  const [displayText, setDisplayText] = useState('')
   const [isDeleting, setIsDeleting] = useState(false)
   const [isScrolled, setIsScrolled] = useState(false)
 
@@ -33,8 +33,8 @@ export const Hero = () => {
     const handleScroll = () => {
       setIsScrolled(window.scrollY > 100)
     }
-    window.addEventListener("scroll", handleScroll)
-    return () => window.removeEventListener("scroll", handleScroll)
+    window.addEventListener('scroll', handleScroll)
+    return () => window.removeEventListener('scroll', handleScroll)
   }, [])
 
   useEffect(() => {
@@ -66,7 +66,7 @@ export const Hero = () => {
   }, [displayText, currentRole, isDeleting])
 
   const scrollToAbout = () => {
-    const aboutSection = document.querySelector("#about")
+    const aboutSection = document.querySelector('#about')
     if (aboutSection) {
       const headerOffset = 80
       const elementPosition = aboutSection.getBoundingClientRect().top
@@ -74,13 +74,13 @@ export const Hero = () => {
 
       window.scrollTo({
         top: offsetPosition,
-        behavior: "smooth"
+        behavior: 'smooth'
       })
     }
   }
 
   const scrollToProjects = () => {
-    const projectsSection = document.querySelector("#projects")
+    const projectsSection = document.querySelector('#projects')
     if (projectsSection) {
       const headerOffset = 80
       const elementPosition = projectsSection.getBoundingClientRect().top
@@ -88,13 +88,16 @@ export const Hero = () => {
 
       window.scrollTo({
         top: offsetPosition,
-        behavior: "smooth"
+        behavior: 'smooth'
       })
     }
   }
 
   return (
-    <section id="hero" className="relative min-h-screen flex items-center justify-center overflow-hidden w-full pt-20 lg:pt-24 xl:pt-28">
+    <section
+      id="hero"
+      className="relative min-h-screen flex items-center justify-center overflow-hidden w-full pt-20 lg:pt-24 xl:pt-28"
+    >
       {/* Enhanced animated background */}
       <div className="absolute inset-0 hero-gradient opacity-90"></div>
 
@@ -102,60 +105,60 @@ export const Hero = () => {
       <div className="absolute inset-0 overflow-hidden">
         {/* Large floating shapes */}
         {[
-          { left: "5%", top: "20%", size: "w-20 h-20 sm:w-32 sm:h-32", shape: "rounded-full" },
-          { left: "70%", top: "15%", size: "w-16 h-16 sm:w-24 sm:h-24", shape: "rounded-2xl" },
-          { left: "60%", top: "70%", size: "w-20 h-20 sm:w-28 sm:h-28", shape: "rounded-full" },
-          { left: "10%", top: "75%", size: "w-14 h-14 sm:w-20 sm:h-20", shape: "rounded-2xl" },
-          { left: "75%", top: "55%", size: "w-12 h-12 sm:w-16 sm:h-16", shape: "rounded-full" },
+          { left: '5%', top: '20%', size: 'w-20 h-20 sm:w-32 sm:h-32', shape: 'rounded-full' },
+          { left: '70%', top: '15%', size: 'w-16 h-16 sm:w-24 sm:h-24', shape: 'rounded-2xl' },
+          { left: '60%', top: '70%', size: 'w-20 h-20 sm:w-28 sm:h-28', shape: 'rounded-full' },
+          { left: '10%', top: '75%', size: 'w-14 h-14 sm:w-20 sm:h-20', shape: 'rounded-2xl' },
+          { left: '75%', top: '55%', size: 'w-12 h-12 sm:w-16 sm:h-16', shape: 'rounded-full' }
         ].map((element, i) => (
           <motion.div
             key={`large-${i}`}
             className={`absolute ${element.size} ${element.shape} bg-white/10 backdrop-blur-sm border border-white/20`}
             style={{
               left: element.left,
-              top: element.top,
+              top: element.top
             }}
             animate={{
               y: [0, -40, 0],
               x: [0, 25, 0],
               rotate: [0, 180, 360],
-              scale: [1, 1.2, 1],
+              scale: [1, 1.2, 1]
             }}
             transition={{
               duration: 8 + i * 2,
               repeat: Infinity,
-              ease: "easeInOut",
+              ease: 'easeInOut'
             }}
           />
         ))}
 
         {/* Small particle elements */}
         {[
-          { left: "15%", top: "25%", duration: 4.5, delay: 0.5 },
-          { left: "70%", top: "35%", duration: 6.2, delay: 1.2 },
-          { left: "45%", top: "65%", duration: 5.8, delay: 2.1 },
-          { left: "25%", top: "85%", duration: 4.8, delay: 0.8 },
-          { left: "75%", top: "45%", duration: 7.1, delay: 3.2 },
-          { left: "35%", top: "15%", duration: 5.5, delay: 1.8 },
-          { left: "60%", top: "75%", duration: 6.5, delay: 2.8 },
-          { left: "50%", top: "55%", duration: 4.2, delay: 1.5 },
+          { left: '15%', top: '25%', duration: 4.5, delay: 0.5 },
+          { left: '70%', top: '35%', duration: 6.2, delay: 1.2 },
+          { left: '45%', top: '65%', duration: 5.8, delay: 2.1 },
+          { left: '25%', top: '85%', duration: 4.8, delay: 0.8 },
+          { left: '75%', top: '45%', duration: 7.1, delay: 3.2 },
+          { left: '35%', top: '15%', duration: 5.5, delay: 1.8 },
+          { left: '60%', top: '75%', duration: 6.5, delay: 2.8 },
+          { left: '50%', top: '55%', duration: 4.2, delay: 1.5 }
         ].map((particle, i) => (
           <motion.div
             key={`particle-${i}`}
             className="absolute w-2 h-2 rounded-full bg-white/30"
             style={{
               left: particle.left,
-              top: particle.top,
+              top: particle.top
             }}
             animate={{
               y: [0, -100, 0],
-              opacity: [0, 1, 0],
+              opacity: [0, 1, 0]
             }}
             transition={{
               duration: particle.duration,
               repeat: Infinity,
-              ease: "easeInOut",
-              delay: particle.delay,
+              ease: 'easeInOut',
+              delay: particle.delay
             }}
           />
         ))}
@@ -165,7 +168,7 @@ export const Hero = () => {
         <div className="grid lg:grid-cols-5 gap-6 lg:gap-12 items-center">
           {/* Left side - Content */}
           <motion.div
-            initial={{ opacity: 0, x: -50 }}
+            initial={immediate ? { opacity: 1, x: 0 } : { opacity: 0, x: -50 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.8 }}
             className="lg:col-span-3 space-y-4 sm:space-y-6 lg:space-y-8 text-center lg:text-left max-w-4xl mx-auto lg:mx-0"
@@ -180,10 +183,7 @@ export const Hero = () => {
               >
                 {/* <h1 className="text-base xs:text-4xl sm:text-5xl lg:text-6xl xl:text-8xl 2xl:text-9xl font-black text-primary leading-tight tracking-tight text-enhanced"> */}
                 <h1 className="text-4xl sm:text-6xl xl:text-7xl 2xl:text-8xl font-black text-primary leading-tight tracking-tight text-enhanced">
-                  Hi, I&apos;m{" "}
-                  <span className="gradient-text-inverted">
-                    Wade!
-                  </span>
+                  Hi, I&apos;m <span className="gradient-text-inverted">Wade!</span>
                 </h1>
                 <p className="text-secondary font-medium text-md sm:text-base lg:text-3xl tracking-wide uppercase">
                   Senior Software Engineer
@@ -216,9 +216,11 @@ export const Hero = () => {
                 className="space-y-6"
               >
                 <p className="text-primary text-enhanced text-base h-16 font-semibold">
-                  Transforming complex requirements into elegant solutions with{" "}
-                  <span className="text-accent font-bold text-lg sm:text-xl lg:text-3xl">6+ years</span> of experience
-                  in modern web technologies and cloud infrastructure.
+                  Transforming complex requirements into elegant solutions with{' '}
+                  <span className="text-accent font-bold text-lg sm:text-xl lg:text-3xl">
+                    6+ years
+                  </span>{' '}
+                  of experience in modern web technologies and cloud infrastructure.
                 </p>
               </motion.div>
 
@@ -261,7 +263,11 @@ export const Hero = () => {
                 whileTap={{ scale: 0.95 }}
                 className="group flex items-center justify-center gap-2 sm:gap-3 px-6 sm:px-8 py-3 sm:py-4 border-2 border-primary/30 bg-background/20 backdrop-blur-sm text-primary hover:border-primary hover:bg-primary/10 hover:shadow-lg transition-all duration-300 rounded-full font-semibold text-base sm:text-lg w-full sm:w-auto sm:min-w-[200px] touch-manipulation"
               >
-                <Icon name="download" size="md" className="group-hover:animate-bounce flex-shrink-0" />
+                <Icon
+                  name="download"
+                  size="md"
+                  className="group-hover:animate-bounce flex-shrink-0"
+                />
                 <span>Download Resume</span>
               </motion.a>
             </motion.div>
@@ -273,11 +279,17 @@ export const Hero = () => {
               transition={{ delay: 1, duration: 0.8 }}
               className="flex justify-center lg:justify-start space-x-3 sm:space-x-4"
             >
-              {([
-                { icon: "github" as const, href: "https://github.com/Dozr13", label: "GitHub" },
-                { icon: "linkedin" as const, href: "https://www.linkedin.com/in/wadejp8/", label: "LinkedIn" },
-                { icon: "mail" as const, href: "mailto:wadejp8@gmail.com", label: "Email" },
-              ] as const).map((social) => (
+              {(
+                [
+                  { icon: 'github' as const, href: 'https://github.com/Dozr13', label: 'GitHub' },
+                  {
+                    icon: 'linkedin' as const,
+                    href: 'https://www.linkedin.com/in/wadejp8/',
+                    label: 'LinkedIn'
+                  },
+                  { icon: 'mail' as const, href: 'mailto:wadejp8@gmail.com', label: 'Email' }
+                ] as const
+              ).map((social) => (
                 <motion.a
                   key={social.label}
                   href={social.href}
@@ -288,7 +300,11 @@ export const Hero = () => {
                   className="w-11 h-11 sm:w-12 sm:h-12 rounded-full glass border border-muted flex items-center justify-center text-secondary hover:text-accent hover:border-accent transition-all duration-300 group touch-manipulation"
                   aria-label={social.label}
                 >
-                  <Icon name={social.icon} size="md" className="w-4 h-4 sm:w-5 sm:h-5 group-hover:scale-110 transition-transform" />
+                  <Icon
+                    name={social.icon}
+                    size="md"
+                    className="w-4 h-4 sm:w-5 sm:h-5 group-hover:scale-110 transition-transform"
+                  />
                 </motion.a>
               ))}
             </motion.div>
@@ -312,7 +328,9 @@ export const Hero = () => {
                     <Icon name={stat.icon} size="sm" className="text-inverted" />
                   </div>
                   <div className="text-lg font-bold text-primary leading-none">{stat.value}</div>
-                  <div className="text-xs text-muted leading-tight mt-1 font-medium">{stat.label}</div>
+                  <div className="text-xs text-muted leading-tight mt-1 font-medium">
+                    {stat.label}
+                  </div>
                 </motion.div>
               ))}
             </motion.div>
@@ -327,10 +345,7 @@ export const Hero = () => {
               <span className="text-muted text-xs font-medium tracking-wider uppercase">
                 Scroll Down
               </span>
-              <motion.div
-                animate={{ y: [0, 4, 0] }}
-                transition={{ duration: 2, repeat: Infinity }}
-              >
+              <motion.div animate={{ y: [0, 4, 0] }} transition={{ duration: 2, repeat: Infinity }}>
                 <motion.button
                   onClick={scrollToAbout}
                   whileHover={{ scale: 1.1 }}
@@ -359,7 +374,9 @@ export const Hero = () => {
               className="relative mb-2"
             >
               <div className="w-48 h-48 rounded-full glass gradient-hero-inverted flex items-center justify-center shadow-2xl">
-                <div className="text-5xl font-black text-inverted drop-shadow-lg tracking-wider">WP</div>
+                <div className="text-5xl font-black text-inverted drop-shadow-lg tracking-wider">
+                  WP
+                </div>
               </div>
             </motion.div>
 
@@ -397,12 +414,12 @@ export const Hero = () => {
               className="flex flex-wrap gap-2 justify-center max-w-xs"
             >
               {[
-                { name: "React", color: "from-blue-400 to-blue-600" },
-                { name: "TypeScript", color: "from-blue-500 to-blue-700" },
-                { name: "AWS", color: "from-orange-400 to-orange-600" },
-                { name: "Next.js", color: "from-gray-600 to-gray-800" },
-                { name: "Node.js", color: "from-green-400 to-green-600" },
-                { name: "Docker", color: "from-cyan-400 to-cyan-600" }
+                { name: 'React', color: 'from-blue-400 to-blue-600' },
+                { name: 'TypeScript', color: 'from-blue-500 to-blue-700' },
+                { name: 'AWS', color: 'from-orange-400 to-orange-600' },
+                { name: 'Next.js', color: 'from-gray-600 to-gray-800' },
+                { name: 'Node.js', color: 'from-green-400 to-green-600' },
+                { name: 'Docker', color: 'from-cyan-400 to-cyan-600' }
               ].map((tech, index) => (
                 <motion.span
                   key={tech.name}
@@ -447,4 +464,4 @@ export const Hero = () => {
       </motion.div>
     </section>
   )
-} 
+}

@@ -1,29 +1,18 @@
-"use client"
+'use client'
 
-import { Icon } from "@/components/ui/Icon"
-import { motion } from "framer-motion"
-import Link from "next/link"
+import { Icon } from '@/components/ui'
+import { PublicCaseStudy } from '@/lib/types/public'
+import { motion } from 'framer-motion'
+import Link from 'next/link'
 
-interface CaseStudy {
-  id: string
-  title: string
-  company: string
-  duration: string
-  overview: string
-  problem: string
-  solution: string
-  results: string[]
-  technologies: string[]
-  challenges: string[]
-  metrics: { label: string; value: string; improvement: string }[]
-  testimonial?: { quote: string; author: string; role: string }
-  githubUrl?: string
-  liveUrl?: string
-  featured: boolean
-}
-
-export const CaseStudies = ({ caseStudies, immediate = false }: { caseStudies: CaseStudy[]; immediate?: boolean }) => {
-  const featuredStudies = caseStudies.filter(study => study.featured)
+export const CaseStudiesClient = ({
+  caseStudies,
+  immediate = false
+}: {
+  caseStudies: PublicCaseStudy[]
+  immediate?: boolean
+}) => {
+  const featuredStudies = caseStudies.filter((study) => study.featured)
 
   return (
     <section id="case-studies" className="py-20 bg-background">
@@ -39,7 +28,8 @@ export const CaseStudies = ({ caseStudies, immediate = false }: { caseStudies: C
             Case Studies
           </h2>
           <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
-            Deep dives into complex technical challenges and the solutions that delivered measurable business impact
+            Deep dives into complex technical challenges and the solutions that delivered measurable
+            business impact
           </p>
         </motion.div>
 
@@ -146,8 +136,12 @@ export const CaseStudies = ({ caseStudies, immediate = false }: { caseStudies: C
                     {study.metrics.map((metric, idx) => (
                       <div key={idx} className="bg-muted/50 rounded-xl p-4 text-center">
                         <div className="text-2xl font-bold text-primary mb-1">{metric.value}</div>
-                        <div className="text-sm font-medium text-foreground mb-1">{metric.label}</div>
-                        <div className="text-xs text-green-500 font-medium">{metric.improvement}</div>
+                        <div className="text-sm font-medium text-foreground mb-1">
+                          {metric.label}
+                        </div>
+                        <div className="text-xs text-green-500 font-medium">
+                          {metric.improvement}
+                        </div>
                       </div>
                     ))}
                   </div>
@@ -170,7 +164,9 @@ export const CaseStudies = ({ caseStudies, immediate = false }: { caseStudies: C
 
                 {/* Challenges */}
                 <div className="mb-8">
-                  <h4 className="text-lg font-semibold text-foreground mb-4">Technical Challenges</h4>
+                  <h4 className="text-lg font-semibold text-foreground mb-4">
+                    Technical Challenges
+                  </h4>
                   <div className="grid md:grid-cols-2 gap-4">
                     {study.challenges.map((challenge, idx) => (
                       <div key={idx} className="flex items-start gap-3 p-4 bg-muted/30 rounded-lg">
@@ -188,7 +184,9 @@ export const CaseStudies = ({ caseStudies, immediate = false }: { caseStudies: C
                       &ldquo;{study.testimonial.quote}&rdquo;
                     </blockquote>
                     <cite className="not-italic">
-                      <div className="font-semibold text-foreground">{study.testimonial.author}</div>
+                      <div className="font-semibold text-foreground">
+                        {study.testimonial.author}
+                      </div>
                       <div className="text-sm text-muted-foreground">{study.testimonial.role}</div>
                     </cite>
                   </div>
@@ -211,7 +209,8 @@ export const CaseStudies = ({ caseStudies, immediate = false }: { caseStudies: C
               Ready to Solve Your Technical Challenges?
             </h3>
             <p className="text-muted-foreground mb-6">
-              Let&apos;s discuss how I can help architect and implement solutions that drive measurable business results
+              Let&apos;s discuss how I can help architect and implement solutions that drive
+              measurable business results
             </p>
             <Link
               href="#contact"

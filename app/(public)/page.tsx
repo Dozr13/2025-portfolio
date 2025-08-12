@@ -1,24 +1,30 @@
-import { listPublicBlogPosts } from "@/app/actions/public/blog"
-import { listExperiences } from "@/app/actions/public/experiences"
-import { listPublicProjects } from "@/app/actions/public/projects"
-import { About } from "@/components/sections/about"
-import { BlogSuspense } from "@/components/sections/blog/BlogSuspense"
-import { CaseStudies } from "@/components/sections/case-studies"
-import { Contact } from "@/components/sections/contact"
-import { Experience } from "@/components/sections/experience"
-import { Hero } from "@/components/sections/hero"
-import { ProjectsSuspense } from "@/components/sections/projects/ProjectsSuspense"
-import { SkillsSuspense } from "@/components/sections/skills/SkillsSuspense"
+import { listPublicBlogPosts } from '@/app/actions/public/blog'
+import { listPublicCaseStudies } from '@/app/actions/public/case-studies'
+import { listExperiences } from '@/app/actions/public/experiences'
+import { listPublicProjects } from '@/app/actions/public/projects'
+import { listPublicSkills } from '@/app/actions/public/skills'
+import { AboutSuspense } from '@/components/sections/about/AboutSuspense'
+import { BlogSuspense } from '@/components/sections/blog/BlogSuspense'
+import { CaseStudiesSuspense } from '@/components/sections/caseStudies/CaseStudiesSuspense'
+import { ContactSuspense } from '@/components/sections/contact/ContactSuspense'
+import { ExperienceSuspense } from '@/components/sections/experience/ExperienceSuspense'
+import { HeroSuspense } from '@/components/sections/hero/HeroSuspense'
+import { ProjectsSuspense } from '@/components/sections/projects/ProjectsSuspense'
+import { SkillsSuspense } from '@/components/sections/skills/SkillsSuspense'
+import { unstable_noStore as noStore } from 'next/cache'
 
 export default async function Home() {
-  const [projects, , blogPosts] = await Promise.all([
+  noStore()
+  const [projects, blogPosts, skills, experiences, caseStudies] = await Promise.all([
     listPublicProjects(),
+    listPublicBlogPosts(),
+    listPublicSkills(),
     listExperiences(),
-    listPublicBlogPosts()
+    listPublicCaseStudies()
   ])
 
   // Transform admin data to public types
-  const projectsPublic = projects.map(project => ({
+  const projectsPublic = projects.map((project) => ({
     id: project.id,
     title: project.title,
     slug: project.slug,
@@ -30,9 +36,12 @@ export default async function Home() {
     githubUrl: project.githubUrl || null
   }))
 
-  // skills section now reads directly via SkillsSuspense
+  // skills for public display
+  const skillsPublic = skills
+  const experiencesPublic = experiences
+  const caseStudiesPublic = caseStudies
 
-  const blogPublic = blogPosts.map(post => ({
+  const blogPublic = blogPosts.map((post) => ({
     id: post.id,
     title: post.title,
     slug: post.slug,
@@ -47,14 +56,14 @@ export default async function Home() {
 
   return (
     <>
-      <Hero />
-      <About />
-      <SkillsSuspense skills={[]} />
-      <ProjectsSuspense projects={projectsPublic} />
-      <CaseStudies />
-      <Experience />
+      <HeroSuspense />
+      <AboutSuspense />
+      <SkillsSuspense skills={skillsPublic} mode="preview" />
+      <ProjectsSuspense projects={projectsPublic} mode="preview" />
+      <CaseStudiesSuspense caseStudies={caseStudiesPublic} />
+      <ExperienceSuspense experiences={experiencesPublic} />
       <BlogSuspense posts={blogPublic} />
-      <Contact />
+      <ContactSuspense />
     </>
   )
 }

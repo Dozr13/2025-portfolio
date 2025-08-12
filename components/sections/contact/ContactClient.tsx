@@ -1,34 +1,10 @@
-"use client"
+'use client'
 
-import { createContact } from "@/app/actions/public/contact"
-import { Icon, type IconName } from "@/components/ui/Icon"
-import { AnimatePresence, motion } from "framer-motion"
-import { useRef, useState } from "react"
-
-const contactInfo: {
-  icon: IconName
-  label: string
-  value: string
-  href?: string
-}[] = [
-    {
-      icon: "mail",
-      label: "Email",
-      value: "wadejp8@gmail.com",
-      href: "mailto:wadejp8@gmail.com"
-    },
-    {
-      icon: "phone",
-      label: "Phone",
-      value: "(720) 641-7170",
-      href: "tel:+17206417170"
-    },
-    {
-      icon: "map-pin",
-      label: "Location",
-      value: "Meridian, Idaho"
-    }
-  ]
+import { createContact } from '@/app/actions/public/contact'
+import { Icon } from '@/components/ui'
+import { CONTACT_INFO, RATE_LIMIT_DURATION, RATE_LIMIT_KEY } from '@/lib/constants'
+import { AnimatePresence, motion } from 'framer-motion'
+import { useRef, useState } from 'react'
 
 interface FormData {
   name: string
@@ -39,11 +15,7 @@ interface FormData {
 
 type FormStatus = 'idle' | 'loading' | 'success' | 'error'
 
-// Rate limiting helper
-const RATE_LIMIT_KEY = 'contact_form_last_submission'
-const RATE_LIMIT_DURATION = 60000
-
-export const Contact = ({ immediate = false }: { immediate?: boolean }) => {
+export const ContactClient = ({ immediate = false }: { immediate?: boolean }) => {
   const [formData, setFormData] = useState<FormData>({
     name: '',
     email: '',
@@ -59,27 +31,20 @@ export const Contact = ({ immediate = false }: { immediate?: boolean }) => {
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
       [name]: value
     }))
   }
 
   const validateForm = (): string | null => {
-
-
-
-
     // Honeypot check (if filled, it's likely a bot) - but be lenient for false positives
     if (honeypot && honeypot.trim().length > 0) {
-
       // Only block if it looks like bot behavior (long strings or common spam patterns)
       if (honeypot.length > 10 || /http|www\.|\.com|\.net|\.org/i.test(honeypot)) {
-
         return 'Invalid form submission. Please try again.'
       }
       // For short values, just log but don't block (could be auto-fill)
-
     }
 
     // Rate limiting check
@@ -95,24 +60,22 @@ export const Contact = ({ immediate = false }: { immediate?: boolean }) => {
 
     // Enhanced validation
     if (formData.name.length < 2 || formData.name.length > 50) {
-
       return 'Name must be between 2 and 50 characters.'
     }
 
     if (formData.subject.length < 5 || formData.subject.length > 100) {
-
       return 'Subject must be between 5 and 100 characters.'
     }
 
     if (formData.message.length < 10 || formData.message.length > 1000) {
-
       return 'Message must be between 10 and 1000 characters.'
     }
 
     // Time-based validation (temporarily reduced for testing)
     const timeSpent = Date.now() - submissionTimeRef.current
 
-    if (timeSpent < 1000) { // Reduced from 3000ms to 1000ms for easier testing
+    if (timeSpent < 1000) {
+      // Reduced from 3000ms to 1000ms for easier testing
 
       return 'Please take your time filling out the form.'
     }
@@ -120,7 +83,6 @@ export const Contact = ({ immediate = false }: { immediate?: boolean }) => {
     // Email format validation (additional check)
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
     if (!emailRegex.test(formData.email)) {
-
       return 'Please enter a valid email address.'
     }
 
@@ -186,11 +148,10 @@ export const Contact = ({ immediate = false }: { immediate?: boolean }) => {
             to_email: 'wadejp8@gmail.com',
             auto_reply: 'true',
             reply_to_email: formData.email.trim(),
-            reply_to: formData.email.trim(),
+            reply_to: formData.email.trim()
           },
           process.env.NEXT_PUBLIC_EMAILJS_PUBLIC_KEY!
         )
-
       } catch (emailError) {
         console.warn('Email notification failed, but contact was saved:', emailError)
       }
@@ -199,13 +160,16 @@ export const Contact = ({ immediate = false }: { immediate?: boolean }) => {
       localStorage.setItem(RATE_LIMIT_KEY, Date.now().toString())
 
       setStatus('success')
-      setStatusMessage('Thank you! Your message has been received. I\'ll get back to you within 48 hours!')
+      setStatusMessage(
+        "Thank you! Your message has been received. I'll get back to you within 48 hours!"
+      )
       setFormData({ name: '', email: '', subject: '', message: '' })
       setHoneypot('')
-
     } catch (error: unknown) {
       setStatus('error')
-      setStatusMessage('Failed to send message. Please try again or contact me directly at wadejp8@gmail.com')
+      setStatusMessage(
+        'Failed to send message. Please try again or contact me directly at wadejp8@gmail.com'
+      )
       console.error('Contact submission error:', error)
     }
 
@@ -237,8 +201,8 @@ export const Contact = ({ immediate = false }: { immediate?: boolean }) => {
             Let&apos;s Connect
           </h2>
           <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
-            Whether you have a project in mind, want to collaborate, or just want to say hello, I&apos;d love to hear from
-            you. I&apos;m always open to discussing new opportunities.
+            Whether you have a project in mind, want to collaborate, or just want to say hello,
+            I&apos;d love to hear from you. I&apos;m always open to discussing new opportunities.
           </p>
         </motion.div>
 
@@ -252,16 +216,15 @@ export const Contact = ({ immediate = false }: { immediate?: boolean }) => {
             className="space-y-8"
           >
             <div className="space-y-6">
-              <h3 className="text-2xl font-bold text-foreground mb-6">
-                Get In Touch
-              </h3>
+              <h3 className="text-2xl font-bold text-foreground mb-6">Get In Touch</h3>
               <p className="text-muted-foreground leading-relaxed">
-                I&apos;m always interested in new opportunities and exciting projects. Let&apos;s talk!
+                I&apos;m always interested in new opportunities and exciting projects. Let&apos;s
+                talk!
               </p>
             </div>
 
             <div className="space-y-6">
-              {contactInfo.map((info, index) => (
+              {CONTACT_INFO.map((info, index) => (
                 <motion.div
                   key={info.label}
                   initial={{ opacity: 0, y: 20 }}
@@ -271,11 +234,7 @@ export const Contact = ({ immediate = false }: { immediate?: boolean }) => {
                   className="flex items-center space-x-4 p-4 rounded-xl bg-background/50 border border-border/50 hover:border-border transition-colors"
                 >
                   <div className="w-12 h-12 rounded-lg bg-gradient-to-br from-blue-500/10 to-purple-600/10 flex items-center justify-center">
-                    <Icon
-                      name={info.icon}
-                      size="md"
-                      className="text-blue-600 dark:text-blue-400"
-                    />
+                    <Icon name={info.icon} size="md" className="text-blue-600 dark:text-blue-400" />
                   </div>
                   <div>
                     <p className="font-medium text-foreground">{info.label}</p>
@@ -302,7 +261,10 @@ export const Contact = ({ immediate = false }: { immediate?: boolean }) => {
             transition={{ duration: 0.8 }}
             viewport={{ once: true }}
           >
-            <form onSubmit={handleSubmit} className="space-y-6 p-8 rounded-2xl bg-background border border-border">
+            <form
+              onSubmit={handleSubmit}
+              className="space-y-6 p-8 rounded-2xl bg-background border border-border"
+            >
               {/* Honeypot field - hidden from users */}
               <input
                 type="text"
@@ -332,37 +294,44 @@ export const Contact = ({ immediate = false }: { immediate?: boolean }) => {
                       initial={{ opacity: 0, y: -10, scale: 0.95 }}
                       animate={{ opacity: 1, y: 0, scale: 1 }}
                       exit={{ opacity: 0, y: 10, scale: 0.95 }}
-                      transition={{ duration: 0.3, ease: "easeInOut" }}
+                      transition={{ duration: 0.3, ease: 'easeInOut' }}
                       className="text-center"
                     >
-                      <h3 className="text-lg font-bold gradient-text-title">
-                        Let&apos;s Chat! 💬
-                      </h3>
+                      <h3 className="text-lg font-bold gradient-text-title">Let&apos;s Chat! 💬</h3>
                       <p className="text-xs text-muted-foreground mt-1">
                         Ready to bring your ideas to life
                       </p>
                     </motion.div>
-                  ) : statusMessage && (
-                    <motion.div
-                      key="status-message"
-                      initial={{ opacity: 0, y: 10, scale: 0.95 }}
-                      animate={{ opacity: 1, y: 0, scale: 1 }}
-                      exit={{ opacity: 0, y: -10, scale: 0.95 }}
-                      transition={{ duration: 0.3, ease: "easeInOut" }}
-                      className={`w-full p-4 rounded-lg flex items-center gap-3 ${status === 'success'
-                        ? 'bg-green-500/10 text-green-600 border border-green-500/20'
-                        : status === 'error'
-                          ? 'bg-red-500/10 text-red-600 border border-red-500/20'
-                          : 'bg-blue-500/10 text-blue-600 border border-blue-500/20'
+                  ) : (
+                    statusMessage && (
+                      <motion.div
+                        key="status-message"
+                        initial={{ opacity: 0, y: 10, scale: 0.95 }}
+                        animate={{ opacity: 1, y: 0, scale: 1 }}
+                        exit={{ opacity: 0, y: -10, scale: 0.95 }}
+                        transition={{ duration: 0.3, ease: 'easeInOut' }}
+                        className={`w-full p-4 rounded-lg flex items-center gap-3 ${
+                          status === 'success'
+                            ? 'bg-green-500/10 text-green-600 border border-green-500/20'
+                            : status === 'error'
+                              ? 'bg-red-500/10 text-red-600 border border-red-500/20'
+                              : 'bg-blue-500/10 text-blue-600 border border-blue-500/20'
                         }`}
-                    >
-                      <Icon
-                        name={status === 'success' ? 'check-circle' : status === 'error' ? 'alert-circle' : 'loader'}
-                        size="md"
-                        className={status === 'loading' ? 'animate-spin' : ''}
-                      />
-                      <p className="text-sm font-medium">{statusMessage}</p>
-                    </motion.div>
+                      >
+                        <Icon
+                          name={
+                            status === 'success'
+                              ? 'check-circle'
+                              : status === 'error'
+                                ? 'alert-circle'
+                                : 'loader'
+                          }
+                          size="md"
+                          className={status === 'loading' ? 'animate-spin' : ''}
+                        />
+                        <p className="text-sm font-medium">{statusMessage}</p>
+                      </motion.div>
+                    )
                   )}
                 </AnimatePresence>
               </div>
@@ -451,18 +420,15 @@ export const Contact = ({ immediate = false }: { immediate?: boolean }) => {
                 disabled={status === 'loading'}
                 whileHover={status !== 'loading' ? { scale: 1.02, y: -2 } : {}}
                 whileTap={status !== 'loading' ? { scale: 0.98 } : {}}
-                className={`w-full flex items-center justify-center gap-2 px-6 py-3 rounded-lg font-medium transition-all group ${status === 'loading'
-                  ? 'bg-muted text-muted-foreground cursor-not-allowed'
-                  : 'bg-primary text-primary-foreground hover:bg-primary/90'
-                  }`}
+                className={`w-full flex items-center justify-center gap-2 px-6 py-3 rounded-lg font-medium transition-all group ${
+                  status === 'loading'
+                    ? 'bg-muted text-muted-foreground cursor-not-allowed'
+                    : 'bg-primary text-primary-foreground hover:bg-primary/90'
+                }`}
               >
                 {status === 'loading' ? (
                   <>
-                    <Icon
-                      name="loader"
-                      size="md"
-                      className="animate-spin"
-                    />
+                    <Icon name="loader" size="md" className="animate-spin" />
                     Sending...
                   </>
                 ) : (
@@ -482,4 +448,4 @@ export const Contact = ({ immediate = false }: { immediate?: boolean }) => {
       </div>
     </section>
   )
-} 
+}
