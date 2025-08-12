@@ -9,6 +9,9 @@
     "vercel-build": "yarn db:generate && next build",
     "start": "next start",
     "lint": "next lint",
+    "lint-staged": "lint-staged",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
     "db:generate": "yarn pnpify prisma generate",
     "db:push": "yarn pnpify prisma db push",
     "db:migrate": "yarn pnpify prisma migrate dev",
@@ -28,7 +31,8 @@
     "deploy": "./scripts/deployment/deploy-production.sh",
     "deploy:vercel": "DEPLOY_TARGET=vercel ./scripts/deployment/deploy-production.sh",
     "type-check": "tsc --noEmit",
-    "analyze": "ANALYZE=true yarn build"
+    "analyze": "ANALYZE=true yarn build",
+    "prepare": "husky"
   },
   "dependencies": {
     "@emailjs/browser": "^4.4.1",
@@ -64,12 +68,22 @@
     "@types/resolve": "^1",
     "eslint": "^9",
     "eslint-config-next": "15.4.1",
+    "eslint-config-prettier": "^10.1.8",
     "eslint-plugin-react-hooks": "^5.0.0",
+    "husky": "^9.1.7",
+    "lint-staged": "^16.1.5",
+    "prettier": "^3.6.2",
+    "prettier-plugin-tailwindcss": "^0.6.14",
     "prisma": "6.13.0",
     "tailwindcss": "^4",
     "tw-animate-css": "^1.3.6",
     "typanion": "^3.14.0",
     "typescript": "^5"
+  },
+  "lint-staged": {
+    "*.{js,jsx,ts,tsx,css,scss,md,mdx,json,yml,yaml}": [
+      "prettier --write --ignore-unknown"
+    ]
   },
   "packageManager": "yarn@4.9.2+sha512.1fc009bc09d13cfd0e19efa44cbfc2b9cf6ca61482725eb35bbc5e257e093ebf4130db6dfe15d604ff4b79efd8e1e8e99b25fa7d0a6197c9f9826358d4d65c3c"
 }

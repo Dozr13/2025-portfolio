@@ -1,0 +1,24 @@
+# dependencies
+node_modules
+.yarn
+.pnp.*
+
+# next build
+.next
+out
+
+# builds & caches
+dist
+build
+coverage
+
+# env
+.env*
+
+# generated
+prisma/generated
+generated
+
+# misc
+*.min.js
+*.min.css
